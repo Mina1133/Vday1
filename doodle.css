@@ -1,0 +1,130 @@
+/* =========================
+   DOODLE THEME (paper + ink)
+   ========================= */
+
+:root {
+    --paper: #f7f1e6;
+    --ink: #1f1f1f;
+    --wash-blue: #5aa7b8;
+    --wash-yellow: #f0b34a;
+    --wash-red: #e95b5b;
+}
+
+/* Paper background */
+body {
+    background: radial-gradient(circle at top, #fff8fb, #fff3f7);
+    position: relative;
+}
+
+/* Add paper texture using CSS only (no image needed) */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 30% 20%, rgba(0, 0, 0, 0.03), transparent 40%),
+        radial-gradient(circle at 70% 60%, rgba(0, 0, 0, 0.02), transparent 45%),
+        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.015), rgba(0, 0, 0, 0.015) 1px, transparent 1px, transparent 6px);
+    mix-blend-mode: multiply;
+    opacity: 0.35;
+}
+
+/* Make cards look hand-drawn */
+.card {
+    background: #fffdfa;
+    border: 2px solid rgba(0, 0, 0, 0.25);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+/* Sketchy border effect */
+.card::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border: 2px dashed rgba(0, 0, 0, 0.18);
+    border-radius: 22px;
+    pointer-events: none;
+}
+
+/* Headings: more “storybook” */
+h1,
+h2,
+h3 {
+    color: var(--ink);
+    letter-spacing: 0.2px;
+}
+
+/* Buttons feel like stickers */
+.btn {
+    border: 2px solid rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 0 rgba(0, 0, 0, 0.12);
+    transform: translateY(0);
+}
+
+.btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12);
+}
+
+/* Tiles: ink-y */
+.tile {
+    border: 2px solid rgba(0, 0, 0, 0.25);
+    background: #fffdfa;
+}
+
+/* --- Doodle stickers you can place anywhere --- */
+.doodleRow {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.sticker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 16px;
+    border: 2px solid rgba(0, 0, 0, 0.25);
+    background: #fffdfa;
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.06);
+    transform: rotate(-1deg);
+}
+
+.sticker .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--wash-yellow);
+    border: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+.sticker.blue .dot {
+    background: var(--wash-blue);
+}
+
+.sticker.red .dot {
+    background: var(--wash-red);
+}
+
+/* Little “hand jitter” animation (subtle) */
+.wiggle {
+    animation: wiggle 2.8s ease-in-out infinite;
+}
+
+@keyframes wiggle {
+    0% {
+        transform: rotate(-1deg) translateY(0);
+    }
+
+    50% {
+        transform: rotate(1deg) translateY(-1px);
+    }
+
+    100% {
+        transform: rotate(-1deg) translateY(0);
+    }
+}
