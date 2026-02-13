@@ -100,7 +100,7 @@ function startNycCoupleFollow(stage, couple) {
         const rect = stage.getBoundingClientRect();
         const localX = clientX - rect.left;
         const localY = clientY - rect.top;
-        targetX = clamp(localX, rect.width * 0.14, rect.width * 0.86);
+        targetX = clamp(localX, rect.width * 0.24, rect.width * 0.76);
         targetY = clamp(localY, rect.height * 0.6, rect.height * 0.92);
     };
 
@@ -1153,7 +1153,7 @@ function render() {
         const nycStartSign = document.getElementById("nycStartSign");
         const nycStartBtn = document.getElementById("nycStartBtn");
         if (nycWalkBubble != null && nycWalkOkBtn != null) {
-            const nycPromptDelayMs = nycArrivalFromWin ? 0 : 1800;
+            const nycPromptDelayMs = nycArrivalFromWin ? 0 : 900;
             nycPromptTimer = setTimeout(() => {
                 if (state.screen !== "nycRoom") return;
                 nycWalkBubble.hidden = false;

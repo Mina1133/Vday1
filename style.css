@@ -481,14 +481,14 @@ body {
 
 .nycDinnerOkBtn {
     position: absolute;
-    left: 22%;
-    top: 66%;
+    left: 30%;
+    top: 72%;
     transform: translateX(-50%);
     z-index: 10;
     width: 124px;
     height: 110px;
     border: none;
-    background: radial-gradient(circle at 30% 26%, #ff97be 0%, #ff4f8e 44%, #d31f61 100%);
+    background: radial-gradient(circle at 30% 26%, rgba(255, 132, 132, 0.74) 0%, rgba(235, 45, 45, 0.62) 44%, rgba(168, 16, 16, 0.56) 100%);
     clip-path: polygon(50% 100%, 8% 58%, 8% 30%, 24% 14%, 41% 14%, 50% 25%, 59% 14%, 76% 14%, 92% 30%, 92% 58%);
     color: #fff6fa;
     font-size: 20px;
