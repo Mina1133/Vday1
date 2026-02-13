@@ -8,6 +8,7 @@ let nycPromptTimer = null;
 let nycFollowTeardown = null;
 let nycObstacleTeardown = null;
 let nycCollisionTeardown = null;
+let nycDinnerRunnerTeardown = null;
 let nycReturnFromWin = false;
 
 function defaultState() {
@@ -54,6 +55,10 @@ function go(screen) {
     if (nycCollisionTeardown != null) {
         nycCollisionTeardown();
         nycCollisionTeardown = null;
+    }
+    if (nycDinnerRunnerTeardown != null) {
+        nycDinnerRunnerTeardown();
+        nycDinnerRunnerTeardown = null;
     }
     state.screen = screen;
     save();
@@ -230,6 +235,186 @@ function startNycCollisionWatch(stage, couple, obstacleLayer, onHit) {
     };
 }
 
+function startNycDinnerRunnerGame(config) {
+    const {
+        stage,
+        player,
+        obstacleLayer,
+        scoreEl,
+        gameOverOverlay,
+        restartBtn
+    } = config;
+    if (
+        stage == null
+        || player == null
+        || obstacleLayer == null
+        || scoreEl == null
+        || gameOverOverlay == null
+        || restartBtn == null
+    ) {
+        return null;
+    }
+
+    let running = true;
+    let gameOver = false;
+    let frameId = 0;
+    let lastTime = performance.now();
+    let spawnTimeout = null;
+    let score = 0;
+    let vy = 0;
+    let y = 0;
+    const gravity = 2400;
+    const jumpVelocity = -980;
+    const moveSpeed = 650;
+    const obstacles = new Set();
+
+    const obstacleTypes = [
+        "dinnerObstacleDish",
+        "dinnerObstacleDrink",
+        "dinnerObstacleBread"
+    ];
+
+    const setPlayerY = () => {
+        player.style.transform = `translateY(${y.toFixed(1)}px)`;
+    };
+
+    const jump = () => {
+        if (!running || gameOver) return;
+        if (y >= -0.5) {
+            vy = jumpVelocity;
+        }
+    };
+
+    const onKeyDown = (e) => {
+        if (e.code === "Space" || e.code === "ArrowUp" || e.code === "KeyW") {
+            e.preventDefault();
+            jump();
+        }
+    };
+
+    const onPointerDown = () => jump();
+
+    const spawnObstacle = () => {
+        if (!running || gameOver || !obstacleLayer.isConnected) return;
+
+        const obstacle = document.createElement("div");
+        obstacle.className = "nycDinnerRunnerObstacle";
+        const variant = obstacleTypes[Math.floor(Math.random() * obstacleTypes.length)];
+        obstacle.classList.add(variant);
+        obstacle.dataset.x = `${stage.clientWidth + 40}`;
+        obstacle.style.left = `${stage.clientWidth + 40}px`;
+        obstacleLayer.appendChild(obstacle);
+        obstacles.add(obstacle);
+
+        const nextDelay = 860 + Math.floor(Math.random() * 560);
+        spawnTimeout = window.setTimeout(spawnObstacle, nextDelay);
+    };
+
+    const hitTest = (a, b) => (
+        a.left < b.right
+        && a.right > b.left
+        && a.top < b.bottom
+        && a.bottom > b.top
+    );
+
+    const finishGame = () => {
+        if (gameOver) return;
+        gameOver = true;
+        if (spawnTimeout != null) {
+            clearTimeout(spawnTimeout);
+            spawnTimeout = null;
+        }
+        gameOverOverlay.hidden = false;
+    };
+
+    const frame = (now) => {
+        if (!running) return;
+        const dt = Math.min(0.035, (now - lastTime) / 1000);
+        lastTime = now;
+
+        vy += gravity * dt;
+        y += vy * dt;
+        if (y > 0) {
+            y = 0;
+            vy = 0;
+        }
+        setPlayerY();
+
+        if (!gameOver) {
+            score += dt * 10;
+            scoreEl.textContent = `${Math.floor(score)}`;
+        }
+
+        const playerRectRaw = player.getBoundingClientRect();
+        const playerRect = {
+            left: playerRectRaw.left + (playerRectRaw.width * 0.2),
+            right: playerRectRaw.right - (playerRectRaw.width * 0.2),
+            top: playerRectRaw.top + (playerRectRaw.height * 0.2),
+            bottom: playerRectRaw.bottom - (playerRectRaw.height * 0.08)
+        };
+
+        for (const obstacle of obstacles) {
+            const nextX = Number(obstacle.dataset.x || "0") - (moveSpeed * dt);
+            obstacle.dataset.x = `${nextX}`;
+            obstacle.style.left = `${nextX}px`;
+            if (nextX < -140) {
+                obstacles.delete(obstacle);
+                obstacle.remove();
+                continue;
+            }
+            if (!gameOver) {
+                const obstacleRectRaw = obstacle.getBoundingClientRect();
+                const obstacleRect = {
+                    left: obstacleRectRaw.left + (obstacleRectRaw.width * 0.12),
+                    right: obstacleRectRaw.right - (obstacleRectRaw.width * 0.12),
+                    top: obstacleRectRaw.top + (obstacleRectRaw.height * 0.12),
+                    bottom: obstacleRectRaw.bottom - (obstacleRectRaw.height * 0.12)
+                };
+                if (hitTest(playerRect, obstacleRect)) {
+                    finishGame();
+                }
+            }
+        }
+
+        frameId = requestAnimationFrame(frame);
+    };
+
+    const teardown = () => {
+        running = false;
+        cancelAnimationFrame(frameId);
+        if (spawnTimeout != null) {
+            clearTimeout(spawnTimeout);
+            spawnTimeout = null;
+        }
+        document.removeEventListener("keydown", onKeyDown);
+        stage.removeEventListener("pointerdown", onPointerDown);
+        for (const obstacle of obstacles) {
+            obstacle.remove();
+        }
+        obstacles.clear();
+        player.style.transform = "";
+    };
+
+    restartBtn.onclick = () => {
+        teardown();
+        const restart = startNycDinnerRunnerGame(config);
+        nycDinnerRunnerTeardown = restart;
+    };
+
+    gameOverOverlay.hidden = true;
+    scoreEl.textContent = "0";
+    obstacleLayer.innerHTML = "";
+    y = 0;
+    vy = 0;
+    setPlayerY();
+
+    document.addEventListener("keydown", onKeyDown);
+    stage.addEventListener("pointerdown", onPointerDown);
+    spawnObstacle();
+    frameId = requestAnimationFrame(frame);
+    return teardown;
+}
+
 function mountClickHearts() {
     if (clickHeartsBound) return;
     clickHeartsBound = true;
@@ -373,6 +558,16 @@ function screenNycDinner() {
       <div class="nycDinnerGameIntro" id="nycDinnerGameIntro" hidden>
         <img class="nycDinnerGameSign" src="assets/restaurant_sign_transparent.png" alt="Restaurant game sign">
         <button class="nycDinnerStartBtn" id="nycDinnerStartBtn" aria-label="Start">Start</button>
+      </div>
+      <div class="nycDinnerRunner" id="nycDinnerRunner" hidden>
+        <div class="nycDinnerRunnerHud">Score: <span id="nycDinnerRunnerScore">0</span></div>
+        <div class="nycDinnerRunnerObstacleLayer" id="nycDinnerRunnerObstacleLayer"></div>
+        <img class="nycDinnerRunnerPlayer" id="nycDinnerRunnerPlayer" src="assets/ccwithme.png" alt="Runner couple">
+        <div class="nycDinnerRunnerGround"></div>
+        <div class="nycDinnerRunnerGameOver" id="nycDinnerRunnerGameOver" hidden>
+          <div class="nycDinnerRunnerGameOverText">Game Over</div>
+          <button class="nycDinnerRunnerRestartBtn" id="nycDinnerRunnerRestartBtn">Play Again</button>
+        </div>
       </div>
     </div>
   `;
@@ -980,6 +1175,12 @@ function render() {
         const nycDinnerOkBtn = document.getElementById("nycDinnerOkBtn");
         const nycDinnerGameIntro = document.getElementById("nycDinnerGameIntro");
         const nycDinnerStartBtn = document.getElementById("nycDinnerStartBtn");
+        const nycDinnerRunner = document.getElementById("nycDinnerRunner");
+        const nycDinnerRunnerScore = document.getElementById("nycDinnerRunnerScore");
+        const nycDinnerRunnerObstacleLayer = document.getElementById("nycDinnerRunnerObstacleLayer");
+        const nycDinnerRunnerPlayer = document.getElementById("nycDinnerRunnerPlayer");
+        const nycDinnerRunnerGameOver = document.getElementById("nycDinnerRunnerGameOver");
+        const nycDinnerRunnerRestartBtn = document.getElementById("nycDinnerRunnerRestartBtn");
         if (
             nycDinnerStage != null
             &&
@@ -990,6 +1191,12 @@ function render() {
             && nycDinnerOkBtn != null
             && nycDinnerGameIntro != null
             && nycDinnerStartBtn != null
+            && nycDinnerRunner != null
+            && nycDinnerRunnerScore != null
+            && nycDinnerRunnerObstacleLayer != null
+            && nycDinnerRunnerPlayer != null
+            && nycDinnerRunnerGameOver != null
+            && nycDinnerRunnerRestartBtn != null
         ) {
             const dinnerLines = [
                 { side: "right", img: "assets/pixel-speech-bubble.png" },
@@ -1033,8 +1240,20 @@ function render() {
             };
 
             nycDinnerStartBtn.onclick = () => {
-                // Placeholder for next restaurant mini-game screen.
-                nycDinnerStartBtn.disabled = true;
+                nycDinnerGameIntro.hidden = true;
+                nycDinnerRunner.hidden = false;
+                if (nycDinnerRunnerTeardown != null) {
+                    nycDinnerRunnerTeardown();
+                    nycDinnerRunnerTeardown = null;
+                }
+                nycDinnerRunnerTeardown = startNycDinnerRunnerGame({
+                    stage: nycDinnerRunner,
+                    player: nycDinnerRunnerPlayer,
+                    obstacleLayer: nycDinnerRunnerObstacleLayer,
+                    scoreEl: nycDinnerRunnerScore,
+                    gameOverOverlay: nycDinnerRunnerGameOver,
+                    restartBtn: nycDinnerRunnerRestartBtn
+                });
             };
         }
         return;

@@ -21,6 +21,7 @@ body {
     --scene-width: calc(var(--design-width) * 1px);
     --scene-height: calc(var(--design-height) * 1px);
     --scene-scale: min(1, calc(100vw / var(--design-width)), calc(100dvh / var(--design-height)));
+    --scene-global-scale: 0.9;
     --panel-width: 980px;
     --dialog-width: 520px;
 }
@@ -165,7 +166,7 @@ body {
     height: var(--scene-height);
     margin: 0 auto;
     overflow: hidden;
-    transform: scale(var(--scene-scale));
+    transform: scale(calc(var(--scene-scale) * var(--scene-global-scale)));
     transform-origin: center center;
 }
 
@@ -260,6 +261,130 @@ body {
 .nycDinnerStartBtn:disabled {
     opacity: 0.55;
     cursor: default;
+}
+
+.nycDinnerRunner {
+    position: absolute;
+    inset: 0;
+    z-index: 12;
+    overflow: hidden;
+}
+
+.nycDinnerRunner[hidden] {
+    display: none;
+}
+
+.nycDinnerRunnerHud {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    z-index: 14;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 215, 145, 0.95);
+    background: linear-gradient(180deg, rgba(48, 29, 12, 0.9) 0%, rgba(23, 14, 7, 0.92) 100%);
+    color: #ffe3ae;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+}
+
+.nycDinnerRunnerObstacleLayer {
+    position: absolute;
+    inset: 0;
+    z-index: 13;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.nycDinnerRunnerPlayer {
+    position: absolute;
+    left: 200px;
+    bottom: 104px;
+    width: 170px;
+    height: auto;
+    z-index: 14;
+    user-select: none;
+    pointer-events: none;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
+}
+
+.nycDinnerRunnerGround {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 84px;
+    height: 8px;
+    z-index: 12;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(245, 216, 161, 0.9) 0%, rgba(255, 240, 196, 0.88) 50%, rgba(245, 216, 161, 0.9) 100%);
+    box-shadow: 0 0 16px rgba(255, 226, 170, 0.45);
+}
+
+.nycDinnerRunnerObstacle {
+    position: absolute;
+    bottom: 92px;
+    width: 74px;
+    height: 74px;
+    z-index: 13;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.35));
+}
+
+.nycDinnerRunnerObstacle.dinnerObstacleDish {
+    background-image: url("assets/dish_transparent.png");
+}
+
+.nycDinnerRunnerObstacle.dinnerObstacleDrink {
+    background-image: url("assets/drink_transparent.png");
+}
+
+.nycDinnerRunnerObstacle.dinnerObstacleBread {
+    background-image: url("assets/bread_transparent.png");
+}
+
+.nycDinnerRunnerGameOver {
+    position: absolute;
+    inset: 0;
+    z-index: 15;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 14px;
+    background: rgba(11, 7, 19, 0.42);
+}
+
+.nycDinnerRunnerGameOver[hidden] {
+    display: none;
+}
+
+.nycDinnerRunnerGameOverText {
+    padding: 14px 24px;
+    border-radius: 16px;
+    border: 2px solid rgba(255, 210, 130, 0.95);
+    background: linear-gradient(180deg, rgba(62, 37, 19, 0.9) 0%, rgba(29, 17, 10, 0.92) 100%);
+    color: #ffe0ab;
+    font-size: 38px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.nycDinnerRunnerRestartBtn {
+    min-width: 200px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 211, 92, 0.98);
+    background: linear-gradient(180deg, rgba(255, 247, 192, 0.98) 0%, rgba(255, 216, 92, 0.96) 100%);
+    color: #5b4300;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    box-shadow: 0 8px 22px rgba(151, 103, 0, 0.35);
+    cursor: pointer;
 }
 
 .nycDinnerChat {
