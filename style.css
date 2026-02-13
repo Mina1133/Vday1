@@ -873,8 +873,8 @@ body {
 
 .computerFrame {
     position: relative;
-    width: min(100%, calc(var(--scene-height) * (2048 / 1536)));
-    max-height: 100%;
+    width: min(100%, calc((var(--scene-height) - 72px) * (2048 / 1536)));
+    max-height: calc(100% - 72px);
     aspect-ratio: 2048 / 1536;
     background: url("assets/windows screen.png") center center no-repeat;
     background-size: 100% 100%;
