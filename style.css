@@ -376,7 +376,19 @@ body {
     text-transform: uppercase;
 }
 
-.nycDinnerRunnerRestartBtn {
+.nycDinnerRunnerBestScore {
+    padding: 8px 18px;
+    border-radius: 12px;
+    border: 2px solid rgba(255, 223, 166, 0.95);
+    background: rgba(25, 15, 9, 0.85);
+    color: #ffe6bc;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.nycDinnerRunnerRestartBtn,
+.nycDinnerRunnerNextBtn {
     min-width: 200px;
     padding: 12px 22px;
     border-radius: 999px;
@@ -418,8 +430,9 @@ body {
 }
 
 .nycDinnerChatRight {
-    left: 56%;
-    width: 600px;
+    left: 48%;
+    top: 46%;
+    width: 500px;
     max-width: 92%;
     padding: 0;
     border: none;
@@ -472,28 +485,52 @@ body {
     top: 66%;
     transform: translateX(-50%);
     z-index: 10;
-    min-width: 180px;
-    padding: 10px 20px;
-    border-radius: 999px;
-    border: 2px solid rgba(255, 211, 92, 0.98);
-    background: linear-gradient(180deg, rgba(255, 247, 192, 0.98) 0%, rgba(255, 216, 92, 0.96) 100%);
-    color: #5b4300;
-    font-size: 22px;
+    width: 124px;
+    height: 110px;
+    border: none;
+    background: radial-gradient(circle at 30% 26%, #ff97be 0%, #ff4f8e 44%, #d31f61 100%);
+    clip-path: polygon(50% 100%, 8% 58%, 8% 30%, 24% 14%, 41% 14%, 50% 25%, 59% 14%, 76% 14%, 92% 30%, 92% 58%);
+    color: #fff6fa;
+    font-size: 20px;
     font-weight: 900;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.03em;
     text-transform: uppercase;
-    box-shadow: 0 8px 22px rgba(151, 103, 0, 0.35);
+    text-shadow: 0 1px 2px rgba(107, 11, 46, 0.55);
+    box-shadow: 0 10px 24px rgba(148, 20, 70, 0.4);
     cursor: pointer;
-    transition: transform 120ms ease, box-shadow 120ms ease;
+    transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+    animation: dinnerHeartPulse 1.08s ease-in-out infinite;
 }
 
 .nycDinnerOkBtn:hover {
-    transform: translateX(-50%) translateY(-2px);
-    box-shadow: 0 12px 28px rgba(151, 103, 0, 0.45);
+    transform: translateX(-50%) translateY(-2px) scale(1.03);
+    box-shadow: 0 14px 28px rgba(148, 20, 70, 0.48);
 }
 
 .nycDinnerOkBtn:active {
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(-50%) translateY(0) scale(0.97);
+}
+
+@keyframes dinnerHeartPulse {
+    0% {
+        transform: translateX(-50%) scale(1);
+    }
+
+    20% {
+        transform: translateX(-50%) scale(1.08);
+    }
+
+    40% {
+        transform: translateX(-50%) scale(0.97);
+    }
+
+    60% {
+        transform: translateX(-50%) scale(1.06);
+    }
+
+    100% {
+        transform: translateX(-50%) scale(1);
+    }
 }
 
 .nycRoomStage.gameStarted {
