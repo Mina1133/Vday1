@@ -651,6 +651,12 @@ function screenMap() {
 
       <button class="shelfAction" id="shelfBtn">Look closer</button>
       <button class="computerAction" id="computerBtn">Look closer</button>
+      <div class="mapTouchControls" id="mapTouchControls" aria-label="Movement controls">
+        <button class="mapCtrlBtn mapCtrlUp" id="mapCtrlUp" aria-label="Move up">UP</button>
+        <button class="mapCtrlBtn mapCtrlLeft" id="mapCtrlLeft" aria-label="Move left">LEFT</button>
+        <button class="mapCtrlBtn mapCtrlRight" id="mapCtrlRight" aria-label="Move right">RIGHT</button>
+        <button class="mapCtrlBtn mapCtrlDown" id="mapCtrlDown" aria-label="Move down">DOWN</button>
+      </div>
       <img class="wanderChar" src="assets/ccwithme.png" alt="walking character">
     </div>
   `;
@@ -731,6 +737,26 @@ function startMapCharacterControl() {
         ArrowLeft: false,
         ArrowRight: false
     };
+    const heldByKeyboard = {
+        ArrowUp: false,
+        ArrowDown: false,
+        ArrowLeft: false,
+        ArrowRight: false
+    };
+    const heldByTouch = {
+        ArrowUp: false,
+        ArrowDown: false,
+        ArrowLeft: false,
+        ArrowRight: false
+    };
+    const touchCleanupFns = [];
+
+    function recomputeKeys() {
+        keys.ArrowUp = heldByKeyboard.ArrowUp || heldByTouch.ArrowUp;
+        keys.ArrowDown = heldByKeyboard.ArrowDown || heldByTouch.ArrowDown;
+        keys.ArrowLeft = heldByKeyboard.ArrowLeft || heldByTouch.ArrowLeft;
+        keys.ArrowRight = heldByKeyboard.ArrowRight || heldByTouch.ArrowRight;
+    }
 
     const speed = 360;
     let running = true;
@@ -817,6 +843,8 @@ function startMapCharacterControl() {
         window.removeEventListener("keydown", onKeyDown);
         window.removeEventListener("keyup", onKeyUp);
         window.removeEventListener("resize", onResize);
+        for (const cleanup of touchCleanupFns) cleanup();
+        touchCleanupFns.length = 0;
         if (shelfBtn != null) shelfBtn.onclick = null;
         if (computerBtn != null) computerBtn.onclick = null;
     }
@@ -830,13 +858,15 @@ function startMapCharacterControl() {
         if (Object.prototype.hasOwnProperty.call(keys, e.key)) {
             e.preventDefault();
             if (introActive()) return;
-            keys[e.key] = true;
+            heldByKeyboard[e.key] = true;
+            recomputeKeys();
         }
     }
 
     function onKeyUp(e) {
         if (Object.prototype.hasOwnProperty.call(keys, e.key)) {
-            keys[e.key] = false;
+            heldByKeyboard[e.key] = false;
+            recomputeKeys();
         }
     }
 
@@ -851,10 +881,15 @@ function startMapCharacterControl() {
         lastTime = now;
 
         if (introActive()) {
-            keys.ArrowUp = false;
-            keys.ArrowDown = false;
-            keys.ArrowLeft = false;
-            keys.ArrowRight = false;
+            heldByKeyboard.ArrowUp = false;
+            heldByKeyboard.ArrowDown = false;
+            heldByKeyboard.ArrowLeft = false;
+            heldByKeyboard.ArrowRight = false;
+            heldByTouch.ArrowUp = false;
+            heldByTouch.ArrowDown = false;
+            heldByTouch.ArrowLeft = false;
+            heldByTouch.ArrowRight = false;
+            recomputeKeys();
             draw();
             requestAnimationFrame(frame);
             return;
@@ -894,6 +929,41 @@ function startMapCharacterControl() {
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
     window.addEventListener("resize", onResize);
+
+    const mapCtrlBindings = [
+        { id: "mapCtrlUp", key: "ArrowUp" },
+        { id: "mapCtrlDown", key: "ArrowDown" },
+        { id: "mapCtrlLeft", key: "ArrowLeft" },
+        { id: "mapCtrlRight", key: "ArrowRight" }
+    ];
+    for (const binding of mapCtrlBindings) {
+        const btn = document.getElementById(binding.id);
+        if (btn == null) continue;
+
+        const onDown = (e) => {
+            e.preventDefault();
+            heldByTouch[binding.key] = true;
+            recomputeKeys();
+        };
+        const onUp = (e) => {
+            e.preventDefault();
+            heldByTouch[binding.key] = false;
+            recomputeKeys();
+        };
+
+        btn.addEventListener("pointerdown", onDown);
+        btn.addEventListener("pointerup", onUp);
+        btn.addEventListener("pointercancel", onUp);
+        btn.addEventListener("pointerleave", onUp);
+
+        touchCleanupFns.push(() => {
+            heldByTouch[binding.key] = false;
+            btn.removeEventListener("pointerdown", onDown);
+            btn.removeEventListener("pointerup", onUp);
+            btn.removeEventListener("pointercancel", onUp);
+            btn.removeEventListener("pointerleave", onUp);
+        });
+    }
 
     if (shelfBtn != null) {
         shelfBtn.onclick = () => {

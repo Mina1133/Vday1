@@ -1540,6 +1540,51 @@ body {
     pointer-events: auto;
 }
 
+.mapTouchControls {
+    position: absolute;
+    left: 20px;
+    bottom: 18px;
+    z-index: 26;
+    width: 204px;
+    display: none;
+    grid-template-columns: repeat(3, 60px);
+    grid-template-rows: repeat(3, 60px);
+    gap: 12px;
+    touch-action: none;
+    user-select: none;
+}
+
+.mapCtrlBtn {
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+}
+
+.mapCtrlUp {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.mapCtrlLeft {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.mapCtrlRight {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.mapCtrlDown {
+    grid-column: 2;
+    grid-row: 3;
+}
+
 .roomPanel {
     position: absolute;
     top: 90px;
@@ -1705,4 +1750,26 @@ body {
     border-radius: 999px;
     background: radial-gradient(circle at 30% 30%, #fff2c8 0%, #ffc66d 42%, #ff8b5a 100%);
     box-shadow: 0 0 20px rgba(255, 172, 110, 0.7);
+}
+
+@media (hover: none), (pointer: coarse) {
+    .mapTouchControls {
+        display: grid;
+    }
+}
+
+@media (max-width: 640px) {
+    .mapTouchControls {
+        left: 14px;
+        bottom: 12px;
+        width: 162px;
+        grid-template-columns: repeat(3, 48px);
+        grid-template-rows: repeat(3, 48px);
+        gap: 9px;
+    }
+
+    .mapCtrlBtn {
+        border-radius: 12px;
+        font-size: 10px;
+    }
 }
