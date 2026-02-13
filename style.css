@@ -27,6 +27,7 @@ body {
 
 .app {
     min-height: 100vh;
+    min-height: 100dvh;
     padding: 18px;
 }
 
@@ -44,7 +45,9 @@ body {
 .app.planeClipMode {
     padding: 0;
     min-height: 100vh;
+    min-height: 100dvh;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     background: #000;
 }
@@ -82,26 +85,33 @@ body {
 .app.openingMode {
     padding: 0;
     min-height: 100vh;
+    min-height: 100dvh;
     overflow: hidden;
 }
 
 .app.pigMode {
     padding: 0;
     min-height: 100vh;
+    min-height: 100dvh;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
 }
 
 .app.customizeMode {
     min-height: 100vh;
+    min-height: 100dvh;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     padding: 0;
 }
 
 .app.shelfMode {
     min-height: 100vh;
+    min-height: 100dvh;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     padding: 0;
     background: transparent;
@@ -109,7 +119,9 @@ body {
 
 .app.noteMode {
     min-height: 100vh;
+    min-height: 100dvh;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     padding: 0;
     background: transparent;
@@ -117,7 +129,9 @@ body {
 
 .app.computerMode {
     min-height: 100vh;
+    min-height: 100dvh;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     padding: 0;
     background: transparent;
@@ -126,6 +140,7 @@ body {
 .app.nycRoomMode {
     padding: 0;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     background: #000;
 }
@@ -133,6 +148,7 @@ body {
 .app.nycDinnerMode {
     padding: 0;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     background: #000;
 }
@@ -1407,6 +1423,7 @@ body {
 .app.mapMode {
     padding: 0;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     background: black;
 }
@@ -1771,5 +1788,70 @@ body {
     .mapCtrlBtn {
         border-radius: 12px;
         font-size: 10px;
+    }
+}
+
+@media (max-height: 930px) and (min-width: 900px) {
+    .openingLogo {
+        left: -30px;
+        width: 780px;
+    }
+
+    .startImageBtn {
+        top: 46%;
+        left: 14%;
+        width: 300px;
+        max-width: 36%;
+    }
+
+    .customizeContent {
+        padding: 10px 14px 0;
+    }
+
+    .customizeCard {
+        min-height: calc(var(--scene-height) - 70px);
+    }
+
+    .choiceRow {
+        margin-bottom: 0;
+    }
+
+    .choiceBtn img {
+        width: 250px;
+    }
+
+    .roomIntroBubble img {
+        width: 360px;
+    }
+
+    .introOkBtn {
+        width: 300px !important;
+        bottom: 12px;
+    }
+
+    .nycWalkOkBtn,
+    .nycStartBtn,
+    .nycDinnerStartBtn,
+    .nycDinnerRunnerRestartBtn,
+    .nycPlayAgainBtn,
+    .nycWinBackBtn {
+        min-width: 160px;
+        font-size: 18px;
+        padding: 9px 18px;
+    }
+
+    .nycDinnerGameOverText {
+        font-size: 30px;
+    }
+
+    .nycDinnerRunnerHud,
+    .nycAvoidHud {
+        font-size: 17px;
+        padding: 7px 12px;
+    }
+
+    .backRoomBtn,
+    .homeBtn {
+        padding: 8px 12px;
     }
 }

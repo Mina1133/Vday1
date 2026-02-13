@@ -1382,8 +1382,8 @@ function render() {
             let maxY = Math.max(0, computerFrame.clientHeight - loveBugCrawler.offsetHeight);
             let x = maxX * 0.5;
             let y = maxY * 0.5;
-            let vx = (Math.random() < 0.5 ? -1 : 1) * (220 + (Math.random() * 120));
-            let vy = (Math.random() < 0.5 ? -1 : 1) * (220 + (Math.random() * 120));
+            let vx = (Math.random() < 0.5 ? -1 : 1) * (250 + (Math.random() * 140));
+            let vy = (Math.random() < 0.5 ? -1 : 1) * (250 + (Math.random() * 140));
             let lastTime = performance.now();
 
             function frame(now) {
@@ -1396,12 +1396,12 @@ function render() {
                 lastTime = now;
 
                 // Keep movement chaotic but bounded to the frame.
-                vx += (Math.random() - 0.5) * 760 * dt;
-                vy += (Math.random() - 0.5) * 760 * dt;
+                vx += (Math.random() - 0.5) * 900 * dt;
+                vy += (Math.random() - 0.5) * 900 * dt;
 
                 const speed = Math.hypot(vx, vy) || 1;
-                const minSpeed = 180;
-                const maxSpeed = 420;
+                const minSpeed = 210;
+                const maxSpeed = 500;
                 const clampedSpeed = Math.max(minSpeed, Math.min(maxSpeed, speed));
                 vx = (vx / speed) * clampedSpeed;
                 vy = (vy / speed) * clampedSpeed;
