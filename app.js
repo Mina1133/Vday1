@@ -525,7 +525,7 @@ function screenNycRoom(useHungryPrompt = false) {
       <div class="nycObstacleLayer" id="nycObstacleLayer" hidden></div>
       <div class="nycWinOverlay" id="nycWinOverlay" hidden>
         <img class="nycWinSignImage" src="assets/protect congrats.png" alt="这么好的男朋友！保护大米这么好！">
-        <button class="nycWinBackBtn" id="nycWinBackBtn">Go Back</button>
+        <button class="nycWinBackBtn" id="nycWinBackBtn">Next</button>
       </div>
       <div class="nycGameOverOverlay" id="nycGameOverOverlay" hidden>
         <div class="nycGameOverSign">不保护我</div>
