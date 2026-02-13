@@ -314,31 +314,20 @@ body {
 
 .nycDinnerRunnerPlayer {
     position: absolute;
-    left: 200px;
-    bottom: 104px;
-    width: 170px;
-    height: auto;
+    left: 120px;
+    bottom: 24px;
+    width: auto;
+    height: 196px;
     z-index: 14;
     user-select: none;
     pointer-events: none;
+    transform: translateY(0);
     filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
-}
-
-.nycDinnerRunnerGround {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 84px;
-    height: 8px;
-    z-index: 12;
-    border-radius: 999px;
-    background: linear-gradient(90deg, rgba(245, 216, 161, 0.9) 0%, rgba(255, 240, 196, 0.88) 50%, rgba(245, 216, 161, 0.9) 100%);
-    box-shadow: 0 0 16px rgba(255, 226, 170, 0.45);
 }
 
 .nycDinnerRunnerObstacle {
     position: absolute;
-    bottom: 92px;
+    bottom: 24px;
     width: 74px;
     height: 74px;
     z-index: 13;
@@ -429,8 +418,8 @@ body {
 }
 
 .nycDinnerChatRight {
-    left: 43%;
-    width: 780px;
+    left: 56%;
+    width: 600px;
     max-width: 92%;
     padding: 0;
     border: none;
