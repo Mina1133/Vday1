@@ -20,8 +20,7 @@ body {
     --design-height: 864;
     --scene-width: calc(var(--design-width) * 1px);
     --scene-height: calc(var(--design-height) * 1px);
-    --scene-scale: min(1, calc(100vw / var(--design-width)), calc(100dvh / var(--design-height)));
-    --scene-global-scale: 0.9;
+    --scene-scale: min(calc(100vw / var(--design-width)), calc(100dvh / var(--design-height)));
     --panel-width: 980px;
     --dialog-width: 520px;
 }
@@ -166,7 +165,7 @@ body {
     height: var(--scene-height);
     margin: 0 auto;
     overflow: hidden;
-    transform: scale(calc(var(--scene-scale) * var(--scene-global-scale)));
+    transform: scale(var(--scene-scale));
     transform-origin: center center;
 }
 
@@ -1182,10 +1181,10 @@ body {
 
 .startImageBtn {
     position: absolute;
-    top: 340px !important;
-    left: 150px !important;
+    top: 39%;
+    left: 10%;
     width: 400px;
-    max-width: 92%;
+    max-width: 42%;
     aspect-ratio: 3 / 2;
     border: none;
     background: transparent url("assets/start button.png") center center no-repeat;
@@ -1486,7 +1485,7 @@ body {
 }
 
 .introOkBtn {
-    position: fixed;
+    position: absolute;
     left: 50%;
     bottom: 24px;
     transform: translateX(-50%);
