@@ -1854,4 +1854,45 @@ body {
     .homeBtn {
         padding: 8px 12px;
     }
+
+    .computerFrame {
+        width: min(88%, 980px);
+        max-height: calc(100% - 72px);
+    }
+
+    .catchStartSign,
+    .escapeSignImage,
+    .nycSignImage {
+        width: min(84%, 780px);
+    }
+
+    .escapeSignFrame,
+    .nycSignFrame {
+        width: min(84%, 780px);
+    }
+
+    .huntStartBtn,
+    .nycGoBtn {
+        bottom: 14px;
+        min-width: 150px;
+        padding: 8px 16px;
+        font-size: 15px;
+    }
+
+    .loveBugPopup {
+        width: 320px;
+        padding: 14px;
+    }
+
+    .loveBugImage {
+        width: 180px;
+    }
+
+    .loveBugMessageImage {
+        width: 700px;
+    }
+
+    .loveBugCrawler {
+        width: 98px;
+    }
 }
