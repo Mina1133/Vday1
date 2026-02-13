@@ -117,7 +117,7 @@ function startNycObstacleSpawner(layer, onSpawned = null) {
     let running = true;
     let spawnTimer = null;
     const obstacleTimers = new Set();
-    const randomSignedVw = (minAbs, maxAbs) => {
+    const randomSignedUnit = (minAbs, maxAbs) => {
         const magnitude = minAbs + (Math.random() * (maxAbs - minAbs));
         const sign = Math.random() < 0.5 ? -1 : 1;
         return magnitude * sign;
@@ -132,12 +132,13 @@ function startNycObstacleSpawner(layer, onSpawned = null) {
         const obstacleTypes = ["paperObstacle", "ratObstacle", "rockObstacle"];
         const obstacleType = obstacleTypes[Math.floor(Math.random() * obstacleTypes.length)];
         obstacle.classList.add(obstacleType);
-        const startX = randomSignedVw(0, 7);
-        const fallX = randomSignedVw(6, 36);
+        const unitPx = layer.clientWidth / 100;
+        const startX = randomSignedUnit(0, 7) * unitPx;
+        const fallX = randomSignedUnit(6, 36) * unitPx;
         const midX = (startX * 0.4) + (fallX * 0.46);
-        obstacle.style.setProperty("--startX", `${startX.toFixed(1)}vw`);
-        obstacle.style.setProperty("--fallX", `${fallX.toFixed(1)}vw`);
-        obstacle.style.setProperty("--fallXMid", `${midX.toFixed(1)}vw`);
+        obstacle.style.setProperty("--startX", `${startX.toFixed(1)}px`);
+        obstacle.style.setProperty("--fallX", `${fallX.toFixed(1)}px`);
+        obstacle.style.setProperty("--fallXMid", `${midX.toFixed(1)}px`);
         const durationMs = 4900;
         obstacle.style.animationDuration = `${durationMs / 1000}s`;
 
@@ -442,7 +443,8 @@ function screenMap() {
         id="roomIntroOk"
         aria-label="OK"
         style="
-          width:min(28vw, 360px);
+          width:360px;
+          max-width:92%;
           aspect-ratio: 1536 / 1024;
           background:transparent url('assets/好的宝宝.png') center center no-repeat;
           background-size:contain;
@@ -486,14 +488,18 @@ function screenComputer() {
           <button class="huntStartBtn" id="huntStartBtn" aria-label="Start Love Bug Hunt">Start Hunt</button>
         </div>
         <div class="escapeSignOverlay" id="escapeSignOverlay" hidden>
-          <img class="escapeSignImage" src="assets/love bug escape.png" alt="Love bug escape sign">
-          <button class="escapeOkBtn" id="escapeOkBtn" aria-label="OK">OK</button>
-          <button class="escapeErrorHotspot" id="escapeErrorHotspot" aria-label="Trigger error near OK"></button>
+          <div class="escapeSignFrame">
+            <img class="escapeSignImage" src="assets/love bug escape.png" alt="Love bug escape sign">
+            <button class="escapeOkBtn" id="escapeOkBtn" aria-label="OK">OK</button>
+            <button class="escapeErrorHotspot" id="escapeErrorHotspot" aria-label="Trigger error near OK"></button>
+          </div>
         </div>
         <div class="nycSignOverlay" id="nycSignOverlay" hidden>
-          <img class="nycSignImage" src="assets/go to nyc love bug.png" alt="Love bug headed to New York City sign">
-          <button class="nycGoHotspot" id="nycGoHotspot" aria-label="Let's Go image button"></button>
-          <button class="nycErrorHotspot" id="nycErrorHotspot" aria-label="Trigger error near Let's Go"></button>
+          <div class="nycSignFrame">
+            <img class="nycSignImage" src="assets/go to nyc love bug.png" alt="Love bug headed to New York City sign">
+            <button class="nycGoHotspot" id="nycGoHotspot" aria-label="Let's Go image button"></button>
+            <button class="nycErrorHotspot" id="nycErrorHotspot" aria-label="Trigger error near Let's Go"></button>
+          </div>
         </div>
         <div class="loveBugPopup" id="loveBugPopup" hidden>
           <div id="loveBugStep1">

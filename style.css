@@ -6,9 +6,23 @@ html,
 body {
     margin: 0;
     padding: 0;
+    height: 100%;
     font-family: Arial, sans-serif;
     background: #fde7ee;
     /* pink vibe for non-map pages */
+}
+
+:root {
+    /* Standard sizing system:
+       Build all gameplay layout/sizes against this fixed design canvas.
+       Do not use vw/vh or responsive media overrides for game element sizing/positioning. */
+    --design-width: 1536;
+    --design-height: 864;
+    --scene-width: calc(var(--design-width) * 1px);
+    --scene-height: calc(var(--design-height) * 1px);
+    --scene-scale: min(1, calc(100vw / var(--design-width)), calc(100dvh / var(--design-height)));
+    --panel-width: 980px;
+    --dialog-width: 520px;
 }
 
 .app {
@@ -42,8 +56,8 @@ body {
 }
 
 .planeClipVideo {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     display: block;
     background: #000;
@@ -123,6 +137,38 @@ body {
     background: #000;
 }
 
+.app.planeClipMode,
+.app.openingMode,
+.app.customizeMode,
+.app.shelfMode,
+.app.noteMode,
+.app.computerMode,
+.app.nycRoomMode,
+.app.nycDinnerMode,
+.app.mapMode {
+    display: grid;
+    place-items: center;
+}
+
+.planeClipScreen,
+.openingScreen,
+.customizeScreen,
+.shelfScene,
+.noteScene,
+.computerScene,
+.nycRoomStage,
+.nycDinnerStage,
+.app.mapMode .roomStage {
+    position: relative;
+    inset: auto;
+    width: var(--scene-width);
+    height: var(--scene-height);
+    margin: 0 auto;
+    overflow: hidden;
+    transform: scale(var(--scene-scale));
+    transform-origin: center center;
+}
+
 .app.nycDinnerMode .header {
     position: fixed;
     top: 12px;
@@ -142,10 +188,8 @@ body {
 }
 
 .nycRoomStage {
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background-image: url("assets/nyc view.png");
     background-size: cover;
     background-position: center;
@@ -153,10 +197,8 @@ body {
 }
 
 .nycDinnerStage {
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background-image: url("assets/Restaurant img.png");
     background-size: 92% auto;
     background-position: 52% 42%;
@@ -183,7 +225,8 @@ body {
 }
 
 .nycDinnerGameSign {
-    width: min(62vw, 820px);
+    width: 820px;
+    max-width: 92%;
     height: auto;
     display: block;
     filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.35));
@@ -196,7 +239,7 @@ body {
     border: 2px solid rgba(255, 211, 92, 0.98);
     background: linear-gradient(180deg, rgba(255, 247, 192, 0.98) 0%, rgba(255, 216, 92, 0.96) 100%);
     color: #5b4300;
-    font-size: clamp(18px, 2vw, 26px);
+    font-size: 22px;
     font-weight: 900;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -219,19 +262,14 @@ body {
     cursor: default;
 }
 
-@media (max-width: 900px) {
-    .nycDinnerStage {
-        background-position: 58% 46%;
-    }
-}
-
 .nycDinnerChat {
     position: absolute;
     left: 22%;
     top: 52%;
     transform: translate(-50%, -50%);
     z-index: 9;
-    width: min(34vw, 520px);
+    width: 520px;
+    max-width: 92%;
     padding: 14px 18px;
     border-radius: 26px;
     border: 2px solid rgba(22, 22, 30, 0.82);
@@ -242,7 +280,8 @@ body {
 .nycDinnerChatLeft {
     left: 30%;
     top: 46%;
-    width: min(48vw, 700px);
+    width: 700px;
+    max-width: 92%;
     padding: 0;
     border: none;
     background: transparent;
@@ -251,7 +290,8 @@ body {
 
 .nycDinnerChatRight {
     left: 43%;
-    width: min(52vw, 780px);
+    width: 780px;
+    max-width: 92%;
     padding: 0;
     border: none;
     background: transparent;
@@ -288,7 +328,7 @@ body {
 .nycDinnerChatText {
     color: #121521;
     font-weight: 900;
-    font-size: clamp(16px, 1.9vw, 28px);
+    font-size: 24px;
     line-height: 1.28;
     text-align: center;
 }
@@ -309,7 +349,7 @@ body {
     border: 2px solid rgba(255, 211, 92, 0.98);
     background: linear-gradient(180deg, rgba(255, 247, 192, 0.98) 0%, rgba(255, 216, 92, 0.96) 100%);
     color: #5b4300;
-    font-size: clamp(16px, 1.8vw, 24px);
+    font-size: 22px;
     font-weight: 900;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -370,7 +410,7 @@ body {
     background: linear-gradient(180deg, rgba(59, 38, 20, 0.88) 0%, rgba(28, 17, 9, 0.9) 100%);
     color: #ffe6a4;
     font-weight: 900;
-    font-size: clamp(14px, 2vw, 22px);
+    font-size: 20px;
     letter-spacing: 0.03em;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
     white-space: nowrap;
@@ -394,7 +434,8 @@ body {
 }
 
 .nycWinSign {
-    min-width: min(88vw, 760px);
+    width: 760px;
+    max-width: 92%;
     padding: 20px 30px;
     border-radius: 20px;
     border: 2px solid rgba(151, 255, 162, 0.95);
@@ -402,13 +443,14 @@ body {
     color: #d8ffd4;
     text-align: center;
     font-weight: 900;
-    font-size: clamp(24px, 3.7vw, 46px);
+    font-size: 40px;
     letter-spacing: 0.02em;
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 28px rgba(115, 255, 133, 0.35);
 }
 
 .nycWinSignImage {
-    width: min(80vw, 900px);
+    width: 900px;
+    max-width: 92%;
     height: auto;
     display: block;
     filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.35));
@@ -456,7 +498,8 @@ body {
 }
 
 .nycGameOverSign {
-    min-width: min(84vw, 520px);
+    width: 520px;
+    max-width: 90%;
     padding: 18px 30px;
     border-radius: 18px;
     border: 2px solid rgba(255, 205, 118, 0.92);
@@ -466,7 +509,7 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-weight: 900;
-    font-size: clamp(26px, 4vw, 46px);
+    font-size: 42px;
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45), 0 0 26px rgba(255, 196, 84, 0.35);
 }
 
@@ -498,10 +541,10 @@ body {
 .roadObstacle {
     position: absolute;
     left: 50%;
-    top: 50vh;
+    top: 50%;
     bottom: auto;
-    width: clamp(34px, 4.2vw, 70px);
-    height: clamp(38px, 4.8vw, 78px);
+    width: 70px;
+    height: 78px;
     border-radius: 8px;
     transform-origin: center;
     animation-name: roadObstacleRun;
@@ -534,18 +577,18 @@ body {
 
 @keyframes roadObstacleRun {
     0% {
-        top: 50vh;
-        transform: translateX(calc(-50% + var(--startX, 0vw))) scale(0.78);
+        top: 50%;
+        transform: translateX(calc(-50% + var(--startX, 0px))) scale(0.78);
         opacity: 0.95;
     }
 
     60% {
-        transform: translateX(calc(-50% + var(--fallXMid, 8vw))) scale(1.03);
+        transform: translateX(calc(-50% + var(--fallXMid, 120px))) scale(1.03);
     }
 
     100% {
-        top: 112vh;
-        transform: translateX(calc(-50% + var(--fallX, 24vw))) scale(1.22);
+        top: 112%;
+        transform: translateX(calc(-50% + var(--fallX, 360px))) scale(1.22);
         opacity: 0.95;
     }
 }
@@ -555,7 +598,7 @@ body {
     left: 50%;
     top: 69%;
     transform: translate(-50%, -50%);
-    width: min(24vw, 300px);
+    width: 300px;
     height: auto;
     z-index: 6;
     pointer-events: none;
@@ -564,7 +607,7 @@ body {
 }
 
 .nycRoomStage.gameStarted .nycCouple {
-    width: min(10vw, 120px);
+    width: 120px;
 }
 
 .nycCouple.hitFlip {
@@ -590,7 +633,8 @@ body {
 }
 
 .nycWalkBubble img {
-    width: min(40vw, 620px);
+    width: 620px;
+    max-width: 92%;
     height: auto;
     display: block;
 }
@@ -598,10 +642,10 @@ body {
 .nycWalkOkBtn {
     position: absolute;
     left: 50%;
-    bottom: calc(1vh - 80px);
+    bottom: -72px;
     transform: translateX(-50%);
     z-index: 9;
-    width: min(24vw, 280px);
+    width: 280px;
     aspect-ratio: 1536 / 1024;
     border: none;
     cursor: pointer;
@@ -618,7 +662,8 @@ body {
 }
 
 .nycStartSign img {
-    width: min(42vw, 640px);
+    width: 640px;
+    max-width: 92%;
     height: auto;
     display: block;
 }
@@ -626,7 +671,7 @@ body {
 .nycStartBtn {
     position: absolute;
     left: 50%;
-    bottom: 2vh;
+    bottom: 24px;
     transform: translateX(-50%);
     z-index: 9;
     min-width: 210px;
@@ -654,16 +699,14 @@ body {
 }
 
 .blankWhitePage {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background: transparent;
 }
 
 .shelfScene {
-    position: fixed;
-    inset: 0;
     background: #f6d6ea url("assets/bookshelf.png") center center no-repeat;
-    background-size: cover;
+    background-size: 100% 100%;
 }
 
 .shelfHeartHotspot {
@@ -678,15 +721,11 @@ body {
 }
 
 .noteScene {
-    position: fixed;
-    inset: 0;
     background: #f6d6ea url("assets/blank note.png") center center no-repeat;
     background-size: contain;
 }
 
 .computerScene {
-    position: fixed;
-    inset: 0;
     display: grid;
     place-items: center;
     background: #d7d4ff;
@@ -694,7 +733,8 @@ body {
 
 .computerFrame {
     position: relative;
-    width: min(100vw, calc(100vh * (2048 / 1536)));
+    width: min(100%, calc(var(--scene-height) * (2048 / 1536)));
+    max-height: 100%;
     aspect-ratio: 2048 / 1536;
     background: url("assets/windows screen.png") center center no-repeat;
     background-size: 100% 100%;
@@ -738,7 +778,6 @@ body {
 }
 
 .huntStartBtn,
-.escapeOkBtn,
 .nycGoBtn {
     position: absolute;
     left: 50%;
@@ -760,25 +799,35 @@ body {
 }
 
 .huntStartBtn:hover,
-.escapeOkBtn:hover,
 .nycGoBtn:hover {
     transform: translateX(-50%) translateY(-2px);
     box-shadow: 0 12px 28px rgba(98, 29, 98, 0.4);
 }
 
 .huntStartBtn:active,
-.escapeOkBtn:active,
 .nycGoBtn:active {
     transform: translateX(-50%) translateY(0);
 }
 
+.escapeSignFrame,
+.nycSignFrame {
+    position: relative;
+    width: min(90%, 980px);
+}
+
+.escapeSignImage,
+.nycSignImage {
+    width: 100%;
+}
+
 /* Use the built-in "OK!" drawn on the escape sign image; this is just a click hotspot. */
 .escapeOkBtn {
-    left: 39.5%;
-    top: 63%;
+    position: absolute;
+    left: 38.5%;
+    top: 69%;
     bottom: auto;
-    width: min(25vw, 270px);
-    height: min(8.5vw, 92px);
+    width: 40%;
+    height: 22%;
     min-width: 0;
     padding: 0;
     border: none;
@@ -800,10 +849,10 @@ body {
 
 .escapeErrorHotspot {
     position: absolute;
-    left: 63%;
-    top: 63%;
-    width: min(8vw, 88px);
-    height: min(8vw, 88px);
+    left: 60.5%;
+    top: 69%;
+    width: 13.5%;
+    aspect-ratio: 1 / 1;
     border: none;
     border-radius: 999px;
     background: transparent;
@@ -815,10 +864,10 @@ body {
 /* Click hotspot over the built-in "LET'S GO!" on NYC sign image. */
 .nycGoHotspot {
     position: absolute;
-    left: 38%;
-    top: 65.5%;
-    width: min(24vw, 260px);
-    height: min(8.4vw, 92px);
+    left: 36.8%;
+    top: 69.4%;
+    width: 40%;
+    height: 20.5%;
     border: none;
     border-radius: 999px;
     background: transparent;
@@ -830,10 +879,10 @@ body {
 
 .nycErrorHotspot {
     position: absolute;
-    left: 60.5%;
-    top: 65.5%;
-    width: min(8vw, 88px);
-    height: min(8vw, 88px);
+    left: 58.7%;
+    top: 69.4%;
+    width: 13.5%;
+    aspect-ratio: 1 / 1;
     border: none;
     border-radius: 999px;
     background: transparent;
@@ -849,7 +898,8 @@ body {
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 20;
-    min-width: min(62vw, 360px);
+    width: 360px;
+    max-width: calc(100% - 24px);
     border-radius: 16px;
     border: 1px solid rgba(0, 0, 0, 0.2);
     background: rgba(255, 224, 244, 0.92);
@@ -863,7 +913,7 @@ body {
 }
 
 .loveBugImage {
-    width: min(46vw, 220px);
+    width: 220px;
     max-width: 100%;
     height: auto;
     display: block;
@@ -897,7 +947,7 @@ body {
 }
 
 .loveBugMessageImage {
-    width: min(78vw, 900px);
+    width: 900px;
     max-width: 100%;
     height: auto;
     display: block;
@@ -918,7 +968,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: min(14vw, 120px);
+    width: 120px;
     height: auto;
     z-index: 16;
     pointer-events: none;
@@ -942,8 +992,6 @@ body {
 }
 
 .customizeScreen {
-    position: fixed;
-    inset: 0;
     overflow: hidden;
 }
 
@@ -971,8 +1019,6 @@ body {
 }
 
 .openingScreen {
-    position: fixed;
-    inset: 0;
     overflow: hidden;
     background: #000;
 }
@@ -996,7 +1042,8 @@ body {
     top: 5px;
     left: -160px;
     z-index: 2;
-    width: min(60vw, 980px);
+    width: 980px;
+    max-width: 92%;
     height: auto;
     pointer-events: none;
 }
@@ -1004,23 +1051,22 @@ body {
 .openingContent {
     position: relative;
     z-index: 3;
-    min-height: 100vh;
-    padding: 18px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
+    min-height: 100%;
+    padding: 0;
 }
 
 .startImageBtn {
-    width: min(48vw, 400px);
+    position: absolute;
+    top: 340px !important;
+    left: 150px !important;
+    width: 400px;
+    max-width: 92%;
     aspect-ratio: 3 / 2;
     border: none;
     background: transparent url("assets/start button.png") center center no-repeat;
     background-size: contain;
     cursor: pointer;
-    margin-top: 5vh;
-    margin-left: 5px;
+    margin: 0;
     opacity: 0.72;
     transition: transform 0.16s ease;
 }
@@ -1031,19 +1077,6 @@ body {
 
 .startImageBtn:active {
     transform: scale(0.98);
-}
-
-@media (max-width: 700px) {
-    .openingLogo {
-        left: 2px;
-        width: min(74vw, 430px);
-    }
-
-    .startImageBtn {
-        width: min(62vw, 300px);
-        margin-top: 16vh;
-        margin-left: -16px;
-    }
 }
 
 /* header */
@@ -1105,13 +1138,6 @@ body {
 }
 
 
-/* responsive */
-@media (max-width: 900px) {
-    .row {
-        grid-template-columns: 1fr;
-    }
-}
-
 /* =========================
    CUSTOMIZE SCREEN
    ========================= */
@@ -1143,8 +1169,8 @@ body {
 .choiceBtn img {
     display: block;
     margin: 0 auto;
-    width: min(33vw, 320px);
-    /* stops giant images */
+    width: 320px;
+    max-width: 100%;
     height: auto;
 }
 
@@ -1157,9 +1183,10 @@ body {
 }
 
 .customizeCard {
-    width: min(980px, calc(100vw - 36px));
+    width: 980px;
+    max-width: 100%;
     margin: 0 auto;
-    min-height: calc(100vh - 120px);
+    min-height: calc(var(--scene-height) - 120px);
     display: flex;
     flex-direction: column;
     padding: 0;
@@ -1170,7 +1197,7 @@ body {
 }
 
 .customizeTitleImage {
-    width: min(44vw, 560px);
+    width: 560px;
     max-width: 100%;
     height: auto;
     margin: 0;
@@ -1197,26 +1224,6 @@ body {
     }
 }
 
-@media (max-width: 900px) {
-    .customizeCard {
-        min-height: auto;
-    }
-
-    .choiceRow {
-        margin-top: 100vh;
-        margin-bottom: 100px;
-    }
-
-    .choiceBtn img {
-        width: min(48vw, 260px);
-    }
-
-    .customizeTitleImage {
-        width: min(58vw, 380px);
-        top: 10px;
-    }
-}
-
 /* =========================
    MODAL
    ========================= */
@@ -1231,7 +1238,8 @@ body {
 }
 
 .modal {
-    width: min(520px, calc(100vw - 30px));
+    width: var(--dialog-width);
+    max-width: calc(100% - 30px);
     background: white;
     border-radius: 18px;
     padding: 16px;
@@ -1249,7 +1257,8 @@ body {
    ========================= */
 
 .gameArea {
-    width: min(520px, calc(100vw - 40px));
+    width: var(--dialog-width);
+    max-width: calc(100% - 40px);
     height: 380px;
     border: 2px solid rgba(0, 0, 0, 0.2);
     border-radius: 18px;
@@ -1289,8 +1298,8 @@ body {
 
 .roomStage {
     position: relative;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background: url("assets/room img valentine.png") center center no-repeat;
     background-size: 100% 100%;
     overflow: hidden;
@@ -1316,10 +1325,8 @@ body {
 
 .app.mapMode .roomStage {
     display: block;
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
+    width: var(--scene-width);
+    height: var(--scene-height);
 
     background-image: url("assets/room img valentine.png");
     background-size: 100% 100%;
@@ -1347,7 +1354,8 @@ body {
 }
 
 .roomIntroBubble img {
-    width: min(36vw, 430px);
+    width: 430px;
+    max-width: 90%;
     height: auto;
     display: block;
 }
@@ -1413,7 +1421,8 @@ body {
     top: 90px;
     left: 50%;
     transform: translateX(-50%);
-    width: min(980px, calc(100vw - 40px));
+    width: var(--panel-width);
+    max-width: calc(100% - 40px);
     z-index: 10;
 }
 
@@ -1424,7 +1433,7 @@ body {
     left: 0;
     bottom: auto;
 
-    height: 500px;
+    height: 660px;
     width: auto;
 
     pointer-events: none;
