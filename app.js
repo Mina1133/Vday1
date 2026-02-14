@@ -1415,15 +1415,16 @@ function render() {
                 {
                     side: "right",
                     img: "assets/third speech bubble.png",
-                    fallbackImg: "assets/pixel-speech-bubble (1).png"
+                    fallbackImg: "assets/pixel-speech-bubble (2).png"
                 },
-                { side: "left", img: "assets/pixel-speech-bubble (2).png" },
-                { side: "right", img: "assets/pixel-speech-bubble (3).png" },
-                { side: "left", img: "assets/pixel-speech-bubble (4).png" },
-                { side: "right", img: "assets/pixel-speech-bubble (5).png" },
-                { side: "left", img: "assets/pixel-speech-bubble (6).png" },
-                { side: "right", img: "assets/pixel-speech-bubble (7).png" },
-                { side: "left", img: "assets/pixel-speech-bubble (8).png" }
+                { side: "left", img: "assets/pixel-speech-bubble (3).png" },
+                { side: "right", img: "assets/pixel-speech-bubble (4).png" },
+                { side: "left", img: "assets/pixel-speech-bubble (5).png" },
+                { side: "right", img: "assets/pixel-speech-bubble (6).png" },
+                { side: "left", img: "assets/pixel-speech-bubble (7).png" },
+                { side: "right", img: "assets/pixel-speech-bubble (8).png" },
+                 { side: "right", img: "assets/pixel-speech-bubble (9).png" },
+                { side: "left", img: "assets/pixel-speech-bubble (10).png" }
             ];
             let dinnerLineIndex = 0;
 
