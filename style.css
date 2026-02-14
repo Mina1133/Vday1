@@ -308,12 +308,24 @@ body {
     pointer-events: none;
 }
 
+.nycDinnerRunnerThrower {
+    position: absolute;
+    right: 24px;
+    bottom: 18px;
+    width: auto;
+    height: 220px;
+    z-index: 12;
+    user-select: none;
+    pointer-events: none;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
+}
+
 .nycDinnerRunnerPlayer {
     position: absolute;
     left: 120px;
     bottom: 24px;
     width: auto;
-    height: 196px;
+    height: 248px;
     z-index: 14;
     user-select: none;
     pointer-events: none;
@@ -324,8 +336,8 @@ body {
 .nycDinnerRunnerObstacle {
     position: absolute;
     bottom: 24px;
-    width: 74px;
-    height: 74px;
+    width: 96px;
+    height: 96px;
     z-index: 13;
     background-size: contain;
     background-position: center;
@@ -442,9 +454,9 @@ body {
 }
 
 .nycDinnerChatLeft {
-    left: 30%;
-    top: 42%;
-    width: 700px;
+    left: 18%;
+    top: 38%;
+    width: 330px;
     max-width: 92%;
     padding: 0;
     border: none;
@@ -455,7 +467,7 @@ body {
 .nycDinnerChatRight {
     left: 48%;
     top: 46%;
-    width: 500px;
+    width: 390px;
     max-width: 92%;
     padding: 0;
     border: none;
@@ -835,6 +847,25 @@ body {
     z-index: 8;
 }
 
+.nycPostDinnerSummary {
+    position: absolute;
+    left: 50%;
+    top: 16%;
+    transform: translateX(-50%);
+    z-index: 9;
+    width: min(980px, 86%);
+    padding: 14px 18px;
+    border-radius: 16px;
+    border: 2px solid rgba(255, 241, 198, 0.92);
+    background: rgba(35, 25, 12, 0.62);
+    color: #fff5d8;
+    text-align: center;
+    font-weight: 800;
+    font-size: clamp(16px, 1.4vw, 24px);
+    line-height: 1.35;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
 .nycWalkBubble img {
     width: 620px;
     max-width: 92%;
@@ -845,7 +876,7 @@ body {
 .nycWalkOkBtn {
     position: absolute;
     left: 50%;
-    bottom: -72px;
+    bottom: -36px;
     transform: translateX(-50%);
     z-index: 9;
     width: 280px;
@@ -926,6 +957,10 @@ body {
 .noteScene {
     background: #f6d6ea url("assets/blank note.png") center center no-repeat;
     background-size: contain;
+}
+
+.nycWalkOkBtn.postDinnerFinal {
+    bottom: -72px;
 }
 
 .noteMessage {
@@ -1039,6 +1074,10 @@ body {
     width: 100%;
 }
 
+.nycSignFrame {
+    transform: translateY(42px);
+}
+
 /* Use the built-in "OK!" drawn on the escape sign image; this is just a click hotspot. */
 .escapeOkBtn {
     position: absolute;
@@ -1084,7 +1123,7 @@ body {
 .nycGoHotspot {
     position: absolute;
     left: 36.8%;
-    top: 73.4%;
+    top: 69.4%;
     width: 40%;
     height: 20.5%;
     border: none;
