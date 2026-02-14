@@ -68,7 +68,7 @@ function saveMintTopScore(score) {
 
 function defaultState() {
     return {
-        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | orangeScreen | violetScreen | redScreen | blackScreen | brownScreen | greyScreen | silverScreen | purpleScreen | magentaScreen | goldenScreen | mintRoom
+        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | orangeScreen | violetScreen | kissRedScreen | redScreen | blackScreen | brownScreen | greyScreen | silverScreen | purpleScreen | magentaScreen | goldenScreen | mintRoom
         characterMode: null, // null | alone | withme
         mapIntroDone: false,
         mapPostComputerIntroPending: false,
@@ -939,7 +939,19 @@ function screenVioletScreen() {
     return `
     ${headerTitle()}
     <div class="violetScreenStage" id="violetScreenStage" aria-label="Violet screen">
+      <video class="violetKissVideo" autoplay muted loop playsinline>
+        <source src="assets/kiss vid.mp4" type="video/mp4">
+      </video>
       <button class="violetToPurpleBtn" id="violetToPurpleBtn" aria-label="Next">Next</button>
+    </div>
+  `;
+}
+
+function screenKissRedScreen() {
+    return `
+    ${headerTitle()}
+    <div class="kissRedScreenStage" id="kissRedScreenStage" aria-label="Red kiss cam screen">
+      <button class="kissRedToPurpleBtn" id="kissRedToPurpleBtn" aria-label="Next">Next</button>
     </div>
   `;
 }
@@ -1835,6 +1847,7 @@ function render() {
     app.classList.toggle("yellowScreenMode", state.screen === "yellowScreen");
     app.classList.toggle("orangeScreenMode", state.screen === "orangeScreen");
     app.classList.toggle("violetScreenMode", state.screen === "violetScreen");
+    app.classList.toggle("kissRedScreenMode", state.screen === "kissRedScreen");
     app.classList.toggle("redScreenMode", state.screen === "redScreen");
     app.classList.toggle("blackScreenMode", state.screen === "blackScreen");
     app.classList.toggle("brownScreenMode", state.screen === "brownScreen");
@@ -2632,7 +2645,15 @@ function render() {
         app.innerHTML = screenVioletScreen();
         mountHomeButton();
         const violetToPurpleBtn = document.getElementById("violetToPurpleBtn");
-        if (violetToPurpleBtn != null) violetToPurpleBtn.onclick = () => go("purpleScreen");
+        if (violetToPurpleBtn != null) violetToPurpleBtn.onclick = () => go("kissRedScreen");
+        return;
+    }
+
+    if (state.screen === "kissRedScreen") {
+        app.innerHTML = screenKissRedScreen();
+        mountHomeButton();
+        const kissRedToPurpleBtn = document.getElementById("kissRedToPurpleBtn");
+        if (kissRedToPurpleBtn != null) kissRedToPurpleBtn.onclick = () => go("purpleScreen");
         return;
     }
 
