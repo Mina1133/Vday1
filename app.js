@@ -28,7 +28,7 @@ function saveDinnerTopScore(score) {
 
 function defaultState() {
     return {
-        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen
+        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | redScreen
         characterMode: null, // null | alone | withme
         mapIntroDone: false,
         mapPostComputerIntroPending: false,
@@ -868,7 +868,24 @@ function screenBahamasHotel() {
 function screenYellowScreen() {
     return `
     ${headerTitle()}
-    <div class="yellowScreenStage" id="yellowScreenStage" aria-label="Yellow ending screen"></div>
+    <div class="yellowScreenStage" id="yellowScreenStage" aria-label="Yellow ending screen">
+      <img class="yellowFastPassObject" src="assets/floating.png" alt="" aria-hidden="true">
+      <img class="yellowGameLogo" src="assets/picture sign.png" alt="Take a Picture Game">
+      <button class="yellowStartGameBtn" id="yellowStartGameBtn" aria-label="Take Picture">Take Picture</button>
+      <button class="yellowStopObjectBtn" id="yellowStopObjectBtn" aria-label="Stop moving object"></button>
+      <div class="yellowGoodSign" id="yellowGoodSign" hidden>Good</div>
+      <button class="yellowNextBtn" id="yellowNextBtn" aria-label="Next" hidden>Next</button>
+      <button class="yellowPlayAgainBtn" id="yellowPlayAgainBtn" aria-label="Play Again" hidden>Play Again</button>
+    </div>
+  `;
+}
+
+function screenRedScreen() {
+    return `
+    ${headerTitle()}
+    <div class="redScreenStage" id="redScreenStage" aria-label="Red screen">
+      <div class="redScreenLabel">Red Screen</div>
+    </div>
   `;
 }
 
@@ -1427,6 +1444,7 @@ function render() {
     app.classList.toggle("memoriesBlueMode", state.screen === "memoriesBlue");
     app.classList.toggle("bahamasHotelMode", state.screen === "bahamasHotel");
     app.classList.toggle("yellowScreenMode", state.screen === "yellowScreen");
+    app.classList.toggle("redScreenMode", state.screen === "redScreen");
 
     if (state.screen === "home") {
         app.innerHTML = screenHome();
@@ -2045,6 +2063,133 @@ function render() {
 
     if (state.screen === "yellowScreen") {
         app.innerHTML = screenYellowScreen();
+        mountHomeButton();
+        const yellowStartGameBtn = document.getElementById("yellowStartGameBtn");
+        const yellowStopObjectBtn = document.getElementById("yellowStopObjectBtn");
+        const yellowFastPassObject = document.querySelector(".yellowFastPassObject");
+        const yellowGameLogo = document.querySelector(".yellowGameLogo");
+        const yellowScreenStage = document.getElementById("yellowScreenStage");
+        const yellowGoodSign = document.getElementById("yellowGoodSign");
+        const yellowNextBtn = document.getElementById("yellowNextBtn");
+        const yellowPlayAgainBtn = document.getElementById("yellowPlayAgainBtn");
+        const boxWidth = 64;
+        const boxHeight = 64;
+        const boxCenterXRatio = 0.56;
+        const boxTopRatio = 0.52;
+        const checkObjectInBox = () => {
+            if (yellowScreenStage == null || yellowFastPassObject == null) return false;
+            const stageRect = yellowScreenStage.getBoundingClientRect();
+            const objectRect = yellowFastPassObject.getBoundingClientRect();
+            const objectLeft = objectRect.left - stageRect.left;
+            const objectTop = objectRect.top - stageRect.top;
+            const objectRight = objectLeft + objectRect.width;
+            const objectBottom = objectTop + objectRect.height;
+
+            const boxCenterX = stageRect.width * boxCenterXRatio;
+            const boxCenterY = (stageRect.height * boxTopRatio) + (boxHeight * 0.5);
+            const boxLeft = boxCenterX - (boxWidth * 0.5);
+            const boxTop = boxCenterY - (boxHeight * 0.5);
+            const boxRight = boxLeft + boxWidth;
+            const boxBottom = boxTop + boxHeight;
+            const hitInset = 22;
+            const hitLeft = boxLeft + hitInset;
+            const hitTop = boxTop + hitInset;
+            const hitRight = boxRight - hitInset;
+            const hitBottom = boxBottom - hitInset;
+
+            return objectRight >= hitLeft && objectLeft <= hitRight && objectBottom >= hitTop && objectTop <= hitBottom;
+        };
+        if (yellowFastPassObject != null) {
+            const respawnFastObject = () => {
+                if (yellowFastPassObject.dataset.paused === "1") return;
+                yellowFastPassObject.style.left = "-14%";
+                if (yellowScreenStage != null && yellowScreenStage.classList.contains("photoTaken")) {
+                    const stageHeight = yellowScreenStage.clientHeight;
+                    const objectHeight = yellowFastPassObject.offsetHeight || 18;
+                    const boxCenterY = (stageHeight * boxTopRatio) + (boxHeight * 0.5);
+                    const jitter = Math.max(2, stageHeight * 0.015);
+                    const topPx = Math.max(
+                        0,
+                        Math.min(
+                            stageHeight - objectHeight,
+                            (boxCenterY - (objectHeight * 0.5)) + ((Math.random() * 2 - 1) * jitter)
+                        )
+                    );
+                    yellowFastPassObject.style.top = `${topPx}px`;
+                } else {
+                    yellowFastPassObject.style.top = `${58 + (Math.random() * 12)}%`;
+                }
+            };
+            yellowFastPassObject.addEventListener("animationiteration", respawnFastObject);
+            respawnFastObject();
+        }
+        if (yellowNextBtn != null) {
+            yellowNextBtn.onclick = () => go("redScreen");
+        }
+        if (yellowPlayAgainBtn != null) {
+            yellowPlayAgainBtn.onclick = () => go("yellowScreen");
+        }
+        if (yellowStopObjectBtn != null) {
+            yellowStopObjectBtn.onclick = () => {
+                if (yellowFastPassObject != null && yellowScreenStage != null) {
+                    const isPaused = yellowFastPassObject.dataset.paused === "1";
+                    if (!isPaused) {
+                        const stageRect = yellowScreenStage.getBoundingClientRect();
+                        const objectRect = yellowFastPassObject.getBoundingClientRect();
+                        const maxLeft = Math.max(0, stageRect.width - objectRect.width);
+                        const maxTop = Math.max(0, stageRect.height - objectRect.height);
+                        const frozenLeft = Math.max(0, Math.min(maxLeft, objectRect.left - stageRect.left));
+                        const frozenTop = Math.max(0, Math.min(maxTop, objectRect.top - stageRect.top));
+                        yellowFastPassObject.style.left = `${frozenLeft}px`;
+                        yellowFastPassObject.style.top = `${frozenTop}px`;
+                        yellowFastPassObject.style.transform = "none";
+                        yellowFastPassObject.style.animation = "none";
+                        yellowFastPassObject.dataset.paused = "1";
+                        if (yellowScreenStage.classList.contains("photoTaken") && yellowGoodSign != null && yellowNextBtn != null && yellowPlayAgainBtn != null) {
+                            const inBox = checkObjectInBox();
+                            yellowGoodSign.hidden = !inBox;
+                            yellowNextBtn.hidden = !inBox;
+                            yellowPlayAgainBtn.hidden = !inBox;
+                            if (inBox) {
+                                yellowStopObjectBtn.remove();
+                            }
+                        }
+                    } else {
+                        if (yellowScreenStage != null && yellowScreenStage.classList.contains("photoTaken")) {
+                            const stageHeight = yellowScreenStage.clientHeight;
+                            const objectHeight = yellowFastPassObject.offsetHeight || 18;
+                            const boxCenterY = (stageHeight * boxTopRatio) + (boxHeight * 0.5);
+                            yellowFastPassObject.style.left = "-14%";
+                            yellowFastPassObject.style.top = `${Math.max(0, Math.min(stageHeight - objectHeight, boxCenterY - (objectHeight * 0.5)))}px`;
+                        } else {
+                            yellowFastPassObject.style.left = "-14%";
+                            yellowFastPassObject.style.top = `${58 + (Math.random() * 12)}%`;
+                        }
+                        yellowFastPassObject.style.animation = "yellowFastPass 550ms linear infinite";
+                        yellowFastPassObject.dataset.paused = "0";
+                        if (yellowGoodSign != null) yellowGoodSign.hidden = true;
+                        if (yellowNextBtn != null) yellowNextBtn.hidden = true;
+                        if (yellowPlayAgainBtn != null) yellowPlayAgainBtn.hidden = true;
+                    }
+                }
+            };
+        }
+        if (yellowStartGameBtn != null) {
+            yellowStartGameBtn.onclick = () => {
+                if (yellowGameLogo != null && yellowGameLogo.parentNode != null) {
+                    yellowGameLogo.parentNode.removeChild(yellowGameLogo);
+                }
+                if (yellowScreenStage != null) {
+                    yellowScreenStage.classList.add("photoTaken");
+                }
+                yellowStartGameBtn.remove();
+            };
+        }
+        return;
+    }
+
+    if (state.screen === "redScreen") {
+        app.innerHTML = screenRedScreen();
         mountHomeButton();
         return;
     }
