@@ -2,6 +2,7 @@
 
 const STORAGE_KEY = "valentine_game_save_v11_story_map";
 const DINNER_TOP_SCORE_KEY = "valentine_game_nyc_dinner_top_score_v1";
+const MINT_TOP_SCORE_KEY = "valentine_game_mint_top_score_v1";
 
 let mapControlTeardown = null;
 let bahamasControlTeardown = null;
@@ -53,9 +54,21 @@ function saveDinnerTopScore(score) {
     localStorage.setItem(DINNER_TOP_SCORE_KEY, String(safe));
 }
 
+function loadMintTopScore() {
+    const raw = localStorage.getItem(MINT_TOP_SCORE_KEY);
+    const parsed = Number.parseInt(raw ?? "0", 10);
+    if (!Number.isFinite(parsed) || parsed < 0) return 0;
+    return parsed;
+}
+
+function saveMintTopScore(score) {
+    const safe = Math.max(0, Math.floor(Number(score) || 0));
+    localStorage.setItem(MINT_TOP_SCORE_KEY, String(safe));
+}
+
 function defaultState() {
     return {
-        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | redScreen | blackScreen | brownScreen | greyScreen | silverScreen | purpleScreen | magentaScreen | goldenScreen | mintRoom
+        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | orangeScreen | violetScreen | redScreen | blackScreen | brownScreen | greyScreen | silverScreen | purpleScreen | magentaScreen | goldenScreen | mintRoom
         characterMode: null, // null | alone | withme
         mapIntroDone: false,
         mapPostComputerIntroPending: false,
@@ -912,6 +925,25 @@ function screenYellowScreen() {
   `;
 }
 
+function screenOrangeScreen() {
+    return `
+    ${headerTitle()}
+    <div class="orangeScreenStage" id="orangeScreenStage" aria-label="Orange screen">
+      <img class="orangeKissCamSign" src="assets/kiss cam.png" alt="Kiss cam message">
+      <button class="orangeToPurpleBtn" id="orangeToPurpleBtn" aria-label="what thing?">what thing?</button>
+    </div>
+  `;
+}
+
+function screenVioletScreen() {
+    return `
+    ${headerTitle()}
+    <div class="violetScreenStage" id="violetScreenStage" aria-label="Violet screen">
+      <button class="violetToPurpleBtn" id="violetToPurpleBtn" aria-label="Next">Next</button>
+    </div>
+  `;
+}
+
 function screenRedScreen() {
     const redCharacterSrc = state.characterMode === "alone"
         ? "assets/ccalone.png"
@@ -1040,6 +1072,12 @@ function screenMintRoom() {
     ${headerTitle()}
     <div class="mintRoomStage" id="mintRoomStage" aria-label="Mint color room">
       <div class="mintFallingLayer" id="mintFallingLayer" aria-hidden="true"></div>
+      <div class="mintScoreHud" id="mintScoreHud" aria-label="Objects caught" hidden>Caught: 0</div>
+      <div class="mintLivesHud" id="mintLivesHud" aria-label="Lives remaining" hidden>
+        <span class="mintLifeHeart" aria-hidden="true">♥</span>
+        <span class="mintLifeHeart" aria-hidden="true">♥</span>
+        <span class="mintLifeHeart" aria-hidden="true">♥</span>
+      </div>
       <img
         class="mintHoop"
         id="mintHoop"
@@ -1049,12 +1087,14 @@ function screenMintRoom() {
         hidden
       >
       <img class="mintGameSign" id="mintGameSign" src="assets/bsk gm.png" alt="Basketball game sign">
+      <div class="mintGameOverSign" id="mintGameOverSign" hidden>Game Over</div>
       <button class="mintGameStartBtn" id="mintGameStartBtn" aria-label="Start basketball game">Start</button>
+      <button class="mintGameNextBtn" id="mintGameNextBtn" aria-label="Go to lily colors screen" hidden>Next</button>
     </div>
   `;
 }
 
-function startMintFallingGame(stage, layer, hoop) {
+function startMintFallingGame(stage, layer, hoop, onGameOver = null, onMiss = null, onCatch = null) {
     if (stage == null || layer == null || hoop == null) return null;
 
     let running = true;
@@ -1062,10 +1102,14 @@ function startMintFallingGame(stage, layer, hoop) {
     let spawnTimer = null;
     let speedTimer = null;
     let lastTs = 0;
+    let missedCount = 0;
+    let caughtCount = 0;
+    const maxMisses = 3;
+    let cleanedUp = false;
 
-    let spawnIntervalMs = 500;
-    let fallSpeedMultiplier = 1;
-    const minSpawnIntervalMs = 120;
+    let spawnIntervalMs = 420;
+    let fallSpeedMultiplier = 1.25;
+    const minSpawnIntervalMs = 95;
     const objects = [];
     const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
     let hoopCenterX = stage.clientWidth * 0.5;
@@ -1105,11 +1149,14 @@ function startMintFallingGame(stage, layer, hoop) {
 
         const obj = document.createElement("div");
         obj.className = "mintFallingObject";
-        const size = 20 + Math.random() * 26;
-        const maxX = Math.max(0, stage.clientWidth - size);
-        const x = Math.random() * maxX;
+        const size = 86 + Math.random() * 64;
+        const absoluteMaxX = Math.max(0, stage.clientWidth - size);
+        const sideInset = Math.min(absoluteMaxX * 0.35, 120);
+        const minX = Math.min(sideInset, absoluteMaxX);
+        const maxX = Math.max(minX, absoluteMaxX - sideInset);
+        const x = minX + (Math.random() * (maxX - minX));
         const y = -(size + 8);
-        const vy = 120 + Math.random() * 130;
+        const vy = 220 + Math.random() * 170;
 
         obj.style.width = `${size}px`;
         obj.style.height = `${size}px`;
@@ -1129,8 +1176,43 @@ function startMintFallingGame(stage, layer, hoop) {
     };
 
     const speedUp = () => {
-        spawnIntervalMs = Math.max(minSpawnIntervalMs, spawnIntervalMs - 35);
-        fallSpeedMultiplier = Math.min(3.2, fallSpeedMultiplier + 0.08);
+        spawnIntervalMs = Math.max(minSpawnIntervalMs, spawnIntervalMs - 42);
+        fallSpeedMultiplier = Math.min(3.8, fallSpeedMultiplier + 0.11);
+    };
+
+    const cleanup = () => {
+        if (cleanedUp) return;
+        cleanedUp = true;
+        if (spawnTimer != null) {
+            clearTimeout(spawnTimer);
+            spawnTimer = null;
+        }
+        if (speedTimer != null) {
+            clearInterval(speedTimer);
+            speedTimer = null;
+        }
+        cancelAnimationFrame(frameId);
+        for (const obj of objects) {
+            if (obj.el.isConnected) obj.el.remove();
+        }
+        objects.length = 0;
+        stage.removeEventListener("pointermove", onPointerMove);
+        stage.removeEventListener("touchmove", onTouchMove);
+        window.removeEventListener("keydown", onKeyDown);
+        window.removeEventListener("resize", onResize);
+    };
+
+    const endAsGameOver = () => {
+        if (!running) return;
+        running = false;
+        cleanup();
+        if (typeof onGameOver === "function") {
+            onGameOver({
+                missedCount,
+                maxMisses,
+                caughtCount
+            });
+        }
     };
 
     const frame = (ts) => {
@@ -1160,11 +1242,19 @@ function startMintFallingGame(stage, layer, hoop) {
             if (isCaught) {
                 if (obj.el.isConnected) obj.el.remove();
                 objects.splice(i, 1);
+                caughtCount += 1;
+                if (typeof onCatch === "function") onCatch(caughtCount);
                 continue;
             }
             if (obj.y > maxY) {
                 if (obj.el.isConnected) obj.el.remove();
                 objects.splice(i, 1);
+                missedCount += 1;
+                if (typeof onMiss === "function") onMiss(missedCount, maxMisses);
+                if (missedCount >= maxMisses) {
+                    endAsGameOver();
+                    return;
+                }
                 continue;
             }
             obj.el.style.top = `${obj.y}px`;
@@ -1184,23 +1274,7 @@ function startMintFallingGame(stage, layer, hoop) {
 
     return () => {
         running = false;
-        if (spawnTimer != null) {
-            clearTimeout(spawnTimer);
-            spawnTimer = null;
-        }
-        if (speedTimer != null) {
-            clearInterval(speedTimer);
-            speedTimer = null;
-        }
-        cancelAnimationFrame(frameId);
-        for (const obj of objects) {
-            if (obj.el.isConnected) obj.el.remove();
-        }
-        objects.length = 0;
-        stage.removeEventListener("pointermove", onPointerMove);
-        stage.removeEventListener("touchmove", onTouchMove);
-        window.removeEventListener("keydown", onKeyDown);
-        window.removeEventListener("resize", onResize);
+        cleanup();
     };
 }
 
@@ -1759,6 +1833,8 @@ function render() {
     app.classList.toggle("memoriesBlueMode", state.screen === "memoriesBlue");
     app.classList.toggle("bahamasHotelMode", state.screen === "bahamasHotel");
     app.classList.toggle("yellowScreenMode", state.screen === "yellowScreen");
+    app.classList.toggle("orangeScreenMode", state.screen === "orangeScreen");
+    app.classList.toggle("violetScreenMode", state.screen === "violetScreen");
     app.classList.toggle("redScreenMode", state.screen === "redScreen");
     app.classList.toggle("blackScreenMode", state.screen === "blackScreen");
     app.classList.toggle("brownScreenMode", state.screen === "brownScreen");
@@ -2544,6 +2620,22 @@ function render() {
         return;
     }
 
+    if (state.screen === "orangeScreen") {
+        app.innerHTML = screenOrangeScreen();
+        mountHomeButton();
+        const orangeToPurpleBtn = document.getElementById("orangeToPurpleBtn");
+        if (orangeToPurpleBtn != null) orangeToPurpleBtn.onclick = () => go("violetScreen");
+        return;
+    }
+
+    if (state.screen === "violetScreen") {
+        app.innerHTML = screenVioletScreen();
+        mountHomeButton();
+        const violetToPurpleBtn = document.getElementById("violetToPurpleBtn");
+        if (violetToPurpleBtn != null) violetToPurpleBtn.onclick = () => go("purpleScreen");
+        return;
+    }
+
     if (state.screen === "blackScreen") {
         app.innerHTML = screenBlackScreen();
         mountHomeButton();
@@ -2718,9 +2810,28 @@ function render() {
         mountHomeButton();
         const mintRoomStage = document.getElementById("mintRoomStage");
         const mintFallingLayer = document.getElementById("mintFallingLayer");
+        const mintScoreHud = document.getElementById("mintScoreHud");
+        const mintLivesHud = document.getElementById("mintLivesHud");
         const mintHoop = document.getElementById("mintHoop");
         const mintGameSign = document.getElementById("mintGameSign");
+        const mintGameOverSign = document.getElementById("mintGameOverSign");
         const mintGameStartBtn = document.getElementById("mintGameStartBtn");
+        const mintGameNextBtn = document.getElementById("mintGameNextBtn");
+        const paintMintScore = (score) => {
+            if (mintScoreHud == null) return;
+            mintScoreHud.textContent = `Caught: ${Math.max(0, Math.floor(Number(score) || 0))}`;
+        };
+        if (mintScoreHud != null) mintScoreHud.hidden = true;
+        if (mintLivesHud != null) mintLivesHud.hidden = true;
+        if (mintGameNextBtn != null) mintGameNextBtn.hidden = true;
+        if (mintGameStartBtn != null) mintGameStartBtn.classList.remove("withNext");
+        const paintMintLives = (missed) => {
+            if (mintLivesHud == null) return;
+            const hearts = mintLivesHud.querySelectorAll(".mintLifeHeart");
+            hearts.forEach((heart, index) => {
+                heart.classList.toggle("is-empty", index < missed);
+            });
+        };
         if (mintHoop != null) {
             const fallbackSrc = mintHoop.dataset.fallbackSrc;
             if (fallbackSrc != null) {
@@ -2733,15 +2844,50 @@ function render() {
         if (mintGameStartBtn != null) {
             mintGameStartBtn.onclick = () => {
                 if (mintGameSign != null) mintGameSign.remove();
+                if (mintGameOverSign != null) mintGameOverSign.hidden = true;
+                if (mintGameNextBtn != null) mintGameNextBtn.hidden = true;
+                mintGameStartBtn.classList.remove("withNext");
+                if (mintScoreHud != null) mintScoreHud.hidden = false;
+                if (mintLivesHud != null) mintLivesHud.hidden = false;
+                paintMintScore(0);
+                paintMintLives(0);
+                mintGameStartBtn.textContent = "Start";
                 mintGameStartBtn.hidden = true;
                 if (mintHoop != null) mintHoop.hidden = false;
                 if (mintGameTeardown != null) {
                     mintGameTeardown();
                     mintGameTeardown = null;
                 }
-                mintGameTeardown = startMintFallingGame(mintRoomStage, mintFallingLayer, mintHoop);
+                mintGameTeardown = startMintFallingGame(mintRoomStage, mintFallingLayer, mintHoop, (result) => {
+                    const finalScore = Math.max(0, Math.floor(result?.caughtCount || 0));
+                    const previousBest = loadMintTopScore();
+                    const bestScore = Math.max(previousBest, finalScore);
+                    if (bestScore !== previousBest) saveMintTopScore(bestScore);
+                    if (mintGameOverSign != null) {
+                        mintGameOverSign.innerHTML = `
+                          <div class="mintGameOverTitle">Game Over</div>
+                          <div class="mintGameOverMeta">Score: ${finalScore}</div>
+                          <div class="mintGameOverMeta">Best: ${bestScore}</div>
+                        `;
+                        mintGameOverSign.hidden = false;
+                    }
+                    paintMintLives(3);
+                    if (mintScoreHud != null) mintScoreHud.hidden = true;
+                    if (mintLivesHud != null) mintLivesHud.hidden = true;
+                    if (mintHoop != null) mintHoop.hidden = true;
+                    mintGameStartBtn.textContent = "Play Again";
+                    mintGameStartBtn.hidden = false;
+                    mintGameStartBtn.classList.add("withNext");
+                    if (mintGameNextBtn != null) mintGameNextBtn.hidden = false;
+                    mintGameTeardown = null;
+                }, (missedCount) => {
+                    paintMintLives(missedCount);
+                }, (caughtCount) => {
+                    paintMintScore(caughtCount);
+                });
             };
         }
+        if (mintGameNextBtn != null) mintGameNextBtn.onclick = () => go("orangeScreen");
         return;
     }
 
