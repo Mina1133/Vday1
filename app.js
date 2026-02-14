@@ -28,7 +28,7 @@ function saveDinnerTopScore(score) {
 
 function defaultState() {
     return {
-        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | redScreen | blackScreen | brownScreen
+        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | redScreen | blackScreen | brownScreen | greyScreen | purpleScreen
         characterMode: null, // null | alone | withme
         mapIntroDone: false,
         mapPostComputerIntroPending: false,
@@ -925,7 +925,40 @@ function screenBlackScreen() {
 function screenBrownScreen() {
     return `
     ${headerTitle()}
-    <div class="brownScreenStage" id="brownScreenStage" aria-label="Brown screen"></div>
+    <div class="brownScreenStage" id="brownScreenStage" aria-label="Sea screen">
+      <video class="brownScreenVideo" id="brownScreenVideo" autoplay muted playsinline>
+        <source src="assets/sea video.mp4" type="video/mp4">
+      </video>
+    </div>
+  `;
+}
+
+function screenGreyScreen() {
+    const greyCharacterSrc = state.characterMode === "alone"
+        ? "assets/ccalone.png"
+        : "assets/ccwithme.png";
+    return `
+    ${headerTitle()}
+    <div class="greyScreenStage" id="greyScreenStage" aria-label="Hotel screen">
+      <img
+        class="greyScreenCharacter"
+        id="greyScreenCharacter"
+        src="${greyCharacterSrc}"
+        data-fallback-src="assets/ccwithme.png"
+        alt="Characters at the hotel"
+      >
+      <img class="greyBugOutImg" src="assets/bug out.png" alt="Bug out scene">
+      <button class="greyPurpleBtn" id="greyPurpleBtn" aria-label="Continue to purple screen">
+        <img src="assets/好的宝宝.png" alt="Continue">
+      </button>
+    </div>
+  `;
+}
+
+function screenPurpleScreen() {
+    return `
+    ${headerTitle()}
+    <div class="purpleScreenStage" id="purpleScreenStage" aria-label="Purple screen"></div>
   `;
 }
 
@@ -1486,6 +1519,9 @@ function render() {
     app.classList.toggle("yellowScreenMode", state.screen === "yellowScreen");
     app.classList.toggle("redScreenMode", state.screen === "redScreen");
     app.classList.toggle("blackScreenMode", state.screen === "blackScreen");
+    app.classList.toggle("brownScreenMode", state.screen === "brownScreen");
+    app.classList.toggle("greyScreenMode", state.screen === "greyScreen");
+    app.classList.toggle("purpleScreenMode", state.screen === "purpleScreen");
 
     if (state.screen === "home") {
         app.innerHTML = screenHome();
@@ -2283,6 +2319,35 @@ function render() {
 
     if (state.screen === "brownScreen") {
         app.innerHTML = screenBrownScreen();
+        mountHomeButton();
+        const brownScreenVideo = document.getElementById("brownScreenVideo");
+        if (brownScreenVideo != null) {
+            brownScreenVideo.onended = () => go("greyScreen");
+        }
+        return;
+    }
+
+    if (state.screen === "greyScreen") {
+        app.innerHTML = screenGreyScreen();
+        mountHomeButton();
+        const greyScreenCharacter = document.getElementById("greyScreenCharacter");
+        const greyPurpleBtn = document.getElementById("greyPurpleBtn");
+        if (greyScreenCharacter != null) {
+            greyScreenCharacter.onerror = () => {
+                const fallbackSrc = greyScreenCharacter.dataset.fallbackSrc;
+                if (fallbackSrc != null && greyScreenCharacter.src.indexOf(fallbackSrc) === -1) {
+                    greyScreenCharacter.src = fallbackSrc;
+                }
+            };
+        }
+        if (greyPurpleBtn != null) {
+            greyPurpleBtn.onclick = () => go("purpleScreen");
+        }
+        return;
+    }
+
+    if (state.screen === "purpleScreen") {
+        app.innerHTML = screenPurpleScreen();
         mountHomeButton();
         return;
     }
