@@ -28,7 +28,7 @@ function saveDinnerTopScore(score) {
 
 function defaultState() {
     return {
-        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | redScreen
+        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | redScreen | blackScreen
         characterMode: null, // null | alone | withme
         mapIntroDone: false,
         mapPostComputerIntroPending: false,
@@ -898,7 +898,17 @@ function screenRedScreen() {
         <img class="redThoughtBubbleImg" id="redThoughtBubbleImg" src="assets/Happy day.png" alt="What a happy day!">
       </div>
       <button class="heartNextBtn redThoughtNextBtn" id="redThoughtNextBtn" aria-label="Next thought bubble">Next</button>
+      <button class="redFinalImageBtn" id="redFinalImageBtn" aria-label="Continue" hidden>
+        <img src="assets/好的宝宝.png" alt="Continue">
+      </button>
     </div>
+  `;
+}
+
+function screenBlackScreen() {
+    return `
+    ${headerTitle()}
+    <div class="blackScreenStage" id="blackScreenStage" aria-label="Black screen"></div>
   `;
 }
 
@@ -1458,6 +1468,7 @@ function render() {
     app.classList.toggle("bahamasHotelMode", state.screen === "bahamasHotel");
     app.classList.toggle("yellowScreenMode", state.screen === "yellowScreen");
     app.classList.toggle("redScreenMode", state.screen === "redScreen");
+    app.classList.toggle("blackScreenMode", state.screen === "blackScreen");
 
     if (state.screen === "home") {
         app.innerHTML = screenHome();
@@ -2207,6 +2218,7 @@ function render() {
         const redScreenCharacter = document.getElementById("redScreenCharacter");
         const redThoughtBubbleImg = document.getElementById("redThoughtBubbleImg");
         const redThoughtNextBtn = document.getElementById("redThoughtNextBtn");
+        const redFinalImageBtn = document.getElementById("redFinalImageBtn");
         if (redScreenCharacter != null) {
             redScreenCharacter.onerror = () => {
                 const fallbackSrc = redScreenCharacter.dataset.fallbackSrc;
@@ -2214,6 +2226,9 @@ function render() {
                     redScreenCharacter.src = fallbackSrc;
                 }
             };
+        }
+        if (redFinalImageBtn != null) {
+            redFinalImageBtn.onclick = () => go("blackScreen");
         }
         if (redThoughtNextBtn != null && redThoughtBubbleImg != null) {
             let redThoughtStep = 1;
@@ -2223,9 +2238,16 @@ function render() {
                     redThoughtBubbleImg.src = "assets/to sea.png";
                     redThoughtBubbleImg.alt = "Tomorrow lets look for the bug out at sea";
                     redThoughtNextBtn.hidden = true;
+                    if (redFinalImageBtn != null) redFinalImageBtn.hidden = false;
                 }
             };
         }
+        return;
+    }
+
+    if (state.screen === "blackScreen") {
+        app.innerHTML = screenBlackScreen();
+        mountHomeButton();
         return;
     }
 
