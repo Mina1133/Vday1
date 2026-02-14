@@ -265,6 +265,14 @@ body {
     background: #000;
 }
 
+.app.mintRoomMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
 .app.planeClipMode,
 .app.openingMode,
 .app.customizeMode,
@@ -287,6 +295,7 @@ body {
 .app.purpleScreenMode,
 .app.magentaScreenMode,
 .app.goldenScreenMode,
+.app.mintRoomMode,
 .app.mapMode {
     display: grid;
     place-items: center;
@@ -314,6 +323,7 @@ body {
 .purpleScreenStage,
 .magentaScreenStage,
 .goldenScreenStage,
+.mintRoomStage,
 .app.mapMode .roomStage {
     position: relative;
     inset: auto;
@@ -461,6 +471,15 @@ body {
 }
 
 .app.goldenScreenMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.mintRoomMode .header {
     position: fixed;
     top: 12px;
     left: 12px;
@@ -1262,6 +1281,10 @@ body {
     width: min(24vw, 260px);
 }
 
+.magentaBubbleImageWhat {
+    width: min(12vw, 120px);
+}
+
 .magentaTextBubble::after {
     content: "";
     position: absolute;
@@ -1279,11 +1302,27 @@ body {
     content: none;
 }
 
-.magentaTextBubble[data-step="2"],
+.magentaTextBubble[data-step="1"] {
+    left: 61%;
+    top: 53%;
+}
+
+.magentaTextBubble[data-step="1"] .magentaBubbleImage {
+    width: min(36vw, 400px);
+}
+
+.magentaTextBubble[data-step="2"] {
+    left: 52%;
+    min-width: min(24%, 220px);
+    max-width: min(24%, 220px);
+    top: 48%;
+}
+
 .magentaTextBubble[data-step="3"] {
+    left: 62%;
     min-width: min(34%, 320px);
     max-width: min(34%, 320px);
-    top: 46%;
+    top: 58%;
 }
 
 .magentaNextBtn {
@@ -1305,7 +1344,7 @@ body {
 .magentaEndBtn {
     position: absolute;
     left: 50%;
-    bottom: 6px;
+    bottom: -26px;
     transform: translateX(-50%);
     border: none;
     background: transparent;
@@ -1316,12 +1355,104 @@ body {
 
 .magentaEndBtn img {
     display: block;
-    width: min(24vw, 360px);
+    width: min(16vw, 240px);
     height: auto;
 }
 
 .goldenScreenStage {
-    background: linear-gradient(180deg, #fce59b 0%, #f3c95f 50%, #d89e2e 100%);
+    background: url("assets/bsk bgr.png") center center / cover no-repeat;
+}
+
+.goldenSpeechBubble {
+    position: absolute;
+    left: 53%;
+    top: 19%;
+    transform: translateX(-50%);
+    width: min(28vw, 430px);
+    height: auto;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.goldenLavenderBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%);
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    z-index: 4;
+}
+
+.goldenLavenderBtn img {
+    display: block;
+    width: min(22vw, 340px);
+    height: auto;
+}
+
+.mintRoomStage {
+    background: url("assets/bsk bgr.png") center center / cover no-repeat;
+}
+
+.mintFallingLayer {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.mintGameSign {
+    position: absolute;
+    left: 50%;
+    top: 32%;
+    transform: translate(-50%, -50%);
+    width: min(48vw, 620px);
+    height: auto;
+    z-index: 3;
+}
+
+.mintFallingObject {
+    position: absolute;
+    border-radius: 50%;
+    background:
+        linear-gradient(90deg, transparent 45%, #2a1703 47%, #2a1703 53%, transparent 55%),
+        radial-gradient(circle at -24% 50%, transparent 58%, #2a1703 60%, #2a1703 64%, transparent 66%),
+        radial-gradient(circle at 124% 50%, transparent 58%, #2a1703 60%, #2a1703 64%, transparent 66%),
+        radial-gradient(circle at 30% 28%, #ffd27a 0%, #f59c28 52%, #c96e12 100%);
+    border: 2px solid #261503;
+    box-shadow:
+        inset -8px -10px 14px rgba(0, 0, 0, 0.22),
+        inset 6px 8px 10px rgba(255, 205, 120, 0.2),
+        0 4px 10px rgba(0, 0, 0, 0.35);
+}
+
+.mintHoop {
+    position: absolute;
+    bottom: 42px;
+    left: 50%;
+    width: min(22vw, 320px);
+    height: auto;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.mintGameStartBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 96px;
+    transform: translateX(-50%);
+    border: none;
+    border-radius: 999px;
+    padding: 18px 42px;
+    background: #f08a1f;
+    color: #fff7eb;
+    font-size: 28px;
+    font-weight: 800;
+    cursor: pointer;
+    z-index: 4;
 }
 
 .nycAfterDinnerBubble {

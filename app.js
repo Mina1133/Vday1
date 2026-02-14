@@ -11,6 +11,7 @@ let nycFollowTeardown = null;
 let nycObstacleTeardown = null;
 let nycCollisionTeardown = null;
 let nycDinnerRunnerTeardown = null;
+let mintGameTeardown = null;
 let nycReturnFromWin = false;
 let nycFromDinnerNext = false;
 const PURPLE_SLIDES = [
@@ -54,7 +55,7 @@ function saveDinnerTopScore(score) {
 
 function defaultState() {
     return {
-        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | redScreen | blackScreen | brownScreen | greyScreen | silverScreen | purpleScreen | magentaScreen | goldenScreen
+        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | redScreen | blackScreen | brownScreen | greyScreen | silverScreen | purpleScreen | magentaScreen | goldenScreen | mintRoom
         characterMode: null, // null | alone | withme
         mapIntroDone: false,
         mapPostComputerIntroPending: false,
@@ -104,6 +105,10 @@ function go(screen) {
     if (nycDinnerRunnerTeardown != null) {
         nycDinnerRunnerTeardown();
         nycDinnerRunnerTeardown = null;
+    }
+    if (screen !== "mintRoom" && mintGameTeardown != null) {
+        mintGameTeardown();
+        mintGameTeardown = null;
     }
     state.screen = screen;
     if (screen !== "nycRoom") {
@@ -1021,8 +1026,182 @@ function screenMagentaScreen() {
 function screenGoldenScreen() {
     return `
     ${headerTitle()}
-    <div class="goldenScreenStage" id="goldenScreenStage" aria-label="Golden screen"></div>
+    <div class="goldenScreenStage" id="goldenScreenStage" aria-label="Golden screen">
+      <img class="goldenSpeechBubble" src="assets/sht.png" alt="Baby I really want to see you shoot some basketballs">
+      <button class="goldenLavenderBtn" id="goldenLavenderBtn" aria-label="Go to mint room">
+        <img src="assets/好的宝宝.png" alt="Continue">
+      </button>
+    </div>
   `;
+}
+
+function screenMintRoom() {
+    return `
+    ${headerTitle()}
+    <div class="mintRoomStage" id="mintRoomStage" aria-label="Mint color room">
+      <div class="mintFallingLayer" id="mintFallingLayer" aria-hidden="true"></div>
+      <img
+        class="mintHoop"
+        id="mintHoop"
+        src="assets/vbasketball hoop.png"
+        data-fallback-src="assets/basketball-hoops.webp"
+        alt="Basketball hoop"
+        hidden
+      >
+      <img class="mintGameSign" id="mintGameSign" src="assets/bsk gm.png" alt="Basketball game sign">
+      <button class="mintGameStartBtn" id="mintGameStartBtn" aria-label="Start basketball game">Start</button>
+    </div>
+  `;
+}
+
+function startMintFallingGame(stage, layer, hoop) {
+    if (stage == null || layer == null || hoop == null) return null;
+
+    let running = true;
+    let frameId = 0;
+    let spawnTimer = null;
+    let speedTimer = null;
+    let lastTs = 0;
+
+    let spawnIntervalMs = 500;
+    let fallSpeedMultiplier = 1;
+    const minSpawnIntervalMs = 120;
+    const objects = [];
+    const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+    let hoopCenterX = stage.clientWidth * 0.5;
+
+    const updateHoopX = () => {
+        const hoopWidth = hoop.offsetWidth || 240;
+        const maxLeft = Math.max(0, stage.clientWidth - hoopWidth);
+        const left = clamp(hoopCenterX - (hoopWidth * 0.5), 0, maxLeft);
+        hoop.style.left = `${left}px`;
+    };
+
+    const moveHoopToClientX = (clientX) => {
+        const rect = stage.getBoundingClientRect();
+        hoopCenterX = clamp(clientX - rect.left, 0, rect.width);
+        updateHoopX();
+    };
+
+    const onPointerMove = (e) => moveHoopToClientX(e.clientX);
+    const onTouchMove = (e) => {
+        if (e.touches.length < 1) return;
+        moveHoopToClientX(e.touches[0].clientX);
+    };
+    const onKeyDown = (e) => {
+        if (e.key === "ArrowLeft") {
+            hoopCenterX -= 42;
+            updateHoopX();
+        } else if (e.key === "ArrowRight") {
+            hoopCenterX += 42;
+            updateHoopX();
+        }
+    };
+    const onResize = () => updateHoopX();
+
+    const spawnObject = () => {
+        if (!running || !layer.isConnected) return;
+        if (objects.length > 0) return;
+
+        const obj = document.createElement("div");
+        obj.className = "mintFallingObject";
+        const size = 20 + Math.random() * 26;
+        const maxX = Math.max(0, stage.clientWidth - size);
+        const x = Math.random() * maxX;
+        const y = -(size + 8);
+        const vy = 120 + Math.random() * 130;
+
+        obj.style.width = `${size}px`;
+        obj.style.height = `${size}px`;
+        obj.style.left = `${x}px`;
+        obj.style.top = `${y}px`;
+        layer.appendChild(obj);
+        objects.push({ el: obj, x, y, vy, size });
+    };
+
+    const scheduleSpawn = () => {
+        if (!running) return;
+        spawnTimer = window.setTimeout(() => {
+            spawnTimer = null;
+            if (objects.length === 0) spawnObject();
+            scheduleSpawn();
+        }, spawnIntervalMs);
+    };
+
+    const speedUp = () => {
+        spawnIntervalMs = Math.max(minSpawnIntervalMs, spawnIntervalMs - 35);
+        fallSpeedMultiplier = Math.min(3.2, fallSpeedMultiplier + 0.08);
+    };
+
+    const frame = (ts) => {
+        if (!running) return;
+        if (lastTs === 0) lastTs = ts;
+        const dt = Math.min(0.05, (ts - lastTs) / 1000);
+        lastTs = ts;
+        const maxY = stage.clientHeight + 60;
+        const hoopLeft = hoop.offsetLeft;
+        const hoopTop = hoop.offsetTop;
+        const hoopWidth = hoop.offsetWidth;
+        const hoopHeight = hoop.offsetHeight;
+        const catchLeft = hoopLeft + (hoopWidth * 0.26);
+        const catchRight = hoopLeft + (hoopWidth * 0.74);
+        const catchTop = hoopTop + (hoopHeight * 0.14);
+        const catchBottom = hoopTop + (hoopHeight * 0.43);
+
+        for (let i = objects.length - 1; i >= 0; i -= 1) {
+            const obj = objects[i];
+            obj.y += obj.vy * fallSpeedMultiplier * dt;
+            const centerX = obj.x + (obj.size * 0.5);
+            const centerY = obj.y + (obj.size * 0.5);
+            const isCaught = centerX >= catchLeft
+                && centerX <= catchRight
+                && centerY >= catchTop
+                && centerY <= catchBottom;
+            if (isCaught) {
+                if (obj.el.isConnected) obj.el.remove();
+                objects.splice(i, 1);
+                continue;
+            }
+            if (obj.y > maxY) {
+                if (obj.el.isConnected) obj.el.remove();
+                objects.splice(i, 1);
+                continue;
+            }
+            obj.el.style.top = `${obj.y}px`;
+        }
+
+        frameId = requestAnimationFrame(frame);
+    };
+
+    stage.addEventListener("pointermove", onPointerMove);
+    stage.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("resize", onResize);
+    updateHoopX();
+    scheduleSpawn();
+    speedTimer = window.setInterval(speedUp, 500);
+    frameId = requestAnimationFrame(frame);
+
+    return () => {
+        running = false;
+        if (spawnTimer != null) {
+            clearTimeout(spawnTimer);
+            spawnTimer = null;
+        }
+        if (speedTimer != null) {
+            clearInterval(speedTimer);
+            speedTimer = null;
+        }
+        cancelAnimationFrame(frameId);
+        for (const obj of objects) {
+            if (obj.el.isConnected) obj.el.remove();
+        }
+        objects.length = 0;
+        stage.removeEventListener("pointermove", onPointerMove);
+        stage.removeEventListener("touchmove", onTouchMove);
+        window.removeEventListener("keydown", onKeyDown);
+        window.removeEventListener("resize", onResize);
+    };
 }
 
 function screenHome() {
@@ -1588,6 +1767,7 @@ function render() {
     app.classList.toggle("purpleScreenMode", state.screen === "purpleScreen");
     app.classList.toggle("magentaScreenMode", state.screen === "magentaScreen");
     app.classList.toggle("goldenScreenMode", state.screen === "goldenScreen");
+    app.classList.toggle("mintRoomMode", state.screen === "mintRoom");
 
     if (state.screen === "home") {
         app.innerHTML = screenHome();
@@ -2492,7 +2672,7 @@ function render() {
                 magentaTextBubble.innerHTML = `<img class="magentaBubbleImage" src="${MAGENTA_FIRST_BUBBLE_IMAGE}" alt="Now that we are home you know what sounds really good?">`;
                 magentaTextBubble.classList.add("useImage");
             } else if (magentaStep === 1) {
-                magentaTextBubble.innerHTML = `<img class="magentaBubbleImage magentaBubbleImageSmall" src="${MAGENTA_SECOND_BUBBLE_IMAGE}" alt="What?">`;
+                magentaTextBubble.innerHTML = `<img class="magentaBubbleImage magentaBubbleImageSmall magentaBubbleImageWhat" src="${MAGENTA_SECOND_BUBBLE_IMAGE}" alt="What?">`;
                 magentaTextBubble.classList.add("useImage");
             } else if (magentaStep === 2) {
                 magentaTextBubble.innerHTML = `<img class="magentaBubbleImage magentaBubbleImageSmall" src="${MAGENTA_THIRD_BUBBLE_IMAGE}" alt="Shanghai dui">`;
@@ -2528,6 +2708,40 @@ function render() {
     if (state.screen === "goldenScreen") {
         app.innerHTML = screenGoldenScreen();
         mountHomeButton();
+        const goldenLavenderBtn = document.getElementById("goldenLavenderBtn");
+        if (goldenLavenderBtn != null) goldenLavenderBtn.onclick = () => go("mintRoom");
+        return;
+    }
+
+    if (state.screen === "mintRoom") {
+        app.innerHTML = screenMintRoom();
+        mountHomeButton();
+        const mintRoomStage = document.getElementById("mintRoomStage");
+        const mintFallingLayer = document.getElementById("mintFallingLayer");
+        const mintHoop = document.getElementById("mintHoop");
+        const mintGameSign = document.getElementById("mintGameSign");
+        const mintGameStartBtn = document.getElementById("mintGameStartBtn");
+        if (mintHoop != null) {
+            const fallbackSrc = mintHoop.dataset.fallbackSrc;
+            if (fallbackSrc != null) {
+                mintHoop.onerror = () => {
+                    mintHoop.onerror = null;
+                    mintHoop.src = fallbackSrc;
+                };
+            }
+        }
+        if (mintGameStartBtn != null) {
+            mintGameStartBtn.onclick = () => {
+                if (mintGameSign != null) mintGameSign.remove();
+                mintGameStartBtn.hidden = true;
+                if (mintHoop != null) mintHoop.hidden = false;
+                if (mintGameTeardown != null) {
+                    mintGameTeardown();
+                    mintGameTeardown = null;
+                }
+                mintGameTeardown = startMintFallingGame(mintRoomStage, mintFallingLayer, mintHoop);
+            };
+        }
         return;
     }
 
