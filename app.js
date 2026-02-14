@@ -13,6 +13,13 @@ let nycCollisionTeardown = null;
 let nycDinnerRunnerTeardown = null;
 let nycReturnFromWin = false;
 let nycFromDinnerNext = false;
+const PURPLE_SLIDES = [
+    "assets/park.jpeg",
+    "assets/park 2.jpeg",
+    "assets/lug trav.jpeg",
+    "assets/room img valentine.png",
+    "assets/nyc view.png"
+];
 
 function loadDinnerTopScore() {
     const raw = localStorage.getItem(DINNER_TOP_SCORE_KEY);
@@ -956,9 +963,13 @@ function screenGreyScreen() {
 }
 
 function screenPurpleScreen() {
+    const firstSlide = PURPLE_SLIDES[0] ?? "assets/park.jpeg";
     return `
     ${headerTitle()}
-    <div class="purpleScreenStage" id="purpleScreenStage" aria-label="Purple screen"></div>
+    <div class="purpleScreenStage" id="purpleScreenStage" aria-label="Purple screen slideshow">
+      <img class="purpleSlideImg" id="purpleSlideImg" src="${firstSlide}" alt="Memory picture">
+      <button class="purpleSlideNextBtn" id="purpleSlideNextBtn" aria-label="Next picture">&gt;</button>
+    </div>
   `;
 }
 
@@ -2349,6 +2360,22 @@ function render() {
     if (state.screen === "purpleScreen") {
         app.innerHTML = screenPurpleScreen();
         mountHomeButton();
+        const purpleSlideImg = document.getElementById("purpleSlideImg");
+        const purpleSlideNextBtn = document.getElementById("purpleSlideNextBtn");
+        let purpleSlideIndex = 0;
+
+        const renderPurpleSlide = () => {
+            if (purpleSlideImg == null || PURPLE_SLIDES.length === 0) return;
+            purpleSlideImg.src = PURPLE_SLIDES[purpleSlideIndex];
+        };
+
+        if (purpleSlideNextBtn != null) {
+            purpleSlideNextBtn.onclick = () => {
+                if (PURPLE_SLIDES.length === 0) return;
+                purpleSlideIndex = (purpleSlideIndex + 1) % PURPLE_SLIDES.length;
+                renderPurpleSlide();
+            };
+        }
         return;
     }
 

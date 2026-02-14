@@ -1006,8 +1006,8 @@ body {
 
 .greyBugOutImg {
     position: absolute;
-    right: 58%;
-    bottom: 300px;
+    right: 64%;
+    bottom: 390px;
     width: min(34%, 460px);
     max-width: 42%;
     height: auto;
@@ -1036,6 +1036,36 @@ body {
 
 .purpleScreenStage {
     background: #6f4aa5;
+    display: grid;
+    place-items: center;
+}
+
+.purpleSlideImg {
+    width: min(86%, 1080px);
+    max-height: calc(100% - 90px);
+    height: auto;
+    object-fit: contain;
+    border-radius: 18px;
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.34);
+    border: 2px solid rgba(255, 255, 255, 0.36);
+}
+
+.purpleSlideNextBtn {
+    position: absolute;
+    right: 26px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 64px;
+    height: 64px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 255, 255, 0.76);
+    background: rgba(67, 34, 116, 0.74);
+    color: #fff;
+    font-size: 38px;
+    font-weight: 900;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 4;
 }
 
 .nycAfterDinnerBubble {
