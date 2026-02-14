@@ -6,13 +6,28 @@ html,
 body {
     margin: 0;
     padding: 0;
+    height: 100%;
     font-family: Arial, sans-serif;
     background: #fde7ee;
     /* pink vibe for non-map pages */
 }
 
+:root {
+    /* Standard sizing system:
+       Build all gameplay layout/sizes against this fixed design canvas.
+       Do not use vw/vh or responsive media overrides for game element sizing/positioning. */
+    --design-width: 1536;
+    --design-height: 864;
+    --scene-width: calc(var(--design-width) * 1px);
+    --scene-height: calc(var(--design-height) * 1px);
+    --scene-scale: min(calc(100vw / var(--design-width)), calc(100dvh / var(--design-height)));
+    --panel-width: 980px;
+    --dialog-width: 520px;
+}
+
 .app {
     min-height: 100vh;
+    min-height: 100dvh;
     padding: 18px;
 }
 
@@ -30,7 +45,9 @@ body {
 .app.planeClipMode {
     padding: 0;
     min-height: 100vh;
+    min-height: 100dvh;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     background: #000;
 }
@@ -42,8 +59,8 @@ body {
 }
 
 .planeClipVideo {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     display: block;
     background: #000;
@@ -68,26 +85,33 @@ body {
 .app.openingMode {
     padding: 0;
     min-height: 100vh;
+    min-height: 100dvh;
     overflow: hidden;
 }
 
 .app.pigMode {
     padding: 0;
     min-height: 100vh;
+    min-height: 100dvh;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
 }
 
 .app.customizeMode {
     min-height: 100vh;
+    min-height: 100dvh;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     padding: 0;
 }
 
 .app.shelfMode {
     min-height: 100vh;
+    min-height: 100dvh;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     padding: 0;
     background: transparent;
@@ -95,7 +119,9 @@ body {
 
 .app.noteMode {
     min-height: 100vh;
+    min-height: 100dvh;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     padding: 0;
     background: transparent;
@@ -103,7 +129,9 @@ body {
 
 .app.computerMode {
     min-height: 100vh;
+    min-height: 100dvh;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     padding: 0;
     background: transparent;
@@ -112,6 +140,7 @@ body {
 .app.nycRoomMode {
     padding: 0;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     background: #000;
 }
@@ -119,8 +148,151 @@ body {
 .app.nycDinnerMode {
     padding: 0;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     background: #000;
+}
+
+.app.nycAfterDinnerMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
+.app.afterDinnerHallMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
+.app.memoriesPinkMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
+.app.memoriesBlueMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
+.app.bahamasHotelMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
+.app.yellowScreenMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
+.app.redScreenMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
+.app.blackScreenMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
+.app.brownScreenMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
+.app.greyScreenMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
+.app.purpleScreenMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
+.app.planeClipMode,
+.app.openingMode,
+.app.customizeMode,
+.app.shelfMode,
+.app.noteMode,
+.app.computerMode,
+.app.nycRoomMode,
+.app.nycDinnerMode,
+.app.nycAfterDinnerMode,
+.app.afterDinnerHallMode,
+.app.memoriesPinkMode,
+.app.memoriesBlueMode,
+.app.bahamasHotelMode,
+.app.yellowScreenMode,
+.app.redScreenMode,
+.app.blackScreenMode,
+.app.brownScreenMode,
+.app.greyScreenMode,
+.app.purpleScreenMode,
+.app.mapMode {
+    display: grid;
+    place-items: center;
+}
+
+.planeClipScreen,
+.openingScreen,
+.customizeScreen,
+.shelfScene,
+.noteScene,
+.computerScene,
+.nycRoomStage,
+.nycDinnerStage,
+.nycAfterDinnerStage,
+.afterDinnerHallStage,
+.memoriesPinkStage,
+.memoriesBlueStage,
+.bahamasHotelStage,
+.yellowScreenStage,
+.redScreenStage,
+.blackScreenStage,
+.brownScreenStage,
+.greyScreenStage,
+.purpleScreenStage,
+.app.mapMode .roomStage {
+    position: relative;
+    inset: auto;
+    width: var(--scene-width);
+    height: var(--scene-height);
+    margin: 0 auto;
+    overflow: hidden;
+    transform: scale(var(--scene-scale));
+    transform-origin: center center;
 }
 
 .app.nycDinnerMode .header {
@@ -141,22 +313,797 @@ body {
     margin: 0;
 }
 
-.nycRoomStage {
+.app.nycAfterDinnerMode .header {
     position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.afterDinnerHallMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.memoriesPinkMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.memoriesBlueMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.bahamasHotelMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.yellowScreenMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.redScreenMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.blackScreenMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.brownScreenMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.greyScreenMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.purpleScreenMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.nycRoomStage {
     background-image: url("assets/nyc view.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
 
-.nycDinnerStage {
-    position: fixed;
+.nycAfterDinnerStage {
+    background-image: url("assets/nyc view.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.afterDinnerHallStage {
+    background: #000;
+}
+
+.afterDinnerHallBg {
+    position: absolute;
     inset: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.afterDinnerHallCaption {
+    position: absolute;
+    left: 50%;
+    bottom: 42px;
+    transform: translateX(-50%);
+    width: min(86%, 980px);
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: rgba(20, 12, 20, 0.56);
+    color: #fff4f7;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.2;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    z-index: 4;
+}
+
+.afterDinnerHallMemoriesBtn {
+    position: absolute;
+    right: 6%;
+    bottom: 42px;
+    transform: none;
+    min-width: 250px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 240, 249, 0.72);
+    background: rgba(255, 181, 219, 0.32);
+    color: #fff8fd;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 3px rgba(128, 38, 92, 0.45);
+    backdrop-filter: blur(2px);
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(116, 29, 85, 0.28);
+    transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease;
+    z-index: 5;
+}
+
+.afterDinnerHallMemoriesBtn:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 192, 226, 0.42);
+    box-shadow: 0 14px 26px rgba(116, 29, 85, 0.34);
+}
+
+.memoriesPinkStage {
+    background: #000;
+}
+
+.memoriesPinkVideo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    background: #120914;
+    display: block;
+}
+
+.memoriesFinishBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 34px;
+    transform: translateX(-50%);
+    min-width: 220px;
+    padding: 13px 30px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 238, 247, 0.95);
+    background:
+        radial-gradient(circle at 20% 24%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 32%),
+        linear-gradient(180deg, rgba(255, 196, 219, 0.99) 0%, rgba(255, 145, 191, 0.99) 52%, rgba(255, 116, 169, 0.99) 100%);
+    color: #fff8fb;
+    font-size: 23px;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    text-shadow: 0 1px 3px rgba(131, 36, 82, 0.75);
+    box-shadow: 0 14px 26px rgba(67, 16, 44, 0.46), 0 0 18px rgba(255, 145, 191, 0.34);
+    transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+    z-index: 6;
+}
+
+.memoriesFinishBtn:hover {
+    transform: translateX(-50%) translateY(-2px) scale(1.02);
+    box-shadow: 0 18px 30px rgba(67, 16, 44, 0.52), 0 0 24px rgba(255, 145, 191, 0.4);
+    filter: saturate(1.08);
+}
+
+.memoriesFinishBtn:active {
+    transform: translateX(-50%) translateY(0) scale(0.99);
+}
+
+.memoriesBlueStage {
+    background-image: url("assets/vacattion bug.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.memoriesBlueCaption {
+    position: absolute;
+    left: 50%;
+    top: 38px;
+    transform: translateX(-50%);
+    padding: 12px 22px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    font-size: clamp(20px, 2.8vw, 34px);
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+    z-index: 6;
+}
+
+.memoriesBlueNextBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 36px;
+    transform: translateX(-50%);
+    z-index: 7;
+}
+
+.bahamasHotelStage {
+    background-image: url("assets/Bahamas hotel.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.bahamasHotelCharacters {
+    position: absolute;
+    left: 24%;
+    bottom: 12px;
+    transform: translateX(-50%) scaleX(-1);
+    width: min(22%, 320px);
+    max-width: 44%;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.4));
+    z-index: 6;
+    pointer-events: none;
+}
+
+.bahamasHotelBubble {
+    position: absolute;
+    left: 22%;
+    top: 36%;
+    width: min(30%, 440px);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    z-index: 7;
+}
+
+.bahamasHotelBubble.secondBubble {
+    left: 2%;
+    top: 44%;
+    width: min(24%, 340px);
+}
+
+.bahamasHotelBubble::after {
+    content: none;
+    position: absolute;
+    left: 30%;
+    bottom: -34px;
+    width: 28px;
+    height: 28px;
+    background: #f3f3f3;
+    border-left: 6px solid #111;
+    border-bottom: 6px solid #111;
+    transform: skewX(-28deg);
+}
+
+.bahamasHotelBubbleText {
+    padding: 18px 22px;
+    color: #111;
+    text-align: center;
+    font-family: "Courier New", monospace;
+    font-size: clamp(24px, 2.7vw, 44px);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.bahamasHotelBubbleImg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.bahamasBubbleNextBtn {
+    position: absolute;
+    left: 36%;
+    top: 48%;
+    z-index: 8;
+}
+
+.bahamasConversationEndBtn {
+    position: absolute;
+    left: 50%;
+    top: 62%;
+    transform: translateX(-50%);
+    width: min(26%, 320px);
+    aspect-ratio: 1536 / 1024;
+    border: none;
+    background: transparent url("assets/好的宝宝.png") center center no-repeat;
+    background-size: contain;
+    cursor: pointer;
+    z-index: 8;
+}
+
+.bahamasHotelNextBtn {
+    position: absolute;
+    right: 40px;
+    bottom: 16px;
+    width: 230px;
+    height: 96px;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    clip-path: polygon(0 0, 82% 0, 100% 50%, 82% 100%, 0 100%, 10% 50%);
+    background: rgba(0, 0, 0, 0.52);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+    transition: transform 140ms ease, background 140ms ease;
+    z-index: 7;
+}
+
+.bahamasHotelNextBtn:hover {
+    transform: translateY(-2px);
+    background: rgba(0, 0, 0, 0.62);
+}
+
+.yellowScreenStage {
+    position: relative;
+    background: url("assets/park.jpeg") center center no-repeat;
+    background-size: cover;
+    overflow: hidden;
+}
+
+.yellowScreenStage.photoTaken {
+    background: url("assets/park 2.jpeg") center center no-repeat;
+    background-size: cover;
+}
+
+.yellowFastPassObject {
+    position: absolute;
+    top: 64%;
+    left: -14%;
+    width: 150px;
+    height: auto;
+    object-fit: contain;
+    z-index: 2;
+    pointer-events: none;
+    animation: yellowFastPass 550ms linear infinite;
+    display: none;
+}
+
+.yellowScreenStage.photoTaken .yellowFastPassObject {
+    display: block;
+}
+
+.yellowStartGameBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 28%;
+    transform: translateX(-50%);
+    min-width: 190px;
+    height: 56px;
+    border: none;
+    outline: none;
+    background: rgba(143, 107, 255, 0.58);
+    color: #fff;
+    font-size: 1.08rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 3;
+}
+
+.yellowStartGameBtn:hover {
+    background: rgba(124, 85, 243, 0.72);
+}
+
+.yellowStopObjectBtn {
+    position: absolute;
+    left: 50%;
+    top: 86%;
+    width: 132px;
+    height: 132px;
+    transform: translate(-50%, -50%);
+    border: none;
+    outline: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.42);
+    color: #111;
+    font-size: 0;
+    font-weight: 700;
+    cursor: pointer;
+    z-index: 3;
+    display: none;
+    text-align: center;
+}
+
+.yellowScreenStage.photoTaken .yellowStopObjectBtn {
+    display: block;
+}
+
+.yellowStopObjectBtn:disabled {
+    opacity: 0.72;
+    cursor: default;
+}
+
+.yellowGoodSign {
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    transform: translate(-50%, -50%);
+    width: min(64%, 560px);
+    height: auto;
+    z-index: 4;
+    pointer-events: none;
+}
+
+.yellowNextBtn {
+    position: absolute;
+    left: calc(50% + 64px);
+    bottom: 22%;
+    transform: translateX(-50%);
+    min-width: 110px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    background: #8f6bff;
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    z-index: 4;
+}
+
+.yellowNextBtn:hover {
+    background: #7c55f3;
+}
+
+.yellowPlayAgainBtn {
+    position: absolute;
+    left: calc(50% - 64px);
+    bottom: 22%;
+    transform: translateX(-50%);
+    min-width: 120px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    background: #8f6bff;
+    color: #fff;
+    font-size: 0.92rem;
+    font-weight: 800;
+    cursor: pointer;
+    z-index: 4;
+}
+
+.yellowPlayAgainBtn:hover {
+    background: #7c55f3;
+}
+
+.yellowGameLogo {
+    position: absolute;
+    top: 36%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(82%, 980px);
+    height: auto;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.yellowScreenStage.photoTaken::after {
+    content: "";
+    position: absolute;
+    top: 52%;
+    left: 56%;
+    width: 64px;
+    height: 64px;
+    border: 2px solid rgba(0, 0, 0, 0.45);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    pointer-events: none;
+}
+
+@keyframes yellowFastPass {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(130vw);
+    }
+}
+
+.redScreenStage {
+    background: url("assets/Bahamas hotel.png") center center no-repeat;
+    background-size: cover;
+    display: grid;
+    place-items: center;
+}
+
+.redScreenLabel {
+    color: #fff;
+    font-size: clamp(1.8rem, 3.4vw, 3rem);
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.redScreenCharacter {
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    transform: translateX(-50%);
+    width: min(20%, 300px);
+    max-width: 44%;
+    height: auto;
+    object-fit: contain;
+    z-index: 2;
+    filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.35));
+}
+
+.redThoughtBubble {
+    position: absolute;
+    top: 38%;
+    left: 36%;
+    transform: translateX(-50%);
+    width: min(30%, 420px);
+    z-index: 4;
+    pointer-events: none;
+}
+
+.redThoughtBubbleImg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.redThoughtNextBtn {
+    position: absolute;
+    left: 34%;
+    top: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+}
+
+.redFinalImageBtn {
+    position: absolute;
+    left: 34%;
+    top: 50%;
+    transform: translateX(-50%);
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.redFinalImageBtn img {
+    display: block;
+    width: min(30vw, 360px);
+    height: auto;
+}
+
+.blackScreenStage {
+    background: #000;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+}
+
+.blackScreenEndingImg {
+    width: min(78vw, 980px);
+    max-height: calc(100vh - 120px);
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.55));
+}
+
+.blackTomorrowBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    min-width: 170px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: 1px solid rgba(92, 141, 255, 0.65);
+    background: rgba(16, 40, 98, 0.42);
+    color: #d6e7ff;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+}
+
+.blackTomorrowHint {
+    position: absolute;
+    left: 50%;
+    bottom: 128px;
+    transform: translateX(-50%);
+    color: #79a8ff;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-align: center;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+}
+
+.brownScreenStage {
+    background: #000;
+}
+
+.brownScreenVideo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.greyScreenStage {
+    background-image: url("assets/Bahamas hotel.png");
+    background-size: 92% auto;
+    background-position: 52% 42%;
+    background-repeat: no-repeat;
+}
+
+.greyScreenCharacter {
+    position: absolute;
+    left: 28%;
+    bottom: 8px;
+    transform: translateX(-50%) scaleX(-1);
+    width: min(20%, 300px);
+    max-width: 44%;
+    height: auto;
+    object-fit: contain;
+    z-index: 2;
+    filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.35));
+}
+
+.greyBugOutImg {
+    position: absolute;
+    right: 58%;
+    bottom: 300px;
+    width: min(34%, 460px);
+    max-width: 42%;
+    height: auto;
+    object-fit: contain;
+    z-index: 3;
+    filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.38));
+}
+
+.greyPurpleBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.greyPurpleBtn img {
+    display: block;
+    width: min(20vw, 300px);
+    height: auto;
+}
+
+.purpleScreenStage {
+    background: #6f4aa5;
+}
+
+.nycAfterDinnerBubble {
+    position: absolute;
+    top: 340px;
+    left: 66%;
+    transform: translateX(-50%);
+    width: min(34%, 460px);
+    max-width: 62%;
+    height: auto;
+    object-fit: contain;
+    z-index: 5;
+    pointer-events: none;
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.24));
+}
+
+.nycAfterDinnerBubble[data-bubble-step="2"] {
+    top: 300px;
+    left: 62%;
+    width: min(28%, 380px);
+    max-width: 52%;
+}
+
+.nycAfterDinnerBubble[data-bubble-step="3"] {
+    top: 336px;
+    left: 61%;
+    width: min(30%, 360px);
+    max-width: 50%;
+}
+
+.nycAfterDinnerCouple {
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    width: min(28%, 360px);
+    max-width: 56%;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.45));
+    z-index: 4;
+    pointer-events: none;
+}
+
+.nycAfterDinnerNextBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    z-index: 6;
+}
+
+.nycAfterDinnerFinalBtn {
+    position: absolute;
+    left: 50%;
+    bottom: -62px;
+    transform: translateX(-50%);
+    width: min(20%, 300px);
+    max-width: 86%;
+    aspect-ratio: 1536 / 1024;
+    border: none;
+    background: transparent url("assets/after-restaurant-final-btn.png") center center no-repeat;
+    background-size: contain;
+    cursor: pointer;
+    z-index: 7;
+}
+
+.nycDinnerStage {
     background-image: url("assets/Restaurant img.png");
     background-size: 92% auto;
     background-position: 52% 42%;
@@ -183,7 +1130,8 @@ body {
 }
 
 .nycDinnerGameSign {
-    width: min(62vw, 820px);
+    width: 820px;
+    max-width: 92%;
     height: auto;
     display: block;
     filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.35));
@@ -196,7 +1144,7 @@ body {
     border: 2px solid rgba(255, 211, 92, 0.98);
     background: linear-gradient(180deg, rgba(255, 247, 192, 0.98) 0%, rgba(255, 216, 92, 0.96) 100%);
     color: #5b4300;
-    font-size: clamp(18px, 2vw, 26px);
+    font-size: 22px;
     font-weight: 900;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -219,19 +1167,178 @@ body {
     cursor: default;
 }
 
-@media (max-width: 900px) {
-    .nycDinnerStage {
-        background-position: 58% 46%;
-    }
+.nycDinnerRunner {
+    position: absolute;
+    inset: 0;
+    z-index: 12;
+    overflow: hidden;
+}
+
+.nycDinnerRunner[hidden] {
+    display: none;
+}
+
+.nycDinnerRunnerHud {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    z-index: 14;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 215, 145, 0.95);
+    background: linear-gradient(180deg, rgba(48, 29, 12, 0.9) 0%, rgba(23, 14, 7, 0.92) 100%);
+    color: #ffe3ae;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+}
+
+.nycDinnerRunnerObstacleLayer {
+    position: absolute;
+    inset: 0;
+    z-index: 13;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.nycDinnerRunnerThrower {
+    position: absolute;
+    right: 24px;
+    bottom: 18px;
+    width: auto;
+    height: 220px;
+    z-index: 12;
+    user-select: none;
+    pointer-events: none;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
+}
+
+.nycDinnerRunnerPlayer {
+    position: absolute;
+    left: 120px;
+    bottom: 24px;
+    width: auto;
+    height: 248px;
+    z-index: 14;
+    user-select: none;
+    pointer-events: none;
+    transform: translateY(0);
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
+}
+
+.nycDinnerRunnerObstacle {
+    position: absolute;
+    bottom: 24px;
+    width: 96px;
+    height: 96px;
+    z-index: 13;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.35));
+}
+
+.nycDinnerRunnerObstacle.dinnerObstacleDish {
+    background-image: url("assets/dish_transparent.png");
+}
+
+.nycDinnerRunnerObstacle.dinnerObstacleDrink {
+    background-image: url("assets/drink_transparent.png");
+}
+
+.nycDinnerRunnerObstacle.dinnerObstacleBread {
+    background-image: url("assets/bread_transparent.png");
+}
+
+.nycDinnerRunnerGameOver {
+    position: absolute;
+    inset: 0;
+    z-index: 15;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 14px;
+    background: rgba(11, 7, 19, 0.42);
+}
+
+.nycDinnerRunnerGameOver[hidden] {
+    display: none;
+}
+
+.nycDinnerRunnerGameOverText {
+    padding: 14px 24px;
+    border-radius: 16px;
+    border: 2px solid rgba(255, 210, 130, 0.95);
+    background: linear-gradient(180deg, rgba(62, 37, 19, 0.9) 0%, rgba(29, 17, 10, 0.92) 100%);
+    color: #ffe0ab;
+    font-size: 38px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.nycDinnerRunnerBestScore {
+    padding: 8px 18px;
+    border-radius: 12px;
+    border: 2px solid rgba(255, 223, 166, 0.95);
+    background: rgba(25, 15, 9, 0.85);
+    color: #ffe6bc;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.nycDinnerRunnerCurrentScore {
+    padding: 8px 18px;
+    border-radius: 12px;
+    border: 2px solid rgba(255, 223, 166, 0.95);
+    background: rgba(25, 15, 9, 0.85);
+    color: #ffe6bc;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.nycDinnerRunnerScoreCompare {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.nycDinnerRunnerRestartBtn,
+.nycDinnerRunnerNextBtn {
+    min-width: 200px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 211, 92, 0.98);
+    background: linear-gradient(180deg, rgba(255, 247, 192, 0.98) 0%, rgba(255, 216, 92, 0.96) 100%);
+    color: #5b4300;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    box-shadow: 0 8px 22px rgba(151, 103, 0, 0.35);
+    cursor: pointer;
+}
+
+.nycDinnerRunnerBtnRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 .nycDinnerChat {
     position: absolute;
     left: 22%;
     top: 52%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(var(--dinner-bubble-scale, 1));
     z-index: 9;
-    width: min(34vw, 520px);
+    width: 520px;
+    max-width: 92%;
     padding: 14px 18px;
     border-radius: 26px;
     border: 2px solid rgba(22, 22, 30, 0.82);
@@ -240,9 +1347,10 @@ body {
 }
 
 .nycDinnerChatLeft {
-    left: 30%;
-    top: 46%;
-    width: min(48vw, 700px);
+    left: 18%;
+    top: 38%;
+    width: 330px;
+    max-width: 92%;
     padding: 0;
     border: none;
     background: transparent;
@@ -250,8 +1358,10 @@ body {
 }
 
 .nycDinnerChatRight {
-    left: 43%;
-    width: min(52vw, 780px);
+    left: 48%;
+    top: 46%;
+    width: 390px;
+    max-width: 92%;
     padding: 0;
     border: none;
     background: transparent;
@@ -288,7 +1398,7 @@ body {
 .nycDinnerChatText {
     color: #121521;
     font-weight: 900;
-    font-size: clamp(16px, 1.9vw, 28px);
+    font-size: 24px;
     line-height: 1.28;
     text-align: center;
 }
@@ -299,32 +1409,56 @@ body {
 
 .nycDinnerOkBtn {
     position: absolute;
-    left: 22%;
-    top: 66%;
+    left: 30%;
+    top: 82%;
     transform: translateX(-50%);
     z-index: 10;
-    min-width: 180px;
-    padding: 10px 20px;
-    border-radius: 999px;
-    border: 2px solid rgba(255, 211, 92, 0.98);
-    background: linear-gradient(180deg, rgba(255, 247, 192, 0.98) 0%, rgba(255, 216, 92, 0.96) 100%);
-    color: #5b4300;
-    font-size: clamp(16px, 1.8vw, 24px);
+    width: 124px;
+    height: 110px;
+    border: none;
+    background: radial-gradient(circle at 30% 26%, rgba(255, 132, 132, 0.74) 0%, rgba(235, 45, 45, 0.62) 44%, rgba(168, 16, 16, 0.56) 100%);
+    clip-path: polygon(50% 100%, 8% 58%, 8% 30%, 24% 14%, 41% 14%, 50% 25%, 59% 14%, 76% 14%, 92% 30%, 92% 58%);
+    color: #fff6fa;
+    font-size: 20px;
     font-weight: 900;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.03em;
     text-transform: uppercase;
-    box-shadow: 0 8px 22px rgba(151, 103, 0, 0.35);
+    text-shadow: 0 1px 2px rgba(107, 11, 46, 0.55);
+    box-shadow: 0 10px 24px rgba(148, 20, 70, 0.4);
     cursor: pointer;
-    transition: transform 120ms ease, box-shadow 120ms ease;
+    transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+    animation: dinnerHeartPulse 1.08s ease-in-out infinite;
 }
 
 .nycDinnerOkBtn:hover {
-    transform: translateX(-50%) translateY(-2px);
-    box-shadow: 0 12px 28px rgba(151, 103, 0, 0.45);
+    transform: translateX(-50%) translateY(-2px) scale(1.03);
+    box-shadow: 0 14px 28px rgba(148, 20, 70, 0.48);
 }
 
 .nycDinnerOkBtn:active {
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(-50%) translateY(0) scale(0.97);
+}
+
+@keyframes dinnerHeartPulse {
+    0% {
+        transform: translateX(-50%) scale(1);
+    }
+
+    20% {
+        transform: translateX(-50%) scale(1.08);
+    }
+
+    40% {
+        transform: translateX(-50%) scale(0.97);
+    }
+
+    60% {
+        transform: translateX(-50%) scale(1.06);
+    }
+
+    100% {
+        transform: translateX(-50%) scale(1);
+    }
 }
 
 .nycRoomStage.gameStarted {
@@ -370,7 +1504,7 @@ body {
     background: linear-gradient(180deg, rgba(59, 38, 20, 0.88) 0%, rgba(28, 17, 9, 0.9) 100%);
     color: #ffe6a4;
     font-weight: 900;
-    font-size: clamp(14px, 2vw, 22px);
+    font-size: 20px;
     letter-spacing: 0.03em;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
     white-space: nowrap;
@@ -394,7 +1528,8 @@ body {
 }
 
 .nycWinSign {
-    min-width: min(88vw, 760px);
+    width: 760px;
+    max-width: 92%;
     padding: 20px 30px;
     border-radius: 20px;
     border: 2px solid rgba(151, 255, 162, 0.95);
@@ -402,20 +1537,30 @@ body {
     color: #d8ffd4;
     text-align: center;
     font-weight: 900;
-    font-size: clamp(24px, 3.7vw, 46px);
+    font-size: 40px;
     letter-spacing: 0.02em;
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 28px rgba(115, 255, 133, 0.35);
 }
 
 .nycWinSignImage {
-    width: min(80vw, 900px);
+    width: 900px;
+    max-width: 92%;
     height: auto;
     display: block;
     filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.35));
 }
 
-.nycWinBackBtn {
+.nycOverlayBtnRow {
     margin-top: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.nycWinBackBtn,
+.nycWinPlayAgainBtn {
     min-width: 200px;
     padding: 12px 22px;
     border-radius: 999px;
@@ -431,12 +1576,14 @@ body {
     transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
-.nycWinBackBtn:hover {
+.nycWinBackBtn:hover,
+.nycWinPlayAgainBtn:hover {
     transform: translateY(-2px);
     box-shadow: 0 12px 28px rgba(151, 103, 0, 0.45);
 }
 
-.nycWinBackBtn:active {
+.nycWinBackBtn:active,
+.nycWinPlayAgainBtn:active {
     transform: translateY(0);
 }
 
@@ -456,7 +1603,8 @@ body {
 }
 
 .nycGameOverSign {
-    min-width: min(84vw, 520px);
+    width: 520px;
+    max-width: 90%;
     padding: 18px 30px;
     border-radius: 18px;
     border: 2px solid rgba(255, 205, 118, 0.92);
@@ -466,11 +1614,12 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-weight: 900;
-    font-size: clamp(26px, 4vw, 46px);
+    font-size: 42px;
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45), 0 0 26px rgba(255, 196, 84, 0.35);
 }
 
-.nycPlayAgainBtn {
+.nycPlayAgainBtn,
+.nycGameOverNextBtn {
     min-width: 210px;
     padding: 12px 24px;
     border-radius: 999px;
@@ -486,22 +1635,24 @@ body {
     transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
-.nycPlayAgainBtn:hover {
+.nycPlayAgainBtn:hover,
+.nycGameOverNextBtn:hover {
     transform: translateY(-2px);
     box-shadow: 0 12px 28px rgba(151, 103, 0, 0.45);
 }
 
-.nycPlayAgainBtn:active {
+.nycPlayAgainBtn:active,
+.nycGameOverNextBtn:active {
     transform: translateY(0);
 }
 
 .roadObstacle {
     position: absolute;
     left: 50%;
-    top: 50vh;
+    top: 50%;
     bottom: auto;
-    width: clamp(34px, 4.2vw, 70px);
-    height: clamp(38px, 4.8vw, 78px);
+    width: 70px;
+    height: 78px;
     border-radius: 8px;
     transform-origin: center;
     animation-name: roadObstacleRun;
@@ -534,18 +1685,18 @@ body {
 
 @keyframes roadObstacleRun {
     0% {
-        top: 50vh;
-        transform: translateX(calc(-50% + var(--startX, 0vw))) scale(0.78);
+        top: 50%;
+        transform: translateX(calc(-50% + var(--startX, 0px))) scale(0.78);
         opacity: 0.95;
     }
 
     60% {
-        transform: translateX(calc(-50% + var(--fallXMid, 8vw))) scale(1.03);
+        transform: translateX(calc(-50% + var(--fallXMid, 120px))) scale(1.03);
     }
 
     100% {
-        top: 112vh;
-        transform: translateX(calc(-50% + var(--fallX, 24vw))) scale(1.22);
+        top: 112%;
+        transform: translateX(calc(-50% + var(--fallX, 360px))) scale(1.22);
         opacity: 0.95;
     }
 }
@@ -555,7 +1706,7 @@ body {
     left: 50%;
     top: 69%;
     transform: translate(-50%, -50%);
-    width: min(24vw, 300px);
+    width: 300px;
     height: auto;
     z-index: 6;
     pointer-events: none;
@@ -564,7 +1715,7 @@ body {
 }
 
 .nycRoomStage.gameStarted .nycCouple {
-    width: min(10vw, 120px);
+    width: 140px;
 }
 
 .nycCouple.hitFlip {
@@ -589,8 +1740,28 @@ body {
     z-index: 8;
 }
 
+.nycPostDinnerSummary {
+    position: absolute;
+    left: 50%;
+    top: 16%;
+    transform: translateX(-50%);
+    z-index: 9;
+    width: min(980px, 86%);
+    padding: 14px 18px;
+    border-radius: 16px;
+    border: 2px solid rgba(255, 241, 198, 0.92);
+    background: rgba(35, 25, 12, 0.62);
+    color: #fff5d8;
+    text-align: center;
+    font-weight: 800;
+    font-size: clamp(16px, 1.4vw, 24px);
+    line-height: 1.35;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
 .nycWalkBubble img {
-    width: min(40vw, 620px);
+    width: 620px;
+    max-width: 92%;
     height: auto;
     display: block;
 }
@@ -598,14 +1769,14 @@ body {
 .nycWalkOkBtn {
     position: absolute;
     left: 50%;
-    bottom: calc(1vh - 80px);
+    bottom: -36px;
     transform: translateX(-50%);
     z-index: 9;
-    width: min(24vw, 280px);
+    width: 280px;
     aspect-ratio: 1536 / 1024;
     border: none;
     cursor: pointer;
-    background: transparent url("assets/好的宝宝.png") center center no-repeat;
+    background: transparent url("assets/%E5%A5%BD%E7%9A%84%E5%AE%9D%E5%AE%9D.png") center center no-repeat;
     background-size: contain;
 }
 
@@ -618,7 +1789,8 @@ body {
 }
 
 .nycStartSign img {
-    width: min(42vw, 640px);
+    width: 640px;
+    max-width: 92%;
     height: auto;
     display: block;
 }
@@ -626,7 +1798,7 @@ body {
 .nycStartBtn {
     position: absolute;
     left: 50%;
-    bottom: 2vh;
+    bottom: 24px;
     transform: translateX(-50%);
     z-index: 9;
     min-width: 210px;
@@ -654,16 +1826,14 @@ body {
 }
 
 .blankWhitePage {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background: transparent;
 }
 
 .shelfScene {
-    position: fixed;
-    inset: 0;
     background: #f6d6ea url("assets/bookshelf.png") center center no-repeat;
-    background-size: cover;
+    background-size: 100% 100%;
 }
 
 .shelfHeartHotspot {
@@ -678,15 +1848,31 @@ body {
 }
 
 .noteScene {
-    position: fixed;
-    inset: 0;
     background: #f6d6ea url("assets/blank note.png") center center no-repeat;
     background-size: contain;
 }
 
+.nycWalkOkBtn.postDinnerFinal {
+    bottom: -72px;
+}
+
+.noteMessage {
+    position: absolute;
+    left: 48%;
+    top: 47%;
+    transform: translate(-50%, -50%);
+    width: min(640px, 62%);
+    text-align: center;
+    color: #2f1f1f;
+    font-family: "Brush Script MT", "Segoe Script", "Lucida Handwriting", cursive;
+    font-size: clamp(28px, 2.9vw, 46px);
+    line-height: 1.35;
+    font-weight: 800;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+    z-index: 10;
+}
+
 .computerScene {
-    position: fixed;
-    inset: 0;
     display: grid;
     place-items: center;
     background: #d7d4ff;
@@ -694,7 +1880,8 @@ body {
 
 .computerFrame {
     position: relative;
-    width: min(100vw, calc(100vh * (2048 / 1536)));
+    width: min(100%, calc((var(--scene-height) - 72px) * (2048 / 1536)));
+    max-height: calc(100% - 72px);
     aspect-ratio: 2048 / 1536;
     background: url("assets/windows screen.png") center center no-repeat;
     background-size: 100% 100%;
@@ -738,11 +1925,10 @@ body {
 }
 
 .huntStartBtn,
-.escapeOkBtn,
 .nycGoBtn {
     position: absolute;
     left: 50%;
-    bottom: 28px;
+    bottom: 84px;
     transform: translateX(-50%);
     min-width: 180px;
     padding: 12px 22px;
@@ -760,25 +1946,39 @@ body {
 }
 
 .huntStartBtn:hover,
-.escapeOkBtn:hover,
 .nycGoBtn:hover {
     transform: translateX(-50%) translateY(-2px);
     box-shadow: 0 12px 28px rgba(98, 29, 98, 0.4);
 }
 
 .huntStartBtn:active,
-.escapeOkBtn:active,
 .nycGoBtn:active {
     transform: translateX(-50%) translateY(0);
 }
 
+.escapeSignFrame,
+.nycSignFrame {
+    position: relative;
+    width: min(90%, 980px);
+}
+
+.escapeSignImage,
+.nycSignImage {
+    width: 100%;
+}
+
+.nycSignFrame {
+    transform: translateY(42px);
+}
+
 /* Use the built-in "OK!" drawn on the escape sign image; this is just a click hotspot. */
 .escapeOkBtn {
-    left: 39.5%;
-    top: 63%;
+    position: absolute;
+    left: 38.5%;
+    top: 69%;
     bottom: auto;
-    width: min(25vw, 270px);
-    height: min(8.5vw, 92px);
+    width: 40%;
+    height: 22%;
     min-width: 0;
     padding: 0;
     border: none;
@@ -800,10 +2000,10 @@ body {
 
 .escapeErrorHotspot {
     position: absolute;
-    left: 63%;
-    top: 63%;
-    width: min(8vw, 88px);
-    height: min(8vw, 88px);
+    left: 60.5%;
+    top: 69%;
+    width: 13.5%;
+    aspect-ratio: 1 / 1;
     border: none;
     border-radius: 999px;
     background: transparent;
@@ -815,10 +2015,10 @@ body {
 /* Click hotspot over the built-in "LET'S GO!" on NYC sign image. */
 .nycGoHotspot {
     position: absolute;
-    left: 38%;
-    top: 65.5%;
-    width: min(24vw, 260px);
-    height: min(8.4vw, 92px);
+    left: 36.8%;
+    top: 69.4%;
+    width: 40%;
+    height: 20.5%;
     border: none;
     border-radius: 999px;
     background: transparent;
@@ -830,10 +2030,10 @@ body {
 
 .nycErrorHotspot {
     position: absolute;
-    left: 60.5%;
-    top: 65.5%;
-    width: min(8vw, 88px);
-    height: min(8vw, 88px);
+    left: 58.7%;
+    top: 69.4%;
+    width: 13.5%;
+    aspect-ratio: 1 / 1;
     border: none;
     border-radius: 999px;
     background: transparent;
@@ -849,7 +2049,8 @@ body {
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 20;
-    min-width: min(62vw, 360px);
+    width: 360px;
+    max-width: calc(100% - 24px);
     border-radius: 16px;
     border: 1px solid rgba(0, 0, 0, 0.2);
     background: rgba(255, 224, 244, 0.92);
@@ -863,7 +2064,7 @@ body {
 }
 
 .loveBugImage {
-    width: min(46vw, 220px);
+    width: 220px;
     max-width: 100%;
     height: auto;
     display: block;
@@ -897,7 +2098,7 @@ body {
 }
 
 .loveBugMessageImage {
-    width: min(78vw, 900px);
+    width: 900px;
     max-width: 100%;
     height: auto;
     display: block;
@@ -918,7 +2119,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: min(14vw, 120px);
+    width: 120px;
     height: auto;
     z-index: 16;
     pointer-events: none;
@@ -942,8 +2143,6 @@ body {
 }
 
 .customizeScreen {
-    position: fixed;
-    inset: 0;
     overflow: hidden;
 }
 
@@ -964,15 +2163,13 @@ body {
 .customizeContent {
     position: relative;
     z-index: 2;
-    min-height: 100vh;
+    min-height: 100%;
     padding: 18px 18px 0;
     display: flex;
     flex-direction: column;
 }
 
 .openingScreen {
-    position: fixed;
-    inset: 0;
     overflow: hidden;
     background: #000;
 }
@@ -996,7 +2193,8 @@ body {
     top: 5px;
     left: -160px;
     z-index: 2;
-    width: min(60vw, 980px);
+    width: 980px;
+    max-width: 92%;
     height: auto;
     pointer-events: none;
 }
@@ -1004,23 +2202,22 @@ body {
 .openingContent {
     position: relative;
     z-index: 3;
-    min-height: 100vh;
-    padding: 18px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
+    min-height: 100%;
+    padding: 0;
 }
 
 .startImageBtn {
-    width: min(48vw, 400px);
+    position: absolute;
+    top: 39%;
+    left: 10%;
+    width: 400px;
+    max-width: 42%;
     aspect-ratio: 3 / 2;
     border: none;
     background: transparent url("assets/start button.png") center center no-repeat;
     background-size: contain;
     cursor: pointer;
-    margin-top: 5vh;
-    margin-left: 5px;
+    margin: 0;
     opacity: 0.72;
     transition: transform 0.16s ease;
 }
@@ -1031,19 +2228,6 @@ body {
 
 .startImageBtn:active {
     transform: scale(0.98);
-}
-
-@media (max-width: 700px) {
-    .openingLogo {
-        left: 2px;
-        width: min(74vw, 430px);
-    }
-
-    .startImageBtn {
-        width: min(62vw, 300px);
-        margin-top: 16vh;
-        margin-left: -16px;
-    }
 }
 
 /* header */
@@ -1085,6 +2269,123 @@ body {
     background: rgba(255, 255, 255, 0.65);
 }
 
+.gameMapOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+    padding: 18px;
+    background: rgba(0, 0, 0, 0.58);
+    backdrop-filter: blur(2px);
+}
+
+.gameMapModal {
+    width: min(860px, 96vw);
+    max-height: min(82dvh, 760px);
+    overflow: auto;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: linear-gradient(180deg, rgba(24, 30, 54, 0.95) 0%, rgba(14, 18, 32, 0.97) 100%);
+    box-shadow: 0 20px 44px rgba(0, 0, 0, 0.5);
+    padding: 18px;
+}
+
+.gameMapTitle {
+    color: #fff6d7;
+    font-weight: 900;
+    font-size: 28px;
+    letter-spacing: 0.02em;
+    margin-bottom: 14px;
+}
+
+.gameMapGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.gameMapItemBtn {
+    border: 1px solid rgba(255, 247, 202, 0.36);
+    border-radius: 14px;
+    background: linear-gradient(180deg, rgba(255, 200, 118, 0.22) 0%, rgba(255, 135, 124, 0.18) 100%);
+    color: #fff;
+    text-align: left;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: transform 110ms ease, box-shadow 110ms ease, border-color 110ms ease;
+}
+
+.gameMapItemBtn:hover {
+    transform: translateY(-1px);
+    border-color: rgba(255, 247, 202, 0.64);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.32);
+}
+
+.gameMapItemLabel {
+    display: block;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.gameMapItemHint {
+    display: block;
+    margin-top: 3px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.86);
+}
+
+.gameMapCloseBtn {
+    margin-top: 14px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.floatingMapBtn {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 9500;
+    min-width: 90px;
+    height: 46px;
+    border: 1px solid rgba(255, 244, 202, 0.6);
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(255, 204, 117, 0.95) 0%, rgba(255, 146, 113, 0.95) 100%);
+    color: #3b2100;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.28);
+}
+
+.floatingMapBtn:hover {
+    transform: translateY(-1px);
+}
+
+.heartNextBtn {
+    width: 98px;
+    height: 84px;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: radial-gradient(circle at 30% 26%, rgba(255, 132, 132, 0.74) 0%, rgba(235, 45, 45, 0.62) 44%, rgba(168, 16, 16, 0.56) 100%);
+    clip-path: polygon(50% 100%, 8% 58%, 8% 30%, 24% 14%, 41% 14%, 50% 25%, 59% 14%, 76% 14%, 92% 30%, 92% 58%);
+    color: #fff6fa;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    text-shadow: 0 1px 2px rgba(107, 11, 46, 0.55);
+    box-shadow: 0 10px 24px rgba(148, 20, 70, 0.4);
+    animation: dinnerHeartPulse 1.08s ease-in-out infinite;
+}
+
 /* cards */
 .card {
     background: rgba(255, 255, 255, 0.88);
@@ -1104,13 +2405,6 @@ body {
     min-width: 0;
 }
 
-
-/* responsive */
-@media (max-width: 900px) {
-    .row {
-        grid-template-columns: 1fr;
-    }
-}
 
 /* =========================
    CUSTOMIZE SCREEN
@@ -1143,8 +2437,8 @@ body {
 .choiceBtn img {
     display: block;
     margin: 0 auto;
-    width: min(33vw, 320px);
-    /* stops giant images */
+    width: 320px;
+    max-width: 100%;
     height: auto;
 }
 
@@ -1157,9 +2451,10 @@ body {
 }
 
 .customizeCard {
-    width: min(980px, calc(100vw - 36px));
+    width: 980px;
+    max-width: 100%;
     margin: 0 auto;
-    min-height: calc(100vh - 120px);
+    min-height: calc(var(--scene-height) - 120px);
     display: flex;
     flex-direction: column;
     padding: 0;
@@ -1170,7 +2465,7 @@ body {
 }
 
 .customizeTitleImage {
-    width: min(44vw, 560px);
+    width: 560px;
     max-width: 100%;
     height: auto;
     margin: 0;
@@ -1197,26 +2492,6 @@ body {
     }
 }
 
-@media (max-width: 900px) {
-    .customizeCard {
-        min-height: auto;
-    }
-
-    .choiceRow {
-        margin-top: 100vh;
-        margin-bottom: 100px;
-    }
-
-    .choiceBtn img {
-        width: min(48vw, 260px);
-    }
-
-    .customizeTitleImage {
-        width: min(58vw, 380px);
-        top: 10px;
-    }
-}
-
 /* =========================
    MODAL
    ========================= */
@@ -1231,7 +2506,8 @@ body {
 }
 
 .modal {
-    width: min(520px, calc(100vw - 30px));
+    width: var(--dialog-width);
+    max-width: calc(100% - 30px);
     background: white;
     border-radius: 18px;
     padding: 16px;
@@ -1249,7 +2525,8 @@ body {
    ========================= */
 
 .gameArea {
-    width: min(520px, calc(100vw - 40px));
+    width: var(--dialog-width);
+    max-width: calc(100% - 40px);
     height: 380px;
     border: 2px solid rgba(0, 0, 0, 0.2);
     border-radius: 18px;
@@ -1274,6 +2551,7 @@ body {
 .app.mapMode {
     padding: 0;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     background: black;
 }
@@ -1289,8 +2567,8 @@ body {
 
 .roomStage {
     position: relative;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background: url("assets/room img valentine.png") center center no-repeat;
     background-size: 100% 100%;
     overflow: hidden;
@@ -1316,10 +2594,8 @@ body {
 
 .app.mapMode .roomStage {
     display: block;
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
+    width: var(--scene-width);
+    height: var(--scene-height);
 
     background-image: url("assets/room img valentine.png");
     background-size: 100% 100%;
@@ -1347,13 +2623,14 @@ body {
 }
 
 .roomIntroBubble img {
-    width: min(36vw, 430px);
+    width: 430px;
+    max-width: 90%;
     height: auto;
     display: block;
 }
 
 .introOkBtn {
-    position: fixed;
+    position: absolute;
     left: 50%;
     bottom: 24px;
     transform: translateX(-50%);
@@ -1408,12 +2685,82 @@ body {
     pointer-events: auto;
 }
 
+.hotelAction {
+    position: absolute;
+    right: 8%;
+    top: 32%;
+    z-index: 41;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    background: rgba(20, 78, 118, 0.72);
+    color: #fff;
+    font-weight: 800;
+    cursor: pointer;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.hotelAction.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.mapTouchControls {
+    position: absolute;
+    left: 20px;
+    bottom: 18px;
+    z-index: 26;
+    width: 204px;
+    display: none;
+    grid-template-columns: repeat(3, 60px);
+    grid-template-rows: repeat(3, 60px);
+    gap: 12px;
+    touch-action: none;
+    user-select: none;
+}
+
+.mapCtrlBtn {
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+}
+
+.mapCtrlUp {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.mapCtrlLeft {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.mapCtrlRight {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.mapCtrlDown {
+    grid-column: 2;
+    grid-row: 3;
+}
+
 .roomPanel {
     position: absolute;
     top: 90px;
     left: 50%;
     transform: translateX(-50%);
-    width: min(980px, calc(100vw - 40px));
+    width: var(--panel-width);
+    max-width: calc(100% - 40px);
     z-index: 10;
 }
 
@@ -1424,7 +2771,7 @@ body {
     left: 0;
     bottom: auto;
 
-    height: 500px;
+    height: 660px;
     width: auto;
 
     pointer-events: none;
@@ -1573,3 +2920,156 @@ body {
     background: radial-gradient(circle at 30% 30%, #fff2c8 0%, #ffc66d 42%, #ff8b5a 100%);
     box-shadow: 0 0 20px rgba(255, 172, 110, 0.7);
 }
+
+@media (hover: none), (pointer: coarse) {
+    .mapTouchControls {
+        display: grid;
+    }
+}
+
+@media (max-width: 640px) {
+    .mapTouchControls {
+        left: 14px;
+        bottom: 12px;
+        width: 162px;
+        grid-template-columns: repeat(3, 48px);
+        grid-template-rows: repeat(3, 48px);
+        gap: 9px;
+    }
+
+    .mapCtrlBtn {
+        border-radius: 12px;
+        font-size: 10px;
+    }
+}
+
+@media (max-height: 930px) and (min-width: 900px) {
+    .openingLogo {
+        left: -30px;
+        width: 780px;
+    }
+
+    .startImageBtn {
+        top: 46%;
+        left: 14%;
+        width: 300px;
+        max-width: 36%;
+    }
+
+    .customizeContent {
+        padding: 10px 14px 0;
+    }
+
+    .customizeCard {
+        min-height: calc(var(--scene-height) - 70px);
+    }
+
+    .choiceRow {
+        margin-bottom: 0;
+    }
+
+    .choiceBtn img {
+        width: 250px;
+    }
+
+    .roomIntroBubble img {
+        width: 360px;
+    }
+
+    .introOkBtn {
+        width: 300px !important;
+        bottom: 12px;
+    }
+
+    .nycWalkOkBtn,
+    .nycStartBtn,
+    .nycDinnerStartBtn,
+    .nycDinnerRunnerRestartBtn,
+    .nycPlayAgainBtn,
+    .nycGameOverNextBtn,
+    .nycWinPlayAgainBtn,
+    .nycWinBackBtn {
+        min-width: 160px;
+        font-size: 18px;
+        padding: 9px 18px;
+    }
+
+    .nycDinnerGameOverText {
+        font-size: 30px;
+    }
+
+    .nycDinnerRunnerHud,
+    .nycAvoidHud {
+        font-size: 17px;
+        padding: 7px 12px;
+    }
+
+    .backRoomBtn,
+    .homeBtn {
+        padding: 8px 12px;
+    }
+
+    .gameMapModal {
+        width: min(94vw, 700px);
+        padding: 14px;
+    }
+
+    .gameMapTitle {
+        font-size: 22px;
+    }
+
+    .gameMapGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .floatingMapBtn {
+        right: 12px;
+        bottom: 12px;
+        min-width: 84px;
+        height: 42px;
+        font-size: 15px;
+    }
+
+    .computerFrame {
+        width: min(88%, 980px);
+        max-height: calc(100% - 72px);
+    }
+
+    .catchStartSign,
+    .escapeSignImage,
+    .nycSignImage {
+        width: min(84%, 780px);
+    }
+
+    .escapeSignFrame,
+    .nycSignFrame {
+        width: min(84%, 780px);
+    }
+
+    .huntStartBtn,
+    .nycGoBtn {
+        bottom: 24px;
+        min-width: 150px;
+        padding: 8px 16px;
+        font-size: 15px;
+    }
+
+
+    .loveBugPopup {
+        width: 320px;
+        padding: 14px;
+    }
+
+    .loveBugImage {
+        width: 180px;
+    }
+
+    .loveBugMessageImage {
+        width: 700px;
+    }
+
+    .loveBugCrawler {
+        width: 98px;
+    }
+}
+
