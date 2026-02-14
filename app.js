@@ -72,7 +72,7 @@ function saveMintTopScore(score) {
 
 function defaultState() {
     return {
-        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | orangeScreen | violetScreen | blueScreen | greenScreen | kissRedScreen | kissPinkScreen | kissGreyScreen | redScreen | blackScreen | brownScreen | greyScreen | silverScreen | purpleScreen | magentaScreen | goldenScreen | mintRoom
+        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | orangeScreen | violetScreen | blueScreen | greenScreen | kissRedScreen | kissPinkScreen | kissGreyScreen | capcutScreen | creditsScreen | redScreen | blackScreen | brownScreen | greyScreen | silverScreen | purpleScreen | magentaScreen | goldenScreen | mintRoom
         characterMode: null, // null | alone | withme
         mapIntroDone: false,
         mapPostComputerIntroPending: false,
@@ -657,6 +657,7 @@ function showGameMapMenu() {
 
     const destinations = [
         { screen: "map", label: "Map Room", hint: "Main room hub" },
+        { screen: "creditsScreen", label: "Credits", hint: "Open the credits and gift scene" },
         { screen: "bahamasHotel", label: "Hotel", hint: "Go to hotel background scene" },
         { screen: "computer", label: "Computer Game", hint: "Open love bug hunt room" },
         { screen: "nycRoom", label: "NYC Walk Game", hint: "Dodge obstacles scene" },
@@ -1154,6 +1155,11 @@ function screenKissGreyScreen() {
     return `
     ${headerTitle()}
     <div class="kissGreyScreenStage" id="kissGreyScreenStage" aria-label="Grey screen">
+      <div class="kissGreyCenterBox" id="kissGreyCenterBox" aria-hidden="true"></div>
+      <img class="kissGreyStartMovieImg" id="kissGreyStartMovieImg" src="assets/startmovie.png" alt="Start movie" hidden>
+      <button class="kissGreyStartMovieBtn" id="kissGreyStartMovieBtn" aria-label="Start movie" hidden>
+        <img class="kissGreyStartMovieBtnImg" src="assets/startmv.png" alt="Start movie">
+      </button>
       <img class="kissGreyBubbleImg first" id="kissGreyBubbleImg" src="assets/couch 1.png" alt="Finally time to rest">
       <img class="kissGreyQuestionImg" id="kissGreyQuestionText" src="assets/missing.png" alt="who is missing?" hidden>
       <div class="kissGreyAnswerBox" id="kissGreyAnswerBox" hidden>
@@ -1166,10 +1172,40 @@ function screenKissGreyScreen() {
           placeholder="type answer"
           aria-label="Type who is missing"
         >
-        <img class="kissGreyKiwiImg" id="kissGreyKiwiImg" src="assets/kiwi.png" alt="Kiwi revealed" hidden>
         <div class="kissGreyAnswerError" id="kissGreyAnswerError" hidden>try again</div>
       </div>
+      <div class="kissGreyKiwiPickup" id="kissGreyKiwiPickup" hidden>
+        <img class="kissGreyKiwiImg" id="kissGreyKiwiImg" src="assets/kiwi.png" alt="Kiwi revealed">
+        <button class="kissGreyTakeBtn" id="kissGreyTakeBtn" aria-label="Take kiwi">take</button>
+      </div>
       <button class="heartNextBtn kissGreyNextBtn" id="kissGreyNextBtn" aria-label="Next">Next</button>
+    </div>
+  `;
+}
+
+function screenCapcutScreen() {
+    return `
+    ${headerTitle()}
+    <div class="brownScreenStage" id="capcutScreenStage" aria-label="CapCut movie screen">
+      <video class="brownScreenVideo" id="capcutScreenVideo" autoplay controls playsinline>
+        <source src="assets/capcut.mp4" type="video/mp4">
+      </video>
+    </div>
+  `;
+}
+
+function screenCreditsScreen() {
+    return `
+    ${headerTitle()}
+    <div class="blackScreenStage" id="creditsScreenStage" aria-label="Credits screen">
+      <div class="creditsBody">
+        <p>In such a short time, we’ve already made so many memories. The love bug showed up early… and now that it bit me, love will never disappear.</p>
+        <p>It won’t fade when things get busy. It won’t vanish when days get hard. It stays. It grows. It lives in the little moments and the big ones—in the laughter, the quiet, and that feeling of being close to you that makes everything softer.</p>
+        <p>So yeah—short time, so many memories… and so many more to come. Because now that the love bug got me, this love isn’t going anywhere. Not with you. Not ever.</p>
+        <p>And there is one more gift waiting for you.</p>
+      </div>
+      <button class="creditsContinueBtn" id="creditsContinueBtn" aria-label="Open gift"></button>
+      <div class="creditsGiftLabel" aria-hidden="true">open gift</div>
     </div>
   `;
 }
@@ -2048,8 +2084,8 @@ function render() {
     app.classList.toggle("kissPinkScreenMode", state.screen === "kissPinkScreen");
     app.classList.toggle("kissGreyScreenMode", state.screen === "kissGreyScreen");
     app.classList.toggle("redScreenMode", state.screen === "redScreen");
-    app.classList.toggle("blackScreenMode", state.screen === "blackScreen");
-    app.classList.toggle("brownScreenMode", state.screen === "brownScreen");
+    app.classList.toggle("blackScreenMode", state.screen === "blackScreen" || state.screen === "creditsScreen");
+    app.classList.toggle("brownScreenMode", state.screen === "brownScreen" || state.screen === "capcutScreen");
     app.classList.toggle("greyScreenMode", state.screen === "greyScreen");
     app.classList.toggle("silverScreenMode", state.screen === "silverScreen");
     app.classList.toggle("purpleScreenMode", state.screen === "purpleScreen");
@@ -3069,23 +3105,117 @@ function render() {
     if (state.screen === "kissGreyScreen") {
         app.innerHTML = screenKissGreyScreen();
         mountHomeButton();
+        const kissGreyScreenStage = document.getElementById("kissGreyScreenStage");
         const kissGreyBubbleImg = document.getElementById("kissGreyBubbleImg");
         const kissGreyQuestionText = document.getElementById("kissGreyQuestionText");
         const kissGreyAnswerBox = document.getElementById("kissGreyAnswerBox");
         const kissGreyAnswerInput = document.getElementById("kissGreyAnswerInput");
+        const kissGreyCenterBox = document.getElementById("kissGreyCenterBox");
+        const kissGreyStartMovieImg = document.getElementById("kissGreyStartMovieImg");
+        const kissGreyStartMovieBtn = document.getElementById("kissGreyStartMovieBtn");
+        const kissGreyKiwiPickup = document.getElementById("kissGreyKiwiPickup");
         const kissGreyKiwiImg = document.getElementById("kissGreyKiwiImg");
+        const kissGreyTakeBtn = document.getElementById("kissGreyTakeBtn");
         const kissGreyAnswerError = document.getElementById("kissGreyAnswerError");
         const kissGreyNextBtn = document.getElementById("kissGreyNextBtn");
         let kissGreyStep = 0;
+        let kiwiRevealQueued = false;
+        let isKiwiDragging = false;
+        let kiwiLockedInBox = false;
+        let kiwiDragOffsetX = 0;
+        let kiwiDragOffsetY = 0;
+        const placeKiwiAt = (left, top) => {
+            if (kissGreyKiwiImg == null) return;
+            const maxLeft = Math.max(0, window.innerWidth - kissGreyKiwiImg.offsetWidth);
+            const maxTop = Math.max(0, window.innerHeight - kissGreyKiwiImg.offsetHeight);
+            const clampedLeft = Math.min(Math.max(0, left), maxLeft);
+            const clampedTop = Math.min(Math.max(0, top), maxTop);
+            kissGreyKiwiImg.style.left = `${clampedLeft}px`;
+            kissGreyKiwiImg.style.top = `${clampedTop}px`;
+        };
+        const lockKiwiInCenterBox = () => {
+            if (kissGreyKiwiImg == null || kissGreyCenterBox == null) return;
+            kiwiLockedInBox = true;
+            kissGreyKiwiImg.classList.remove("dragging", "draggable");
+            kissGreyKiwiImg.classList.add("locked");
+            if (kissGreyStartMovieImg != null) kissGreyStartMovieImg.hidden = false;
+            if (kissGreyStartMovieBtn != null) kissGreyStartMovieBtn.hidden = false;
+        };
+        const shouldLockKiwiInBox = () => {
+            if (kissGreyKiwiImg == null || kissGreyCenterBox == null) return false;
+            const kiwiRect = kissGreyKiwiImg.getBoundingClientRect();
+            const boxRect = kissGreyCenterBox.getBoundingClientRect();
+            return !(kiwiRect.right < boxRect.left || kiwiRect.left > boxRect.right || kiwiRect.bottom < boxRect.top || kiwiRect.top > boxRect.bottom);
+        };
+        const stopKiwiDrag = () => {
+            isKiwiDragging = false;
+            if (kissGreyKiwiImg != null) kissGreyKiwiImg.classList.remove("dragging");
+            window.removeEventListener("pointermove", onKiwiDragMove);
+            window.removeEventListener("pointerup", stopKiwiDrag);
+            window.removeEventListener("pointercancel", stopKiwiDrag);
+            window.removeEventListener("mousemove", onKiwiDragMouseMove);
+            window.removeEventListener("mouseup", stopKiwiDrag);
+            if (kiwiLockedInBox || kissGreyKiwiImg == null || !kissGreyKiwiImg.classList.contains("draggable")) return;
+            if (shouldLockKiwiInBox()) {
+                lockKiwiInCenterBox();
+            }
+        };
+        const onKiwiDragMove = (event) => {
+            if (state.screen !== "kissGreyScreen") {
+                stopKiwiDrag();
+                return;
+            }
+            if (!isKiwiDragging) return;
+            placeKiwiAt(event.clientX - kiwiDragOffsetX, event.clientY - kiwiDragOffsetY);
+        };
+        const onKiwiDragMouseMove = (event) => {
+            onKiwiDragMove(event);
+        };
+        const onKiwiPointerDown = (event) => {
+            if (kissGreyKiwiImg == null) return;
+            if (!kissGreyKiwiImg.classList.contains("draggable")) return;
+            if (kiwiLockedInBox) return;
+            const kiwiRect = kissGreyKiwiImg.getBoundingClientRect();
+            kiwiDragOffsetX = event.clientX - kiwiRect.left;
+            kiwiDragOffsetY = event.clientY - kiwiRect.top;
+            isKiwiDragging = true;
+            kissGreyKiwiImg.classList.add("dragging");
+            window.addEventListener("pointermove", onKiwiDragMove);
+            window.addEventListener("pointerup", stopKiwiDrag);
+            window.addEventListener("pointercancel", stopKiwiDrag);
+        };
+        const onKiwiMouseDown = (event) => {
+            if (kissGreyKiwiImg == null) return;
+            if (!kissGreyKiwiImg.classList.contains("draggable")) return;
+            if (kiwiLockedInBox) return;
+            event.preventDefault();
+            const kiwiRect = kissGreyKiwiImg.getBoundingClientRect();
+            kiwiDragOffsetX = event.clientX - kiwiRect.left;
+            kiwiDragOffsetY = event.clientY - kiwiRect.top;
+            isKiwiDragging = true;
+            kissGreyKiwiImg.classList.add("dragging");
+            window.addEventListener("mousemove", onKiwiDragMouseMove);
+            window.addEventListener("mouseup", stopKiwiDrag);
+        };
         const checkKissGreyAnswer = () => {
             const raw = kissGreyAnswerInput?.value ?? "";
             const answer = raw.trim().toLowerCase();
             if (answer === "kiwi") {
-                if (kissGreyKiwiImg != null) kissGreyKiwiImg.hidden = false;
+                if (kiwiRevealQueued) return;
+                kiwiRevealQueued = true;
                 if (kissGreyAnswerError != null) kissGreyAnswerError.hidden = true;
                 if (kissGreyAnswerInput != null) kissGreyAnswerInput.disabled = true;
-                if (kissGreyQuestionText != null) kissGreyQuestionText.hidden = true;
-                if (kissGreyAnswerBox != null) kissGreyAnswerBox.hidden = true;
+                window.setTimeout(() => {
+                    if (state.screen !== "kissGreyScreen") return;
+                    if (kissGreyScreenStage != null) {
+                        kissGreyScreenStage.style.background = 'url("assets/kiwibk.png") center center / cover no-repeat';
+                    }
+                    if (kissGreyQuestionText != null) kissGreyQuestionText.hidden = true;
+                    if (kissGreyAnswerBox != null) kissGreyAnswerBox.hidden = true;
+                    if (kissGreyKiwiPickup != null) kissGreyKiwiPickup.hidden = false;
+                    if (kissGreyKiwiImg != null) kissGreyKiwiImg.hidden = true;
+                    if (kissGreyTakeBtn != null) kissGreyTakeBtn.hidden = false;
+                }, 500);
                 return;
             }
             if (kissGreyAnswerError != null) {
@@ -3119,6 +3249,138 @@ function render() {
             kissGreyAnswerInput.addEventListener("input", () => {
                 checkKissGreyAnswer();
             });
+        }
+        if (kissGreyTakeBtn != null) {
+            kissGreyTakeBtn.onclick = () => {
+                if (kissGreyKiwiImg == null) return;
+                kissGreyTakeBtn.hidden = true;
+                if (kissGreyKiwiPickup != null) kissGreyKiwiPickup.classList.add("dragMode");
+                kissGreyKiwiImg.classList.remove("following", "cornered");
+                kissGreyKiwiImg.classList.add("draggable");
+                kissGreyKiwiImg.hidden = false;
+                if (kissGreyScreenStage != null) {
+                    const couchBackground = new Image();
+                    couchBackground.onload = () => {
+                        if (state.screen !== "kissGreyScreen") return;
+                        kissGreyScreenStage.style.background = 'url("assets/couch.png") center center / cover no-repeat';
+                    };
+                    couchBackground.onerror = () => {
+                        if (state.screen !== "kissGreyScreen") return;
+                        kissGreyScreenStage.style.background = 'url("assets/couch bkg.png") center center / cover no-repeat';
+                    };
+                    couchBackground.src = "assets/couch.png";
+                }
+                placeKiwiAt(1800, window.innerHeight - kissGreyKiwiImg.offsetHeight - 320);
+            };
+        }
+        if (kissGreyKiwiImg != null) {
+            kissGreyKiwiImg.addEventListener("pointerdown", onKiwiPointerDown);
+            kissGreyKiwiImg.addEventListener("mousedown", onKiwiMouseDown);
+        }
+        if (kissGreyStartMovieBtn != null) {
+            kissGreyStartMovieBtn.onclick = () => go("capcutScreen");
+        }
+        return;
+    }
+
+    if (state.screen === "capcutScreen") {
+        app.innerHTML = screenCapcutScreen();
+        mountHomeButton();
+        const capcutScreenVideo = document.getElementById("capcutScreenVideo");
+        if (capcutScreenVideo != null) {
+            capcutScreenVideo.onended = () => go("creditsScreen");
+            const playPromise = capcutScreenVideo.play();
+            if (playPromise != null && typeof playPromise.catch === "function") {
+                playPromise.catch(() => { });
+            }
+        }
+        return;
+    }
+
+    if (state.screen === "creditsScreen") {
+        app.innerHTML = screenCreditsScreen();
+        mountHomeButton();
+        const creditsScreenStage = document.getElementById("creditsScreenStage");
+        const creditsBody = creditsScreenStage?.querySelector(".creditsBody");
+        const creditsGiftLabel = creditsScreenStage?.querySelector(".creditsGiftLabel");
+        const creditsContinueBtn = document.getElementById("creditsContinueBtn");
+        if (creditsContinueBtn != null) {
+            creditsContinueBtn.onclick = () => {
+                if (creditsScreenStage == null) {
+                    go("redScreen");
+                    return;
+                }
+                creditsContinueBtn.disabled = true;
+                const giftRect = creditsContinueBtn.getBoundingClientRect();
+                creditsContinueBtn.hidden = true;
+                if (creditsBody != null) creditsBody.hidden = true;
+                if (creditsGiftLabel != null) creditsGiftLabel.hidden = true;
+                const kissLayer = document.createElement("div");
+                kissLayer.className = "creditsKissLayer";
+                const stageWidth = creditsScreenStage.clientWidth || window.innerWidth;
+                const stageHeight = creditsScreenStage.clientHeight || window.innerHeight;
+                const emitters = Array.from({ length: 8 }, () => ({
+                    x: Math.random() * stageWidth,
+                    y: Math.random() * stageHeight
+                }));
+                const centerEmitter = {
+                    x: giftRect.left + (giftRect.width / 2),
+                    y: giftRect.top + (giftRect.height / 2)
+                };
+                emitters.push(centerEmitter);
+                const cellSize = 20;
+                const cols = Math.ceil(stageWidth / cellSize) + 2;
+                const rows = Math.ceil(stageHeight / cellSize) + 2;
+                const targets = [];
+                for (let row = -1; row < rows; row += 1) {
+                    for (let col = -1; col < cols; col += 1) {
+                        targets.push({
+                            x: (col * cellSize) + ((Math.random() * 28) - 14),
+                            y: (row * cellSize) + ((Math.random() * 28) - 14)
+                        });
+                    }
+                }
+                const extraThrows = Math.max(800, Math.floor((stageWidth * stageHeight) / 1500));
+                for (let i = 0; i < extraThrows; i += 1) {
+                    targets.push({
+                        x: Math.random() * stageWidth,
+                        y: Math.random() * stageHeight
+                    });
+                }
+                const frag = document.createDocumentFragment();
+                for (let i = 0; i < targets.length; i += 1) {
+                    const kiss = document.createElement("img");
+                    kiss.className = "creditsKissPop";
+                    kiss.src = "assets/kisses.png";
+                    kiss.alt = "";
+                    kiss.setAttribute("aria-hidden", "true");
+                    const emitter = emitters[Math.floor(Math.random() * emitters.length)];
+                    const target = targets[i];
+                    const targetX = target.x;
+                    const targetY = target.y;
+                    const dx = targetX - emitter.x;
+                    const dy = targetY - emitter.y;
+                    kiss.style.left = `${emitter.x}px`;
+                    kiss.style.top = `${emitter.y}px`;
+                    kiss.style.setProperty("--dx", `${dx.toFixed(1)}px`);
+                    kiss.style.setProperty("--dy", `${dy.toFixed(1)}px`);
+                    kiss.style.setProperty("--rot", `${Math.round((Math.random() * 180) - 90)}deg`);
+                    kiss.style.setProperty("--dur", `${1200 + Math.floor(Math.random() * 1300)}ms`);
+                    kiss.style.animationDelay = `${Math.random() * 2600}ms`;
+                    kiss.style.width = `${44 + Math.random() * 38}px`;
+                    frag.appendChild(kiss);
+                }
+                kissLayer.appendChild(frag);
+                creditsScreenStage.appendChild(kissLayer);
+                const kissWords = document.createElement("div");
+                kissWords.className = "creditsKissWords";
+                kissWords.textContent = "LOTS OF KISSES";
+                creditsScreenStage.appendChild(kissWords);
+                window.setTimeout(() => {
+                    if (state.screen !== "creditsScreen") return;
+                    kissWords.classList.add("visible");
+                }, 700);
+            };
         }
         return;
     }

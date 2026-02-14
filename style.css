@@ -1033,6 +1033,56 @@ body {
     background: url("assets/couch bkg.png") center center / cover no-repeat;
 }
 
+.kissGreyCenterBox {
+    position: absolute;
+    left: calc(50% + 40px);
+    top: calc(50% + 60px);
+    transform: translate(-50%, -50%);
+    width: 26px;
+    height: 26px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    z-index: 4;
+}
+
+.kissGreyStartMovieImg {
+    position: absolute;
+    left: 66%;
+    top: 15%;
+    transform: translate(-50%, -50%);
+    width: min(26vw, 300px);
+    height: auto;
+    z-index: 8;
+}
+
+.kissGreyStartMovieImg[hidden] {
+    display: none !important;
+}
+
+.kissGreyStartMovieBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 3%;
+    transform: translateX(-50%);
+    border: none;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    z-index: 9;
+}
+
+.kissGreyStartMovieBtn[hidden] {
+    display: none !important;
+}
+
+.kissGreyStartMovieBtnImg {
+    width: min(36vw, 450px);
+    height: auto;
+    display: block;
+    opacity: 0.88;
+}
+
 .kissGreyCaption {
     position: absolute;
     left: 50%;
@@ -1056,14 +1106,14 @@ body {
 }
 
 .kissGreyBubbleImg.first {
-    left: 26%;
-    top: 10%;
+    left: 36%;
+    top: 7%;
     width: min(24vw, 310px);
 }
 
 .kissGreyBubbleImg.second {
-    left: 70%;
-    top: 14%;
+    left: 74%;
+    top: 11%;
     width: min(24vw, 320px);
 }
 
@@ -1154,10 +1204,102 @@ body {
     box-shadow: none;
 }
 
+.kissGreyKiwiPickup {
+    position: absolute;
+    left: 50%;
+    top: 52%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    z-index: 7;
+}
+
+.kissGreyKiwiPickup[hidden] {
+    display: none !important;
+}
+
+.kissGreyKiwiPickup.following,
+.kissGreyKiwiPickup.dragMode {
+    pointer-events: auto;
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: none;
+    width: 0;
+    height: 0;
+}
+
 .kissGreyKiwiImg {
-    width: min(16vw, 180px);
+    width: min(24vw, 270px);
     height: auto;
     filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.35));
+}
+
+.kissGreyKiwiImg.following {
+    position: fixed;
+    left: 50vw;
+    top: 50vh;
+    transform: none;
+    z-index: 9999;
+    pointer-events: none;
+    display: block;
+}
+
+.kissGreyKiwiImg.draggable {
+    position: fixed;
+    transform: none;
+    z-index: 9999;
+    pointer-events: auto;
+    cursor: grab;
+    touch-action: none;
+}
+
+.kissGreyKiwiImg.draggable.dragging {
+    cursor: grabbing;
+}
+
+.kissGreyKiwiImg.locked {
+    position: fixed;
+    transform: none;
+    z-index: 9999;
+    pointer-events: none;
+    cursor: default;
+}
+
+.kissGreyKiwiImg.cornered {
+    position: fixed;
+    left: 24px;
+    bottom: 24px;
+    transform: none;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.kissGreyTakeBtn {
+    border: none;
+    border-radius: 0;
+    width: 120px;
+    height: 108px;
+    padding: 0;
+    margin-top: 640px;
+    background: rgba(255, 165, 64, 0.82);
+    color: #fff;
+    text-shadow: -1px 0 #000, 1px 0 #000, 0 -1px #000, 0 1px #000;
+    font-size: clamp(18px, 2vw, 24px);
+    font-weight: 700;
+    text-transform: lowercase;
+    cursor: pointer;
+    clip-path: polygon(50% 92%, 6% 50%, 6% 28%, 20% 12%, 36% 12%, 50% 26%, 64% 12%, 80% 12%, 94% 28%, 94% 50%);
+}
+
+.kissGreyTakeBtn:hover {
+    transform: translateY(-1px);
+}
+
+.kissGreyTakeBtn:active {
+    transform: translateY(0);
 }
 
 .kissGreyAnswerError {
@@ -1410,6 +1552,146 @@ body {
     display: grid;
     place-items: center;
     padding: 24px;
+}
+
+.creditsTitle {
+    position: absolute;
+    left: 50%;
+    top: 32%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: clamp(48px, 5vw, 74px);
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.creditsBody {
+    position: absolute;
+    left: 50%;
+    top: 44%;
+    transform: translate(-50%, -50%);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: clamp(24px, 2.2vw, 34px);
+    font-weight: 700;
+    text-align: center;
+    font-family: "Gabrielle", "Gabriola", "Times New Roman", serif;
+}
+
+.creditsContinueBtn {
+    position: absolute;
+    right: 12%;
+    bottom: 14%;
+    transform: none;
+    border: 2px solid rgba(90, 20, 30, 0.9);
+    border-radius: 10px;
+    width: 120px;
+    height: 120px;
+    padding: 0;
+    background:
+        linear-gradient(to right, transparent 46%, #d21f45 46%, #d21f45 54%, transparent 54%),
+        linear-gradient(to bottom, transparent 34%, #d21f45 34%, #d21f45 46%, transparent 46%),
+        linear-gradient(180deg, rgba(255, 139, 172, 0.72) 0%, rgba(255, 111, 152, 0.72) 100%);
+    color: #fff;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    font-family: "Gabrielle", "Gabriola", "Times New Roman", serif;
+    box-shadow: 0 12px 22px rgba(0, 0, 0, 0.35);
+    overflow: visible;
+}
+
+.creditsContinueBtn::before,
+.creditsContinueBtn::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    pointer-events: none;
+}
+
+.creditsContinueBtn::before {
+    top: -34px;
+    width: 110px;
+    height: 44px;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, #ff96b7 0%, #de2f5c 70%, #981b38 100%);
+    clip-path: polygon(0% 54%, 16% 18%, 36% 48%, 50% 34%, 64% 48%, 84% 18%, 100% 54%, 84% 90%, 64% 62%, 50% 76%, 36% 62%, 16% 90%);
+    box-shadow: 0 4px 0 rgba(90, 20, 30, 0.88);
+}
+
+.creditsContinueBtn::after {
+    content: none;
+}
+
+.creditsGiftLabel {
+    position: absolute;
+    right: 12%;
+    bottom: 10.6%;
+    color: #fff;
+    text-shadow: -1px 0 #000, 1px 0 #000, 0 -1px #000, 0 1px #000;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    font-family: "Gabrielle", "Gabriola", "Times New Roman", serif;
+    text-transform: lowercase;
+}
+
+.creditsKissLayer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 12;
+    overflow: hidden;
+}
+
+.creditsKissPop {
+    position: absolute;
+    transform: translate(-50%, -50%) translate3d(0, 0, 0) rotate(0deg) scale(0.75);
+    opacity: 0;
+    animation: creditsKissPop var(--dur, 900ms) cubic-bezier(0.18, 0.74, 0.32, 1) forwards;
+    will-change: transform, opacity;
+    height: auto;
+    display: block;
+    pointer-events: none;
+}
+
+@keyframes creditsKissPop {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) translate3d(0, 0, 0) rotate(0deg) scale(0.65);
+    }
+
+    12% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.95;
+        transform: translate(-50%, -50%) translate3d(var(--dx, 0px), var(--dy, 0px), 0) rotate(var(--rot, 0deg)) scale(1);
+    }
+}
+
+.creditsKissWords {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0;
+    z-index: 13;
+    color: #000;
+    text-shadow: none;
+    font-size: clamp(44px, 5.6vw, 88px);
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+    transition: opacity 360ms ease, transform 360ms ease;
+}
+
+.creditsKissWords.visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
 }
 
 .blackScreenEndingImg {
@@ -3189,6 +3471,11 @@ body {
 
 .btn.secondary {
     background: rgba(255, 255, 255, 0.65);
+}
+
+#gameMapBtn,
+#floatingMapBtn {
+    display: none !important;
 }
 
 .gameMapOverlay {
