@@ -387,6 +387,25 @@ body {
     letter-spacing: 0.02em;
 }
 
+.nycDinnerRunnerCurrentScore {
+    padding: 8px 18px;
+    border-radius: 12px;
+    border: 2px solid rgba(255, 223, 166, 0.95);
+    background: rgba(25, 15, 9, 0.85);
+    color: #ffe6bc;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.nycDinnerRunnerScoreCompare {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
 .nycDinnerRunnerRestartBtn,
 .nycDinnerRunnerNextBtn {
     min-width: 200px;
@@ -490,7 +509,7 @@ body {
 .nycDinnerOkBtn {
     position: absolute;
     left: 30%;
-    top: 78%;
+    top: 82%;
     transform: translateX(-50%);
     z-index: 10;
     width: 124px;
@@ -1319,6 +1338,24 @@ body {
 
 .btn.secondary {
     background: rgba(255, 255, 255, 0.65);
+}
+
+.heartNextBtn {
+    width: 98px;
+    height: 84px;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: radial-gradient(circle at 30% 26%, rgba(255, 132, 132, 0.74) 0%, rgba(235, 45, 45, 0.62) 44%, rgba(168, 16, 16, 0.56) 100%);
+    clip-path: polygon(50% 100%, 8% 58%, 8% 30%, 24% 14%, 41% 14%, 50% 25%, 59% 14%, 76% 14%, 92% 30%, 92% 58%);
+    color: #fff6fa;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    text-shadow: 0 1px 2px rgba(107, 11, 46, 0.55);
+    box-shadow: 0 10px 24px rgba(148, 20, 70, 0.4);
+    animation: dinnerHeartPulse 1.08s ease-in-out infinite;
 }
 
 /* cards */

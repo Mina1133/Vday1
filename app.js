@@ -11,6 +11,7 @@ let nycObstacleTeardown = null;
 let nycCollisionTeardown = null;
 let nycDinnerRunnerTeardown = null;
 let nycReturnFromWin = false;
+let nycFromDinnerNext = false;
 
 function loadDinnerTopScore() {
     const raw = localStorage.getItem(DINNER_TOP_SCORE_KEY);
@@ -74,6 +75,9 @@ function go(screen) {
         nycDinnerRunnerTeardown = null;
     }
     state.screen = screen;
+    if (screen !== "nycRoom") {
+        nycFromDinnerNext = false;
+    }
     save();
     render();
 }
@@ -255,6 +259,7 @@ function startNycDinnerRunnerGame(config) {
         player,
         obstacleLayer,
         scoreEl,
+        currentScoreEl,
         bestScoreEl,
         gameOverOverlay,
         restartBtn
@@ -264,6 +269,7 @@ function startNycDinnerRunnerGame(config) {
         || player == null
         || obstacleLayer == null
         || scoreEl == null
+        || currentScoreEl == null
         || bestScoreEl == null
         || gameOverOverlay == null
         || restartBtn == null
@@ -370,6 +376,7 @@ function startNycDinnerRunnerGame(config) {
         if (gameOver) return;
         gameOver = true;
         const finalScore = Math.floor(score);
+        currentScoreEl.textContent = `Current Score: ${finalScore}`;
         if (finalScore > bestScore) {
             bestScore = finalScore;
             saveDinnerTopScore(bestScore);
@@ -466,6 +473,7 @@ function startNycDinnerRunnerGame(config) {
     gameOverOverlay.hidden = true;
     score = 0;
     scoreEl.textContent = "0";
+    currentScoreEl.textContent = "Current Score: 0";
     bestScoreEl.textContent = `Top Score: ${bestScore}`;
     document.addEventListener("keydown", onKeyDown);
     stage.addEventListener("pointerdown", onPointerDown);
@@ -567,11 +575,18 @@ function screenPlaneClip() {
   `;
 }
 
-function screenNycRoom(useHungryPrompt = false) {
-    const nycBubbleSrc = useHungryPrompt ? "assets/im hungry text.png" : "assets/lets go for a walk text.png";
-    const nycBubbleAlt = useHungryPrompt
+function screenNycRoom(useHungryPrompt = false, usePostDinnerPrompt = false) {
+    let nycBubbleSrc = useHungryPrompt ? "assets/im hungry text.png" : "assets/lets go for a walk text.png";
+    let nycBubbleAlt = useHungryPrompt
         ? "baby im hungry can we eat now? Theres a restaurant i want to go to"
         : "Baby lets go for a walk first";
+    if (usePostDinnerPrompt) {
+        nycBubbleSrc = "assets/street after restaurant bubble.png";
+        nycBubbleAlt = "Seems the love bug got away again :(";
+    }
+    const nycBubbleFallbackSrc = useHungryPrompt
+        ? "assets/im hungry text.png"
+        : "assets/lets go for a walk text.png";
     return `
     ${headerTitle()}
     <div class="nycRoomStage" id="nycRoomStage">
@@ -598,7 +613,7 @@ function screenNycRoom(useHungryPrompt = false) {
       </div>
       <img class="nycCouple" src="assets/ccwithme.png" alt="Couple">
       <div class="nycWalkBubble" id="nycWalkBubble" hidden>
-        <img src="${nycBubbleSrc}" alt="${nycBubbleAlt}">
+        <img src="${nycBubbleSrc}" data-fallback-src="${nycBubbleFallbackSrc}" alt="${nycBubbleAlt}">
       </div>
       <button class="nycWalkOkBtn" id="nycWalkOkBtn" aria-label="OK" hidden></button>
       <div class="nycStartSign" id="nycStartSign" hidden>
@@ -630,7 +645,10 @@ function screenNycDinner() {
         <img class="nycDinnerRunnerPlayer" id="nycDinnerRunnerPlayer" src="assets/restaurant-runner.png" data-fallback-src="assets/ccalone.png" alt="Runner character">
         <div class="nycDinnerRunnerGameOver" id="nycDinnerRunnerGameOver" hidden>
           <div class="nycDinnerRunnerGameOverText">Game Over</div>
-          <div class="nycDinnerRunnerBestScore" id="nycDinnerRunnerBestScore">Top Score: 0</div>
+          <div class="nycDinnerRunnerScoreCompare">
+            <div class="nycDinnerRunnerCurrentScore" id="nycDinnerRunnerCurrentScore">Current Score: 0</div>
+            <div class="nycDinnerRunnerBestScore" id="nycDinnerRunnerBestScore">Top Score: 0</div>
+          </div>
           <div class="nycDinnerRunnerBtnRow">
             <button class="nycDinnerRunnerRestartBtn" id="nycDinnerRunnerRestartBtn">Play Again</button>
             <button class="nycDinnerRunnerNextBtn" id="nycDinnerRunnerNextBtn">Next</button>
@@ -1145,11 +1163,33 @@ function render() {
 
     if (state.screen === "nycRoom") {
         const nycArrivalFromWin = nycReturnFromWin === true;
-        app.innerHTML = screenNycRoom(nycArrivalFromWin);
+        const nycPostDinnerPrompt = nycFromDinnerNext === true;
+        app.innerHTML = screenNycRoom(nycArrivalFromWin, nycPostDinnerPrompt);
         nycReturnFromWin = false;
         mountHomeButton();
+        if (nycPostDinnerPrompt) {
+            const header = app.querySelector(".header");
+            if (header != null) header.style.display = "none";
+        }
+        const homeBtn = document.getElementById("homeBtn");
+        if (nycFromDinnerNext && homeBtn != null) {
+            homeBtn.textContent = "Next";
+            homeBtn.setAttribute("aria-label", "Next");
+            homeBtn.classList.remove("secondary");
+            homeBtn.classList.add("heartNextBtn");
+            homeBtn.onclick = () => go("nycDinner");
+        }
         const nycWalkBubble = document.getElementById("nycWalkBubble");
         const nycWalkOkBtn = document.getElementById("nycWalkOkBtn");
+        const nycWalkBubbleImg = nycWalkBubble?.querySelector("img");
+        if (nycWalkBubbleImg != null) {
+            nycWalkBubbleImg.onerror = () => {
+                const fallbackSrc = nycWalkBubbleImg.dataset.fallbackSrc;
+                if (fallbackSrc != null && nycWalkBubbleImg.src.indexOf(fallbackSrc) === -1) {
+                    nycWalkBubbleImg.src = fallbackSrc;
+                }
+            };
+        }
         const nycRoomStage = document.getElementById("nycRoomStage");
         const nycGameBgVideo = document.getElementById("nycGameBgVideo");
         const nycAvoidHud = document.getElementById("nycAvoidHud");
@@ -1164,6 +1204,13 @@ function render() {
         const nycCouple = document.querySelector(".nycCouple");
         const nycStartSign = document.getElementById("nycStartSign");
         const nycStartBtn = document.getElementById("nycStartBtn");
+        if (nycPostDinnerPrompt) {
+            if (nycWalkBubble != null) nycWalkBubble.hidden = true;
+            if (nycWalkOkBtn != null) nycWalkOkBtn.hidden = true;
+            if (nycStartSign != null) nycStartSign.hidden = true;
+            if (nycStartBtn != null) nycStartBtn.hidden = true;
+            return;
+        }
         if (nycWalkBubble != null && nycWalkOkBtn != null) {
             const nycPromptDelayMs = nycArrivalFromWin ? 0 : 900;
             nycPromptTimer = setTimeout(() => {
@@ -1321,6 +1368,7 @@ function render() {
         const nycDinnerStartBtn = document.getElementById("nycDinnerStartBtn");
         const nycDinnerRunner = document.getElementById("nycDinnerRunner");
         const nycDinnerRunnerScore = document.getElementById("nycDinnerRunnerScore");
+        const nycDinnerRunnerCurrentScore = document.getElementById("nycDinnerRunnerCurrentScore");
         const nycDinnerRunnerBestScore = document.getElementById("nycDinnerRunnerBestScore");
         const nycDinnerRunnerPlayer = document.getElementById("nycDinnerRunnerPlayer");
         const nycDinnerRunnerObstacleLayer = document.getElementById("nycDinnerRunnerObstacleLayer");
@@ -1339,6 +1387,7 @@ function render() {
             && nycDinnerStartBtn != null
             && nycDinnerRunner != null
             && nycDinnerRunnerScore != null
+            && nycDinnerRunnerCurrentScore != null
             && nycDinnerRunnerBestScore != null
             && nycDinnerRunnerObstacleLayer != null
             && nycDinnerRunnerPlayer != null
@@ -1353,31 +1402,49 @@ function render() {
                 }
             };
             nycDinnerRunnerNextBtn.onclick = () => {
+                nycFromDinnerNext = true;
                 go("nycRoom");
             };
 
             const dinnerLines = [
                 { side: "right", img: "assets/pixel-speech-bubble.png" },
-                { side: "left", img: "assets/second speech bubble.png" },
-                { side: "right", img: "assets/pixel-speech-bubble (1).png" },
-                { side: "left", img: "assets/pixel-speech-bubble (7).png" },
-                { side: "right", img: "assets/pixel-speech-bubble (2).png" },
-                { side: "left", img: "assets/pixel-speech-bubble (8).png" },
+                {
+                    side: "left",
+                    img: "assets/pixel-speech-bubble (1).png"
+                },
+                {
+                    side: "right",
+                    img: "assets/third speech bubble.png",
+                    fallbackImg: "assets/pixel-speech-bubble (1).png"
+                },
+                { side: "left", img: "assets/pixel-speech-bubble (2).png" },
                 { side: "right", img: "assets/pixel-speech-bubble (3).png" },
-                { side: "left", img: "assets/pixel-speech-bubble (9).png" },
-                { side: "right", img: "assets/pixel-speech-bubble (4).png" },
-                { side: "left", img: "assets/pixel-speech-bubble (10).png" }
+                { side: "left", img: "assets/pixel-speech-bubble (4).png" },
+                { side: "right", img: "assets/pixel-speech-bubble (5).png" },
+                { side: "left", img: "assets/pixel-speech-bubble (6).png" },
+                { side: "right", img: "assets/pixel-speech-bubble (7).png" },
+                { side: "left", img: "assets/pixel-speech-bubble (8).png" }
             ];
             let dinnerLineIndex = 0;
 
             const renderDinnerLine = () => {
                 const line = dinnerLines[dinnerLineIndex];
+                const applyWithFallback = (imgEl) => {
+                    imgEl.onerror = null;
+                    imgEl.src = line.img;
+                    if (line.fallbackImg != null) {
+                        imgEl.onerror = () => {
+                            imgEl.onerror = null;
+                            imgEl.src = line.fallbackImg;
+                        };
+                    }
+                };
                 if (line.side === "left") {
-                    nycDinnerChatLeftImg.src = line.img;
+                    applyWithFallback(nycDinnerChatLeftImg);
                     nycDinnerChatRight.hidden = true;
                     nycDinnerChatLeft.hidden = false;
                 } else {
-                    nycDinnerChatRightImg.src = line.img;
+                    applyWithFallback(nycDinnerChatRightImg);
                     nycDinnerChatLeft.hidden = true;
                     nycDinnerChatRight.hidden = false;
                 }
@@ -1409,6 +1476,7 @@ function render() {
                     player: nycDinnerRunnerPlayer,
                     obstacleLayer: nycDinnerRunnerObstacleLayer,
                     scoreEl: nycDinnerRunnerScore,
+                    currentScoreEl: nycDinnerRunnerCurrentScore,
                     bestScoreEl: nycDinnerRunnerBestScore,
                     gameOverOverlay: nycDinnerRunnerGameOver,
                     restartBtn: nycDinnerRunnerRestartBtn
