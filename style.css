@@ -254,6 +254,7 @@ body {
 .yellowScreenStage,
 .redScreenStage,
 .blackScreenStage,
+.brownScreenStage,
 .app.mapMode .roomStage {
     position: relative;
     inset: auto;
@@ -781,7 +782,9 @@ body {
     left: 56%;
     width: 64px;
     height: 64px;
-    border: 2px solid rgba(0, 0, 0, 0.95);
+    border: 2px solid rgba(0, 0, 0, 0.45);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
     transform: translate(-50%, -50%);
     box-sizing: border-box;
     pointer-events: none;
@@ -827,8 +830,8 @@ body {
 
 .redThoughtBubble {
     position: absolute;
-    top: 46%;
-    left: 44%;
+    top: 38%;
+    left: 36%;
     transform: translateX(-50%);
     width: min(30%, 420px);
     z-index: 4;
@@ -843,16 +846,16 @@ body {
 
 .redThoughtNextBtn {
     position: absolute;
-    left: 62%;
-    top: 44%;
+    left: 34%;
+    top: 50%;
     transform: translateX(-50%);
     z-index: 5;
 }
 
 .redFinalImageBtn {
     position: absolute;
-    left: 62%;
-    top: 60%;
+    left: 34%;
+    top: 50%;
     transform: translateX(-50%);
     border: none;
     background: transparent;
@@ -869,6 +872,51 @@ body {
 
 .blackScreenStage {
     background: #000;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+}
+
+.blackScreenEndingImg {
+    width: min(78vw, 980px);
+    max-height: calc(100vh - 120px);
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 14px 30px rgba(0, 0, 0, 0.55));
+}
+
+.blackTomorrowBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    min-width: 170px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: 1px solid rgba(92, 141, 255, 0.65);
+    background: rgba(16, 40, 98, 0.42);
+    color: #d6e7ff;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+}
+
+.blackTomorrowHint {
+    position: absolute;
+    left: 50%;
+    bottom: 128px;
+    transform: translateX(-50%);
+    color: #79a8ff;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-align: center;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+}
+
+.brownScreenStage {
+    background: #5d3a1a;
 }
 
 .nycAfterDinnerBubble {

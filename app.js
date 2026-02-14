@@ -28,7 +28,7 @@ function saveDinnerTopScore(score) {
 
 function defaultState() {
     return {
-        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | redScreen | blackScreen
+        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | redScreen | blackScreen | brownScreen
         characterMode: null, // null | alone | withme
         mapIntroDone: false,
         mapPostComputerIntroPending: false,
@@ -570,7 +570,8 @@ function showGameMapMenu() {
         { screen: "nycRoom", label: "NYC Walk Game", hint: "Dodge obstacles scene" },
         { screen: "nycDinner", label: "Restaurant Jump Game", hint: "Runner/jump restaurant game" },
         { screen: "nycAfterDinner", label: "NYC View", hint: "Post-dinner city screen" },
-        { screen: "afterDinnerHall", label: "NYC Memories", hint: "Romantic hallway memory scene" }
+        { screen: "afterDinnerHall", label: "NYC Memories", hint: "Romantic hallway memory scene" },
+        { screen: "brownScreen", label: "sea", hint: "Sea ending screen" }
     ];
 
     const overlay = document.createElement("div");
@@ -908,7 +909,23 @@ function screenRedScreen() {
 function screenBlackScreen() {
     return `
     ${headerTitle()}
-    <div class="blackScreenStage" id="blackScreenStage" aria-label="Black screen"></div>
+    <div class="blackScreenStage" id="blackScreenStage" aria-label="Black screen">
+      <img
+        class="blackScreenEndingImg"
+        src="assets/sleep.png"
+        data-fallback-src="assets/好的宝宝.png"
+        alt="Ending image"
+      >
+      <div class="blackTomorrowHint">take a rest if you need to baby</div>
+      <button class="blackTomorrowBtn" id="blackTomorrowBtn" aria-label="Tomorrow">Tomorrow</button>
+    </div>
+  `;
+}
+
+function screenBrownScreen() {
+    return `
+    ${headerTitle()}
+    <div class="brownScreenStage" id="brownScreenStage" aria-label="Brown screen"></div>
   `;
 }
 
@@ -2247,6 +2264,25 @@ function render() {
 
     if (state.screen === "blackScreen") {
         app.innerHTML = screenBlackScreen();
+        mountHomeButton();
+        const blackScreenEndingImg = document.querySelector(".blackScreenEndingImg");
+        const blackTomorrowBtn = document.getElementById("blackTomorrowBtn");
+        if (blackScreenEndingImg != null) {
+            blackScreenEndingImg.onerror = () => {
+                const fallbackSrc = blackScreenEndingImg.dataset.fallbackSrc;
+                if (fallbackSrc != null && blackScreenEndingImg.src.indexOf(fallbackSrc) === -1) {
+                    blackScreenEndingImg.src = fallbackSrc;
+                }
+            };
+        }
+        if (blackTomorrowBtn != null) {
+            blackTomorrowBtn.onclick = () => go("brownScreen");
+        }
+        return;
+    }
+
+    if (state.screen === "brownScreen") {
+        app.innerHTML = screenBrownScreen();
         mountHomeButton();
         return;
     }
