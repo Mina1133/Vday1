@@ -4,6 +4,7 @@ const STORAGE_KEY = "valentine_game_save_v11_story_map";
 const DINNER_TOP_SCORE_KEY = "valentine_game_nyc_dinner_top_score_v1";
 
 let mapControlTeardown = null;
+let bahamasControlTeardown = null;
 let clickHeartsBound = false;
 let nycPromptTimer = null;
 let nycFollowTeardown = null;
@@ -27,7 +28,7 @@ function saveDinnerTopScore(score) {
 
 function defaultState() {
     return {
-        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue
+        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen
         characterMode: null, // null | alone | withme
         mapIntroDone: false,
         mapPostComputerIntroPending: false,
@@ -53,6 +54,10 @@ function go(screen) {
     if (screen !== "map" && mapControlTeardown != null) {
         mapControlTeardown();
         mapControlTeardown = null;
+    }
+    if (screen !== "bahamasHotel" && bahamasControlTeardown != null) {
+        bahamasControlTeardown();
+        bahamasControlTeardown = null;
     }
     if (nycPromptTimer != null) {
         clearTimeout(nycPromptTimer);
@@ -559,6 +564,7 @@ function showGameMapMenu() {
 
     const destinations = [
         { screen: "map", label: "Map Room", hint: "Main room hub" },
+        { screen: "bahamasHotel", label: "Hotel", hint: "Go to hotel background scene" },
         { screen: "shelf", label: "Bookshelf Game", hint: "Go to shelf close-up" },
         { screen: "computer", label: "Computer Game", hint: "Open love bug hunt room" },
         { screen: "nycRoom", label: "NYC Walk Game", hint: "Dodge obstacles scene" },
@@ -820,7 +826,7 @@ function screenMemoriesPink() {
       <video class="memoriesPinkVideo" autoplay muted loop playsinline>
         <source src="assets/nyc memories.mp4" type="video/mp4">
       </video>
-      <button class="memoriesFinishBtn" id="memoriesFinishBtn" aria-label="Finished">Finished</button>
+      <button class="memoriesFinishBtn" id="memoriesFinishBtn" aria-label="Finished Looking">Finished Looking</button>
     </div>
   `;
 }
@@ -828,7 +834,41 @@ function screenMemoriesPink() {
 function screenMemoriesBlue() {
     return `
     ${headerTitle()}
-    <div class="memoriesBlueStage" id="memoriesBlueStage" aria-label="Blue ending screen"></div>
+    <div class="memoriesBlueStage" id="memoriesBlueStage" aria-label="Blue ending screen">
+      <div class="memoriesBlueCaption">The next adventure awaits!</div>
+      <button class="heartNextBtn memoriesBlueNextBtn" id="memoriesBlueNextBtn" aria-label="Next">Next</button>
+    </div>
+  `;
+}
+
+function screenBahamasHotel() {
+    const hotelCharacterSrc = state.characterMode === "alone"
+        ? "assets/ccalone.png"
+        : "assets/ccwithme.png";
+    return `
+    ${headerTitle()}
+    <div class="bahamasHotelStage" id="bahamasHotelStage" aria-label="Bahamas hotel scene">
+      <img
+        class="bahamasHotelCharacters"
+        id="bahamasHotelCharacters"
+        src="${hotelCharacterSrc}"
+        data-fallback-src="assets/ccwithme.png"
+        alt="Characters at the hotel"
+      >
+      <div class="bahamasHotelBubble" id="bahamasHotelBubble" aria-label="Hotel speech bubble">
+        <img class="bahamasHotelBubbleImg" id="bahamasHotelBubbleImg" src="assets/look where.png" alt="We arrived! Where should we look first?">
+      </div>
+      <button class="heartNextBtn bahamasBubbleNextBtn" id="bahamasBubbleNextBtn" aria-label="Next speech bubble">Next</button>
+      <button class="bahamasConversationEndBtn" id="bahamasConversationEndBtn" aria-label="End conversation" hidden></button>
+      <button class="bahamasHotelNextBtn" id="bahamasHotelNextBtn" aria-label="Water park this way" disabled hidden>Water park this way</button>
+    </div>
+  `;
+}
+
+function screenYellowScreen() {
+    return `
+    ${headerTitle()}
+    <div class="yellowScreenStage" id="yellowScreenStage" aria-label="Yellow ending screen"></div>
   `;
 }
 
@@ -910,6 +950,7 @@ function screenMap() {
 
       <button class="shelfAction" id="shelfBtn">Look closer</button>
       <button class="computerAction" id="computerBtn">Look closer</button>
+      <button class="hotelAction show" id="hotelBtn">Hotel</button>
       <div class="mapTouchControls" id="mapTouchControls" aria-label="Movement controls">
         <button class="mapCtrlBtn mapCtrlUp" id="mapCtrlUp" aria-label="Move up">UP</button>
         <button class="mapCtrlBtn mapCtrlLeft" id="mapCtrlLeft" aria-label="Move left">LEFT</button>
@@ -988,6 +1029,7 @@ function startMapCharacterControl() {
     const char = document.querySelector(".wanderChar");
     const shelfBtn = document.getElementById("shelfBtn");
     const computerBtn = document.getElementById("computerBtn");
+    const hotelBtn = document.getElementById("hotelBtn");
     const introBubble = document.getElementById("roomIntroBubble");
     if (stage == null || char == null) return;
 
@@ -1089,12 +1131,30 @@ function startMapCharacterControl() {
         computerBtn.classList.toggle("show", show);
     }
 
+    function inHotelZone() {
+        const cx = pos.x + (char.offsetWidth * 0.5);
+        const cy = pos.y + (char.offsetHeight * 0.72);
+        const zone = {
+            left: stage.clientWidth * 0.58,
+            right: stage.clientWidth * 0.82,
+            top: stage.clientHeight * 0.08,
+            bottom: stage.clientHeight * 0.42
+        };
+        return cx >= zone.left && cx <= zone.right && cy >= zone.top && cy <= zone.bottom;
+    }
+
+    function updateHotelPrompt() {
+        if (hotelBtn == null) return;
+        hotelBtn.classList.add("show");
+    }
+
     function draw() {
         char.style.left = pos.x + "px";
         char.style.top = pos.y + "px";
         updateIntroBubblePosition();
         updateShelfPrompt();
         updateComputerPrompt();
+        updateHotelPrompt();
     }
 
     function teardown() {
@@ -1107,6 +1167,7 @@ function startMapCharacterControl() {
         touchCleanupFns.length = 0;
         if (shelfBtn != null) shelfBtn.onclick = null;
         if (computerBtn != null) computerBtn.onclick = null;
+        if (hotelBtn != null) hotelBtn.onclick = null;
     }
 
     function onResize() {
@@ -1240,8 +1301,113 @@ function startMapCharacterControl() {
         };
     }
 
+    if (hotelBtn != null) {
+        hotelBtn.onclick = () => {
+            persistMapPose(true);
+            go("bahamasHotel");
+        };
+    }
+
     requestAnimationFrame(frame);
     mapControlTeardown = teardown;
+}
+
+function startBahamasCharacterControl(stage, char, canMove = null) {
+    if (stage == null || char == null) return null;
+
+    const keys = {
+        ArrowUp: false,
+        ArrowDown: false,
+        ArrowLeft: false,
+        ArrowRight: false
+    };
+    const speed = 320;
+    let running = true;
+    let frameId = 0;
+    let lastTime = performance.now();
+
+    const computed = window.getComputedStyle(char);
+    let x = Number.parseFloat(computed.left);
+    let bottom = Number.parseFloat(computed.bottom);
+    if (!Number.isFinite(x)) x = stage.clientWidth * 0.24;
+    if (!Number.isFinite(bottom)) bottom = 12;
+
+    function clamp() {
+        const halfWidth = char.offsetWidth * 0.5;
+        const maxBottom = Math.max(0, stage.clientHeight - char.offsetHeight);
+        x = Math.max(halfWidth, Math.min(stage.clientWidth - halfWidth, x));
+        bottom = Math.max(0, Math.min(maxBottom, bottom));
+    }
+
+    function draw() {
+        char.style.left = `${x}px`;
+        char.style.bottom = `${bottom}px`;
+    }
+
+    function onKeyDown(e) {
+        if (!Object.prototype.hasOwnProperty.call(keys, e.key)) return;
+        e.preventDefault();
+        keys[e.key] = true;
+    }
+
+    function onKeyUp(e) {
+        if (!Object.prototype.hasOwnProperty.call(keys, e.key)) return;
+        keys[e.key] = false;
+    }
+
+    function onResize() {
+        clamp();
+        draw();
+    }
+
+    function frame(now) {
+        if (!running) return;
+        if (state.screen !== "bahamasHotel") return;
+
+        if (typeof canMove === "function" && canMove() !== true) {
+            frameId = requestAnimationFrame(frame);
+            return;
+        }
+
+        const dt = Math.min(0.03, (now - lastTime) / 1000);
+        lastTime = now;
+        let dx = 0;
+        let dy = 0;
+        if (keys.ArrowLeft) dx -= 1;
+        if (keys.ArrowRight) dx += 1;
+        if (keys.ArrowUp) dy += 1;
+        if (keys.ArrowDown) dy -= 1;
+
+        if (dx !== 0 || dy !== 0) {
+            const length = Math.hypot(dx, dy) || 1;
+            x += (dx / length) * speed * dt;
+            bottom += (dy / length) * speed * dt;
+            clamp();
+            draw();
+            const rightEdgeX = x + (char.offsetWidth * 0.5);
+            if (rightEdgeX >= stage.clientWidth - 2) {
+                go("yellowScreen");
+                return;
+            }
+        }
+        frameId = requestAnimationFrame(frame);
+    }
+
+    clamp();
+    draw();
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
+    window.addEventListener("resize", onResize);
+    frameId = requestAnimationFrame(frame);
+
+    return () => {
+        if (!running) return;
+        running = false;
+        cancelAnimationFrame(frameId);
+        window.removeEventListener("keydown", onKeyDown);
+        window.removeEventListener("keyup", onKeyUp);
+        window.removeEventListener("resize", onResize);
+    };
 }
 
 function render() {
@@ -1259,6 +1425,8 @@ function render() {
     app.classList.toggle("afterDinnerHallMode", state.screen === "afterDinnerHall");
     app.classList.toggle("memoriesPinkMode", state.screen === "memoriesPink");
     app.classList.toggle("memoriesBlueMode", state.screen === "memoriesBlue");
+    app.classList.toggle("bahamasHotelMode", state.screen === "bahamasHotel");
+    app.classList.toggle("yellowScreenMode", state.screen === "yellowScreen");
 
     if (state.screen === "home") {
         app.innerHTML = screenHome();
@@ -1799,6 +1967,16 @@ function render() {
     if (state.screen === "memoriesPink") {
         app.innerHTML = screenMemoriesPink();
         mountHomeButton();
+        const memoriesPinkVideo = document.querySelector(".memoriesPinkVideo");
+        if (memoriesPinkVideo != null) {
+            memoriesPinkVideo.muted = true;
+            const playPromise = memoriesPinkVideo.play();
+            if (playPromise != null && typeof playPromise.catch === "function") {
+                playPromise.catch(() => {
+                    memoriesPinkVideo.controls = true;
+                });
+            }
+        }
         const memoriesFinishBtn = document.getElementById("memoriesFinishBtn");
         if (memoriesFinishBtn != null) memoriesFinishBtn.onclick = () => go("memoriesBlue");
         return;
@@ -1806,6 +1984,67 @@ function render() {
 
     if (state.screen === "memoriesBlue") {
         app.innerHTML = screenMemoriesBlue();
+        mountHomeButton();
+        const memoriesBlueNextBtn = document.getElementById("memoriesBlueNextBtn");
+        if (memoriesBlueNextBtn != null) memoriesBlueNextBtn.onclick = () => go("bahamasHotel");
+        return;
+    }
+
+    if (state.screen === "bahamasHotel") {
+        app.innerHTML = screenBahamasHotel();
+        mountHomeButton();
+        const bahamasHotelBubble = document.getElementById("bahamasHotelBubble");
+        const bahamasHotelCharacters = document.getElementById("bahamasHotelCharacters");
+        const bahamasHotelBubbleImg = document.getElementById("bahamasHotelBubbleImg");
+        const bahamasBubbleNextBtn = document.getElementById("bahamasBubbleNextBtn");
+        const bahamasConversationEndBtn = document.getElementById("bahamasConversationEndBtn");
+        const bahamasHotelNextBtn = document.getElementById("bahamasHotelNextBtn");
+        let bahamasMovementUnlocked = !(bahamasBubbleNextBtn != null && bahamasHotelBubbleImg != null);
+        if (bahamasConversationEndBtn != null) bahamasMovementUnlocked = false;
+        if (bahamasHotelCharacters != null) {
+            bahamasHotelCharacters.onerror = () => {
+                const fallbackSrc = bahamasHotelCharacters.dataset.fallbackSrc;
+                if (fallbackSrc != null && bahamasHotelCharacters.src.indexOf(fallbackSrc) === -1) {
+                    bahamasHotelCharacters.src = fallbackSrc;
+                }
+            };
+        }
+        const bahamasHotelStage = document.getElementById("bahamasHotelStage");
+        if (bahamasControlTeardown != null) {
+            bahamasControlTeardown();
+            bahamasControlTeardown = null;
+        }
+        bahamasControlTeardown = startBahamasCharacterControl(
+            bahamasHotelStage,
+            bahamasHotelCharacters,
+            () => bahamasMovementUnlocked
+        );
+        if (bahamasBubbleNextBtn != null && bahamasHotelBubbleImg != null) {
+            let bubbleStep = 1;
+            bahamasBubbleNextBtn.onclick = () => {
+                if (bubbleStep === 1) {
+                    bubbleStep = 2;
+                    bahamasHotelBubbleImg.src = "assets/water park.png";
+                    bahamasHotelBubbleImg.alt = "Lets go to the waterpark!";
+                    if (bahamasHotelBubble != null) bahamasHotelBubble.classList.add("secondBubble");
+                    bahamasBubbleNextBtn.hidden = true;
+                    if (bahamasConversationEndBtn != null) bahamasConversationEndBtn.hidden = false;
+                }
+            };
+        }
+        if (bahamasConversationEndBtn != null) {
+            bahamasConversationEndBtn.onclick = () => {
+                if (bahamasHotelBubble != null) bahamasHotelBubble.hidden = true;
+                bahamasConversationEndBtn.hidden = true;
+                if (bahamasHotelNextBtn != null) bahamasHotelNextBtn.hidden = false;
+                bahamasMovementUnlocked = true;
+            };
+        }
+        return;
+    }
+
+    if (state.screen === "yellowScreen") {
+        app.innerHTML = screenYellowScreen();
         mountHomeButton();
         return;
     }
