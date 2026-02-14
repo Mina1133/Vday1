@@ -14,12 +14,31 @@ let nycDinnerRunnerTeardown = null;
 let nycReturnFromWin = false;
 let nycFromDinnerNext = false;
 const PURPLE_SLIDES = [
-    "assets/park.jpeg",
-    "assets/park 2.jpeg",
-    "assets/lug trav.jpeg",
-    "assets/room img valentine.png",
-    "assets/nyc view.png"
+    "assets/img15.jpg",
+    "assets/img1.jpg",
+    "assets/img2.jpg",
+    "assets/img3.jpg",
+    "assets/img4.jpg",
+    "assets/img5.jpg",
+    "assets/img6.jpg",
+    "assets/img7.jpg",
+    "assets/img8.jpg",
+    "assets/img9.jpg",
+    "assets/img10.jpg",
+    "assets/img11.jpg",
+    "assets/img12.jpg",
+    "assets/img13.jpg",
+    "assets/img14.jpg",
+    "assets/vid1.mp4"
 ];
+const MAGENTA_TEXT_STEPS = [
+    "NOW THAT WE ARE HOME YOU KNOW WHAT SOUNDS REALLY GOOD?",
+    "WHAT?",
+    "SHANGHAI DUI"
+];
+const MAGENTA_FIRST_BUBBLE_IMAGE = "assets/rlly gopod.png";
+const MAGENTA_SECOND_BUBBLE_IMAGE = "assets/what.png";
+const MAGENTA_THIRD_BUBBLE_IMAGE = "assets/sh dui.png";
 
 function loadDinnerTopScore() {
     const raw = localStorage.getItem(DINNER_TOP_SCORE_KEY);
@@ -35,7 +54,7 @@ function saveDinnerTopScore(score) {
 
 function defaultState() {
     return {
-        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | redScreen | blackScreen | brownScreen | greyScreen | purpleScreen
+        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | redScreen | blackScreen | brownScreen | greyScreen | silverScreen | purpleScreen | magentaScreen | goldenScreen
         characterMode: null, // null | alone | withme
         mapIntroDone: false,
         mapPostComputerIntroPending: false,
@@ -968,8 +987,41 @@ function screenPurpleScreen() {
     ${headerTitle()}
     <div class="purpleScreenStage" id="purpleScreenStage" aria-label="Purple screen slideshow">
       <img class="purpleSlideImg" id="purpleSlideImg" src="${firstSlide}" alt="Memory picture">
+      <video class="purpleSlideVideo" id="purpleSlideVideo" playsinline controls hidden></video>
+      <button class="purpleSlidePrevBtn" id="purpleSlidePrevBtn" aria-label="Previous picture">&lt;</button>
       <button class="purpleSlideNextBtn" id="purpleSlideNextBtn" aria-label="Next picture">&gt;</button>
+      <button class="purpleFinishBtn" id="purpleFinishBtn" aria-label="Finished">Finished</button>
     </div>
+  `;
+}
+
+function screenSilverScreen() {
+    return `
+    ${headerTitle()}
+    <div class="silverScreenStage" id="silverScreenStage" aria-label="Silver screen">
+      <div class="silverScreenText">We made so many memories!</div>
+      <button class="silverToPurpleBtn" id="silverToPurpleBtn" aria-label="take a look">take a look</button>
+    </div>
+  `;
+}
+
+function screenMagentaScreen() {
+    return `
+    ${headerTitle()}
+    <div class="magentaScreenStage" id="magentaScreenStage" aria-label="Magenta screen">
+      <div class="magentaTextBubble" id="magentaTextBubble">NOW THAT WE ARE HOME YOU KNOW WHAT SOUNDS REALLY GOOD?</div>
+      <button class="magentaNextBtn" id="magentaNextBtn" aria-label="Next">Next</button>
+      <button class="magentaEndBtn" id="magentaEndBtn" aria-label="End conversation" hidden>
+        <img src="assets/好的宝宝.png" alt="End conversation">
+      </button>
+    </div>
+  `;
+}
+
+function screenGoldenScreen() {
+    return `
+    ${headerTitle()}
+    <div class="goldenScreenStage" id="goldenScreenStage" aria-label="Golden screen"></div>
   `;
 }
 
@@ -1532,7 +1584,10 @@ function render() {
     app.classList.toggle("blackScreenMode", state.screen === "blackScreen");
     app.classList.toggle("brownScreenMode", state.screen === "brownScreen");
     app.classList.toggle("greyScreenMode", state.screen === "greyScreen");
+    app.classList.toggle("silverScreenMode", state.screen === "silverScreen");
     app.classList.toggle("purpleScreenMode", state.screen === "purpleScreen");
+    app.classList.toggle("magentaScreenMode", state.screen === "magentaScreen");
+    app.classList.toggle("goldenScreenMode", state.screen === "goldenScreen");
 
     if (state.screen === "home") {
         app.innerHTML = screenHome();
@@ -2352,7 +2407,17 @@ function render() {
             };
         }
         if (greyPurpleBtn != null) {
-            greyPurpleBtn.onclick = () => go("purpleScreen");
+            greyPurpleBtn.onclick = () => go("silverScreen");
+        }
+        return;
+    }
+
+    if (state.screen === "silverScreen") {
+        app.innerHTML = screenSilverScreen();
+        mountHomeButton();
+        const silverToPurpleBtn = document.getElementById("silverToPurpleBtn");
+        if (silverToPurpleBtn != null) {
+            silverToPurpleBtn.onclick = () => go("purpleScreen");
         }
         return;
     }
@@ -2361,14 +2426,45 @@ function render() {
         app.innerHTML = screenPurpleScreen();
         mountHomeButton();
         const purpleSlideImg = document.getElementById("purpleSlideImg");
+        const purpleSlideVideo = document.getElementById("purpleSlideVideo");
+        const purpleSlidePrevBtn = document.getElementById("purpleSlidePrevBtn");
         const purpleSlideNextBtn = document.getElementById("purpleSlideNextBtn");
+        const purpleFinishBtn = document.getElementById("purpleFinishBtn");
         let purpleSlideIndex = 0;
 
         const renderPurpleSlide = () => {
             if (purpleSlideImg == null || PURPLE_SLIDES.length === 0) return;
-            purpleSlideImg.src = PURPLE_SLIDES[purpleSlideIndex];
+            const slide = PURPLE_SLIDES[purpleSlideIndex];
+            const isVideo = /\.mp4$/i.test(slide);
+
+            if (isVideo) {
+                purpleSlideImg.hidden = true;
+                if (purpleSlideVideo != null) {
+                    purpleSlideVideo.hidden = false;
+                    if (purpleSlideVideo.src.indexOf(slide) === -1) {
+                        purpleSlideVideo.src = slide;
+                    }
+                    purpleSlideVideo.currentTime = 0;
+                    purpleSlideVideo.play().catch(() => { });
+                }
+                return;
+            }
+
+            purpleSlideImg.hidden = false;
+            purpleSlideImg.src = slide;
+            if (purpleSlideVideo != null) {
+                purpleSlideVideo.pause();
+                purpleSlideVideo.hidden = true;
+            }
         };
 
+        if (purpleSlidePrevBtn != null) {
+            purpleSlidePrevBtn.onclick = () => {
+                if (PURPLE_SLIDES.length === 0) return;
+                purpleSlideIndex = (purpleSlideIndex - 1 + PURPLE_SLIDES.length) % PURPLE_SLIDES.length;
+                renderPurpleSlide();
+            };
+        }
         if (purpleSlideNextBtn != null) {
             purpleSlideNextBtn.onclick = () => {
                 if (PURPLE_SLIDES.length === 0) return;
@@ -2376,6 +2472,62 @@ function render() {
                 renderPurpleSlide();
             };
         }
+        if (purpleFinishBtn != null) {
+            purpleFinishBtn.onclick = () => go("magentaScreen");
+        }
+        return;
+    }
+
+    if (state.screen === "magentaScreen") {
+        app.innerHTML = screenMagentaScreen();
+        mountHomeButton();
+        const magentaTextBubble = document.getElementById("magentaTextBubble");
+        const magentaNextBtn = document.getElementById("magentaNextBtn");
+        const magentaEndBtn = document.getElementById("magentaEndBtn");
+        let magentaStep = 0;
+
+        const renderMagentaStep = () => {
+            if (magentaTextBubble == null) return;
+            if (magentaStep === 0) {
+                magentaTextBubble.innerHTML = `<img class="magentaBubbleImage" src="${MAGENTA_FIRST_BUBBLE_IMAGE}" alt="Now that we are home you know what sounds really good?">`;
+                magentaTextBubble.classList.add("useImage");
+            } else if (magentaStep === 1) {
+                magentaTextBubble.innerHTML = `<img class="magentaBubbleImage magentaBubbleImageSmall" src="${MAGENTA_SECOND_BUBBLE_IMAGE}" alt="What?">`;
+                magentaTextBubble.classList.add("useImage");
+            } else if (magentaStep === 2) {
+                magentaTextBubble.innerHTML = `<img class="magentaBubbleImage magentaBubbleImageSmall" src="${MAGENTA_THIRD_BUBBLE_IMAGE}" alt="Shanghai dui">`;
+                magentaTextBubble.classList.add("useImage");
+            } else {
+                magentaTextBubble.textContent = MAGENTA_TEXT_STEPS[magentaStep] ?? "";
+                magentaTextBubble.classList.remove("useImage");
+            }
+            magentaTextBubble.dataset.step = String(magentaStep + 1);
+            if (magentaNextBtn != null) {
+                magentaNextBtn.hidden = magentaStep >= (MAGENTA_TEXT_STEPS.length - 1);
+            }
+            if (magentaEndBtn != null) {
+                magentaEndBtn.hidden = magentaStep < (MAGENTA_TEXT_STEPS.length - 1);
+            }
+        };
+
+        renderMagentaStep();
+
+        if (magentaNextBtn != null) {
+            magentaNextBtn.onclick = () => {
+                if (magentaStep >= MAGENTA_TEXT_STEPS.length - 1) return;
+                magentaStep += 1;
+                renderMagentaStep();
+            };
+        }
+        if (magentaEndBtn != null) {
+            magentaEndBtn.onclick = () => go("goldenScreen");
+        }
+        return;
+    }
+
+    if (state.screen === "goldenScreen") {
+        app.innerHTML = screenGoldenScreen();
+        mountHomeButton();
         return;
     }
 

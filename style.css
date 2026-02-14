@@ -233,7 +233,31 @@ body {
     background: #000;
 }
 
+.app.silverScreenMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
 .app.purpleScreenMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
+.app.magentaScreenMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
+.app.goldenScreenMode {
     padding: 0;
     height: 100vh;
     height: 100dvh;
@@ -259,7 +283,10 @@ body {
 .app.blackScreenMode,
 .app.brownScreenMode,
 .app.greyScreenMode,
+.app.silverScreenMode,
 .app.purpleScreenMode,
+.app.magentaScreenMode,
+.app.goldenScreenMode,
 .app.mapMode {
     display: grid;
     place-items: center;
@@ -283,7 +310,10 @@ body {
 .blackScreenStage,
 .brownScreenStage,
 .greyScreenStage,
+.silverScreenStage,
 .purpleScreenStage,
+.magentaScreenStage,
+.goldenScreenStage,
 .app.mapMode .roomStage {
     position: relative;
     inset: auto;
@@ -403,7 +433,34 @@ body {
     margin: 0;
 }
 
+.app.silverScreenMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
 .app.purpleScreenMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.magentaScreenMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.goldenScreenMode .header {
     position: fixed;
     top: 12px;
     left: 12px;
@@ -1035,37 +1092,236 @@ body {
 }
 
 .purpleScreenStage {
-    background: #6f4aa5;
-    display: grid;
-    place-items: center;
+    background-image: url("assets/pic bck.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.silverScreenStage {
+    background-image: url("assets/plane 2.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.silverScreenText {
+    position: absolute;
+    left: 50%;
+    bottom: 92px;
+    transform: translateX(-50%);
+    color: #183a7a;
+    font-size: clamp(20px, 3vw, 40px);
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-shadow:
+        0 2px 10px rgba(255, 255, 255, 0.7),
+        0 8px 24px rgba(24, 58, 122, 0.45),
+        0 0 30px rgba(140, 185, 255, 0.45);
+    text-align: center;
+    z-index: 3;
+}
+
+.silverToPurpleBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 0, 0, 0.35);
+    background: rgba(255, 255, 255, 0.7);
+    color: #2a2a2a;
+    font-size: 18px;
+    font-weight: 800;
+    cursor: pointer;
 }
 
 .purpleSlideImg {
-    width: min(86%, 1080px);
-    max-height: calc(100% - 90px);
-    height: auto;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 240px);
+    height: calc(100% - 240px);
+    max-width: calc(100% - 240px);
+    max-height: calc(100% - 240px);
     object-fit: contain;
     border-radius: 18px;
     box-shadow: 0 16px 34px rgba(0, 0, 0, 0.34);
-    border: 2px solid rgba(255, 255, 255, 0.36);
+    border: none;
 }
 
+.purpleSlideVideo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 240px);
+    height: calc(100% - 240px);
+    max-width: calc(100% - 240px);
+    max-height: calc(100% - 240px);
+    object-fit: contain;
+    border-radius: 18px;
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.34);
+    border: none;
+}
+
+.purpleSlidePrevBtn,
 .purpleSlideNextBtn {
     position: absolute;
-    right: 26px;
     top: 50%;
     transform: translateY(-50%);
     width: 64px;
     height: 64px;
     border-radius: 999px;
-    border: 2px solid rgba(255, 255, 255, 0.76);
-    background: rgba(67, 34, 116, 0.74);
-    color: #fff;
+    border: 2px solid rgba(255, 236, 174, 0.95);
+    background: linear-gradient(180deg, rgba(255, 220, 120, 0.96) 0%, rgba(230, 160, 55, 0.96) 100%);
+    color: #3a2608;
     font-size: 38px;
     font-weight: 900;
     line-height: 1;
     cursor: pointer;
     z-index: 4;
+}
+
+.purpleSlidePrevBtn {
+    left: 26px;
+}
+
+.purpleSlideNextBtn {
+    right: 26px;
+}
+
+.purpleFinishBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    padding: 11px 24px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 238, 184, 0.95);
+    background: linear-gradient(180deg, rgba(255, 222, 130, 0.98) 0%, rgba(236, 167, 61, 0.98) 100%);
+    color: #3a2608;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.32);
+    z-index: 4;
+}
+
+.magentaScreenStage {
+    background-image: url("assets/sh bkgr.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.magentaTextBubble {
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    transform: translate(-50%, -50%);
+    min-width: min(88%, 980px);
+    max-width: min(88%, 980px);
+    padding: 18px 24px;
+    border: 6px solid #000;
+    border-radius: 12px;
+    background: #fff;
+    color: #000;
+    text-align: center;
+    font-family: "Courier New", monospace;
+    font-size: clamp(18px, 2.4vw, 42px);
+    font-weight: 900;
+    line-height: 1.18;
+    text-transform: uppercase;
+    z-index: 3;
+}
+
+.magentaTextBubble.useImage {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    min-width: auto;
+    max-width: min(92%, 1100px);
+    top: 28%;
+}
+
+.magentaBubbleImage {
+    display: block;
+    width: min(92vw, 1040px);
+    height: auto;
+}
+
+.magentaBubbleImageSmall {
+    width: min(38vw, 420px);
+}
+
+.magentaTextBubble::after {
+    content: "";
+    position: absolute;
+    left: 30%;
+    bottom: -22px;
+    width: 24px;
+    height: 24px;
+    background: #fff;
+    border-left: 6px solid #000;
+    border-bottom: 6px solid #000;
+    transform: skewX(-25deg);
+}
+
+.magentaTextBubble.useImage::after {
+    content: none;
+}
+
+.magentaTextBubble[data-step="2"],
+.magentaTextBubble[data-step="3"] {
+    min-width: min(56%, 520px);
+    max-width: min(56%, 520px);
+    top: 34%;
+}
+
+.magentaNextBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 26px;
+    transform: translateX(-50%);
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 222, 130, 0.95);
+    background: linear-gradient(180deg, rgba(255, 222, 130, 0.98) 0%, rgba(236, 167, 61, 0.98) 100%);
+    color: #3a2608;
+    font-size: 20px;
+    font-weight: 900;
+    cursor: pointer;
+    z-index: 4;
+}
+
+.magentaEndBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.magentaEndBtn img {
+    display: block;
+    width: min(24vw, 360px);
+    height: auto;
+}
+
+.goldenScreenStage {
+    background: linear-gradient(180deg, #fce59b 0%, #f3c95f 50%, #d89e2e 100%);
 }
 
 .nycAfterDinnerBubble {
