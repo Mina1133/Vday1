@@ -434,7 +434,7 @@ body {
     position: absolute;
     left: 22%;
     top: 52%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(var(--dinner-bubble-scale, 1));
     z-index: 9;
     width: 520px;
     max-width: 92%;
@@ -447,7 +447,7 @@ body {
 
 .nycDinnerChatLeft {
     left: 30%;
-    top: 46%;
+    top: 42%;
     width: 700px;
     max-width: 92%;
     padding: 0;
@@ -940,6 +940,7 @@ body {
     width: min(640px, 62%);
     text-align: center;
     color: #2f1f1f;
+    font-family: "Brush Script MT", "Segoe Script", "Lucida Handwriting", cursive;
     font-size: clamp(20px, 2.1vw, 34px);
     line-height: 1.35;
     font-weight: 800;

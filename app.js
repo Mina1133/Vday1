@@ -1,4 +1,4 @@
-﻿const app = document.getElementById("app");
+const app = document.getElementById("app");
 
 const STORAGE_KEY = "valentine_game_save_v11_story_map";
 const DINNER_TOP_SCORE_KEY = "valentine_game_nyc_dinner_top_score_v1";
@@ -493,7 +493,7 @@ function mountClickHearts() {
         for (let i = 0; i < count; i += 1) {
             const heart = document.createElement("span");
             heart.className = "clickHeart";
-            heart.textContent = "❤";
+            heart.textContent = "?";
 
             const spreadX = (Math.random() - 0.5) * 44;
             const spreadY = (Math.random() - 0.5) * 30;
@@ -598,14 +598,14 @@ function screenNycRoom(useHungryPrompt = false, usePostDinnerPrompt = false) {
       </div>
       <div class="nycObstacleLayer" id="nycObstacleLayer" hidden></div>
       <div class="nycWinOverlay" id="nycWinOverlay" hidden>
-        <img class="nycWinSignImage" src="assets/protect congrats.png" alt="这么好的男朋友！保护大米这么好！">
+        <img class="nycWinSignImage" src="assets/protect congrats.png" alt="???????!???????!">
         <div class="nycOverlayBtnRow">
           <button class="nycWinPlayAgainBtn" id="nycWinPlayAgainBtn">Play Again</button>
           <button class="nycWinBackBtn" id="nycWinBackBtn">Next</button>
         </div>
       </div>
       <div class="nycGameOverOverlay" id="nycGameOverOverlay" hidden>
-        <div class="nycGameOverSign">不保护我</div>
+        <div class="nycGameOverSign">????</div>
         <div class="nycOverlayBtnRow">
           <button class="nycPlayAgainBtn" id="nycPlayAgainBtn">Play Again</button>
           <button class="nycGameOverNextBtn" id="nycGameOverNextBtn">Next</button>
@@ -637,7 +637,7 @@ function screenNycDinner() {
       <button class="nycDinnerOkBtn" id="nycDinnerOkBtn" aria-label="Next">Next</button>
       <div class="nycDinnerGameIntro" id="nycDinnerGameIntro" hidden>
         <img class="nycDinnerGameSign" src="assets/restaurant_sign_transparent.png" alt="Restaurant game sign">
-        <button class="nycDinnerStartBtn" id="nycDinnerStartBtn" aria-label="Start">Start</button>
+        <button class="nycDinnerStartBtn" id="nycDinnerStartBtn" aria-label="Start">JUMP</button>
       </div>
       <div class="nycDinnerRunner" id="nycDinnerRunner" hidden>
         <div class="nycDinnerRunnerHud">Score: <span id="nycDinnerRunnerScore">0</span></div>
@@ -727,7 +727,7 @@ function screenMap() {
           width:360px;
           max-width:92%;
           aspect-ratio: 1536 / 1024;
-          background:transparent url('assets/好的宝宝.png') center center no-repeat;
+          background:transparent url('assets/????.png') center center no-repeat;
           background-size:contain;
           border:none;
           cursor:pointer;
@@ -759,7 +759,7 @@ function screenShelf() {
 function screenNote() {
     return `
     <div class="noteScene" aria-label="Close-up note scene">
-      <div class="noteMessage">I made this game for you my love! Now lets go explore!</div>
+      <div class="noteMessage">I made this game<br>for you my love!<br>Now lets go explore!</div>
       <button class="backRoomBtn" id="backRoomBtn">Back to Room</button>
     </div>
   `;
@@ -1407,29 +1407,32 @@ function render() {
             };
 
             const dinnerLines = [
-                { side: "right", img: "assets/pixel-speech-bubble.png" },
+                { side: "right", img: "assets/pixel-speech-bubble.png", small: true },
                 {
                     side: "left",
-                    img: "assets/pixel-speech-bubble (1).png"
+                    img: "assets/pixel-speech-bubble (1).png",
+                    small: true
                 },
                 {
                     side: "right",
                     img: "assets/third speech bubble.png",
                     fallbackImg: "assets/pixel-speech-bubble (2).png"
                 },
-                { side: "left", img: "assets/pixel-speech-bubble (3).png" },
+                { side: "left", img: "assets/pixel-speech-bubble (3).png", small: true },
                 { side: "right", img: "assets/pixel-speech-bubble (4).png" },
-                { side: "left", img: "assets/pixel-speech-bubble (5).png" },
+                { side: "left", img: "assets/pixel-speech-bubble (5).png", small: true },
                 { side: "right", img: "assets/pixel-speech-bubble (6).png" },
-                { side: "left", img: "assets/pixel-speech-bubble (7).png" },
-                { side: "right", img: "assets/pixel-speech-bubble (8).png" },
+                { side: "left", img: "assets/pixel-speech-bubble (7).png", small: true },
+                { side: "right", img: "assets/pixel-speech-bubble (8).png", small: true },
                  { side: "right", img: "assets/pixel-speech-bubble (9).png" },
-                { side: "left", img: "assets/pixel-speech-bubble (10).png" }
+                { side: "left", img: "assets/pixel-speech-bubble (10).png", small: true }
             ];
             let dinnerLineIndex = 0;
 
             const renderDinnerLine = () => {
                 const line = dinnerLines[dinnerLineIndex];
+                nycDinnerChatLeft.style.setProperty("--dinner-bubble-scale", "1");
+                nycDinnerChatRight.style.setProperty("--dinner-bubble-scale", "1");
                 const applyWithFallback = (imgEl) => {
                     imgEl.onerror = null;
                     imgEl.src = line.img;
@@ -1442,10 +1445,12 @@ function render() {
                 };
                 if (line.side === "left") {
                     applyWithFallback(nycDinnerChatLeftImg);
+                    nycDinnerChatLeft.style.setProperty("--dinner-bubble-scale", line.small ? "0.88" : "1");
                     nycDinnerChatRight.hidden = true;
                     nycDinnerChatLeft.hidden = false;
                 } else {
                     applyWithFallback(nycDinnerChatRightImg);
+                    nycDinnerChatRight.style.setProperty("--dinner-bubble-scale", line.small ? "0.88" : "1");
                     nycDinnerChatLeft.hidden = true;
                     nycDinnerChatRight.hidden = false;
                 }
@@ -1540,8 +1545,8 @@ function render() {
             let maxY = Math.max(0, computerFrame.clientHeight - loveBugCrawler.offsetHeight);
             let x = maxX * 0.5;
             let y = maxY * 0.5;
-            let vx = (Math.random() < 0.5 ? -1 : 1) * (250 + (Math.random() * 140));
-            let vy = (Math.random() < 0.5 ? -1 : 1) * (250 + (Math.random() * 140));
+            let vx = (Math.random() < 0.5 ? -1 : 1) * (270 + (Math.random() * 150));
+            let vy = (Math.random() < 0.5 ? -1 : 1) * (270 + (Math.random() * 150));
             let lastTime = performance.now();
 
             function frame(now) {
@@ -1558,8 +1563,8 @@ function render() {
                 vy += (Math.random() - 0.5) * 900 * dt;
 
                 const speed = Math.hypot(vx, vy) || 1;
-                const minSpeed = 210;
-                const maxSpeed = 500;
+                const minSpeed = 235;
+                const maxSpeed = 540;
                 const clampedSpeed = Math.max(minSpeed, Math.min(maxSpeed, speed));
                 vx = (vx / speed) * clampedSpeed;
                 vy = (vy / speed) * clampedSpeed;
@@ -1670,3 +1675,4 @@ function render() {
 
 mountClickHearts();
 render();
+
