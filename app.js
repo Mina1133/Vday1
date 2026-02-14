@@ -13,6 +13,7 @@ let nycObstacleTeardown = null;
 let nycCollisionTeardown = null;
 let nycDinnerRunnerTeardown = null;
 let mintGameTeardown = null;
+let kissRedTeardown = null;
 let nycReturnFromWin = false;
 let nycFromDinnerNext = false;
 const PURPLE_SLIDES = [
@@ -68,7 +69,7 @@ function saveMintTopScore(score) {
 
 function defaultState() {
     return {
-        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | orangeScreen | violetScreen | kissRedScreen | redScreen | blackScreen | brownScreen | greyScreen | silverScreen | purpleScreen | magentaScreen | goldenScreen | mintRoom
+        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | orangeScreen | violetScreen | blueScreen | greenScreen | kissRedScreen | redScreen | blackScreen | brownScreen | greyScreen | silverScreen | purpleScreen | magentaScreen | goldenScreen | mintRoom
         characterMode: null, // null | alone | withme
         mapIntroDone: false,
         mapPostComputerIntroPending: false,
@@ -122,6 +123,10 @@ function go(screen) {
     if (screen !== "mintRoom" && mintGameTeardown != null) {
         mintGameTeardown();
         mintGameTeardown = null;
+    }
+    if (screen !== "kissRedScreen" && kissRedTeardown != null) {
+        kissRedTeardown();
+        kissRedTeardown = null;
     }
     state.screen = screen;
     if (screen !== "nycRoom") {
@@ -609,10 +614,11 @@ function showGameMapMenu() {
     const destinations = [
         { screen: "map", label: "Map Room", hint: "Main room hub" },
         { screen: "bahamasHotel", label: "Hotel", hint: "Go to hotel background scene" },
-        { screen: "shelf", label: "Bookshelf Game", hint: "Go to shelf close-up" },
         { screen: "computer", label: "Computer Game", hint: "Open love bug hunt room" },
         { screen: "nycRoom", label: "NYC Walk Game", hint: "Dodge obstacles scene" },
         { screen: "nycDinner", label: "Restaurant Jump Game", hint: "Runner/jump restaurant game" },
+        { screen: "mintRoom", label: "Basketball Game", hint: "Catch the falling basketballs" },
+        { screen: "violetScreen", label: "Kiss Cam", hint: "Kiss cam arena screen" },
         { screen: "nycAfterDinner", label: "NYC View", hint: "Post-dinner city screen" },
         { screen: "afterDinnerHall", label: "NYC Memories", hint: "Romantic hallway memory scene" },
         { screen: "brownScreen", label: "sea", hint: "Sea ending screen" }
@@ -947,13 +953,152 @@ function screenVioletScreen() {
   `;
 }
 
+function screenBlueScreen() {
+    return `
+    ${headerTitle()}
+    <div class="blueScreenStage" id="blueScreenStage" aria-label="Blue screen">
+      <img class="bluePromptBubble" id="bluePromptBubble" src="assets/wantgo.png" alt="Baby I know we have been doing but there is another place I want to go">
+      <button class="blueToGreenBtn" id="blueToGreenBtn" aria-label="Next">Next</button>
+      <button class="blueEndConvoBtn" id="blueEndConvoBtn" aria-label="End conversation" hidden>
+        <img src="assets/好的宝宝.png" alt="End conversation">
+      </button>
+    </div>
+  `;
+}
+
+function screenGreenScreen() {
+    return `
+    ${headerTitle()}
+    <div class="greenScreenStage" id="greenScreenStage" aria-label="Green screen">
+      <button class="greenToDisneyBtn" id="greenToDisneyBtn" aria-label="Next">Next</button>
+    </div>
+  `;
+}
+
 function screenKissRedScreen() {
     return `
     ${headerTitle()}
     <div class="kissRedScreenStage" id="kissRedScreenStage" aria-label="Red kiss cam screen">
+      <div class="kissRedCounter" id="kissRedCounter" aria-live="polite">Red clicks: 0</div>
+      <div class="kissRedWinSign" id="kissRedWinSign" hidden>You Win!</div>
       <button class="kissRedToPurpleBtn" id="kissRedToPurpleBtn" aria-label="Next">Next</button>
     </div>
   `;
+}
+
+function startKissRedClickGame(stage, counterEl, winEl = null) {
+    if (stage == null || counterEl == null) return null;
+
+    let running = true;
+    let score = 0;
+    const winTarget = 5;
+    const img = new Image();
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    let loaded = false;
+    let naturalWidth = 0;
+    let naturalHeight = 0;
+    const sampleRadius = 4;
+    const minRedHits = 8;
+
+    const setScore = (value) => {
+        score = Math.max(0, Math.floor(Number(value) || 0));
+        counterEl.textContent = `Red clicks: ${score}`;
+        if (score >= winTarget) {
+            if (winEl != null) winEl.hidden = false;
+            running = false;
+        }
+    };
+
+    const isRedPixel = (r, g, b) => {
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+        const delta = max - min;
+        if (delta < 22) return false;
+        const saturation = max === 0 ? 0 : (delta / max);
+        if (saturation < 0.2) return false;
+
+        let hue = 0;
+        if (delta !== 0) {
+            if (max === r) hue = ((g - b) / delta) % 6;
+            else if (max === g) hue = ((b - r) / delta) + 2;
+            else hue = ((r - g) / delta) + 4;
+            hue *= 60;
+            if (hue < 0) hue += 360;
+        }
+
+        const isRedHue = hue <= 24 || hue >= 336;
+        return isRedHue && r >= 95;
+    };
+
+    const isRedZoneAt = (x, y) => {
+        if (ctx == null) return false;
+        let hits = 0;
+        for (let dy = -sampleRadius; dy <= sampleRadius; dy += 1) {
+            const py = y + dy;
+            if (py < 0 || py >= naturalHeight) continue;
+            for (let dx = -sampleRadius; dx <= sampleRadius; dx += 1) {
+                const px = x + dx;
+                if (px < 0 || px >= naturalWidth) continue;
+                const pixel = ctx.getImageData(px, py, 1, 1).data;
+                if (isRedPixel(pixel[0], pixel[1], pixel[2])) {
+                    hits += 1;
+                    if (hits >= minRedHits) return true;
+                }
+            }
+        }
+        return false;
+    };
+
+    const toImagePoint = (clientX, clientY) => {
+        if (!loaded || naturalWidth < 1 || naturalHeight < 1) return null;
+        const rect = stage.getBoundingClientRect();
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+        if (x < 0 || y < 0 || x > rect.width || y > rect.height) return null;
+
+        const scale = Math.max(rect.width / naturalWidth, rect.height / naturalHeight);
+        const drawnWidth = naturalWidth * scale;
+        const drawnHeight = naturalHeight * scale;
+        const offsetX = (rect.width - drawnWidth) * 0.5;
+        const offsetY = (rect.height - drawnHeight) * 0.5;
+
+        const imgX = (x - offsetX) / scale;
+        const imgY = (y - offsetY) / scale;
+        if (imgX < 0 || imgY < 0 || imgX >= naturalWidth || imgY >= naturalHeight) return null;
+        return { x: Math.floor(imgX), y: Math.floor(imgY) };
+    };
+
+    const onStagePointerDown = (e) => {
+        if (!running || !loaded || ctx == null) return;
+        if (e.target instanceof Element && e.target.closest("button")) return;
+        const point = toImagePoint(e.clientX, e.clientY);
+        if (point == null) return;
+        if (isRedZoneAt(point.x, point.y)) {
+            setScore(score + 1);
+        }
+    };
+
+    setScore(0);
+    stage.addEventListener("pointerdown", onStagePointerDown);
+
+    img.onload = () => {
+        naturalWidth = Math.max(1, img.naturalWidth || img.width || 0);
+        naturalHeight = Math.max(1, img.naturalHeight || img.height || 0);
+        if (ctx != null && naturalWidth > 0 && naturalHeight > 0) {
+            canvas.width = naturalWidth;
+            canvas.height = naturalHeight;
+            ctx.drawImage(img, 0, 0, naturalWidth, naturalHeight);
+            loaded = true;
+        }
+    };
+    img.src = "assets/disney.png";
+
+    return () => {
+        if (!running) return;
+        running = false;
+        stage.removeEventListener("pointerdown", onStagePointerDown);
+    };
 }
 
 function screenRedScreen() {
@@ -1847,6 +1992,8 @@ function render() {
     app.classList.toggle("yellowScreenMode", state.screen === "yellowScreen");
     app.classList.toggle("orangeScreenMode", state.screen === "orangeScreen");
     app.classList.toggle("violetScreenMode", state.screen === "violetScreen");
+    app.classList.toggle("blueScreenMode", state.screen === "blueScreen");
+    app.classList.toggle("greenScreenMode", state.screen === "greenScreen");
     app.classList.toggle("kissRedScreenMode", state.screen === "kissRedScreen");
     app.classList.toggle("redScreenMode", state.screen === "redScreen");
     app.classList.toggle("blackScreenMode", state.screen === "blackScreen");
@@ -2645,14 +2792,87 @@ function render() {
         app.innerHTML = screenVioletScreen();
         mountHomeButton();
         const violetToPurpleBtn = document.getElementById("violetToPurpleBtn");
-        if (violetToPurpleBtn != null) violetToPurpleBtn.onclick = () => go("kissRedScreen");
+        if (violetToPurpleBtn != null) violetToPurpleBtn.onclick = () => go("blueScreen");
+        return;
+    }
+
+    if (state.screen === "blueScreen") {
+        app.innerHTML = screenBlueScreen();
+        mountHomeButton();
+        const bluePromptBubble = document.getElementById("bluePromptBubble");
+        const blueToGreenBtn = document.getElementById("blueToGreenBtn");
+        const blueEndConvoBtn = document.getElementById("blueEndConvoBtn");
+        const blueConversation = [
+            {
+                src: "assets/wantgo.png",
+                alt: "Baby I know we have been doing but there is another place I want to go",
+                style: { left: "58%", top: "46%", width: "min(34vw, 420px)" }
+            },
+            {
+                src: "assets/where.png",
+                alt: "Where?",
+                style: { left: "40%", top: "44%", width: "min(16vw, 170px)" }
+            },
+            {
+                src: "assets/disneyyy.png",
+                alt: "Disney!",
+                style: { left: "58%", top: "46%", width: "min(26vw, 280px)" }
+            }
+        ];
+        let blueConversationStep = 0;
+        const renderBlueConversationStep = () => {
+            if (bluePromptBubble == null) return;
+            const step = blueConversation[blueConversationStep];
+            if (step == null) return;
+            bluePromptBubble.src = step.src;
+            bluePromptBubble.alt = step.alt;
+            const left = step.style?.left ?? "50%";
+            const top = step.style?.top ?? "34%";
+            const width = step.style?.width ?? "min(64vw, 760px)";
+            bluePromptBubble.style.left = left;
+            bluePromptBubble.style.top = top;
+            bluePromptBubble.style.width = width;
+        };
+        const renderBlueButtons = () => {
+            const isFinalStep = blueConversationStep >= blueConversation.length - 1;
+            if (blueToGreenBtn != null) blueToGreenBtn.hidden = isFinalStep;
+            if (blueEndConvoBtn != null) blueEndConvoBtn.hidden = !isFinalStep;
+        };
+        renderBlueConversationStep();
+        renderBlueButtons();
+        if (blueToGreenBtn != null) {
+            blueToGreenBtn.onclick = () => {
+                if (blueConversationStep < blueConversation.length - 1) {
+                    blueConversationStep += 1;
+                    renderBlueConversationStep();
+                    renderBlueButtons();
+                }
+            };
+        }
+        if (blueEndConvoBtn != null) blueEndConvoBtn.onclick = () => go("greenScreen");
+        return;
+    }
+
+    if (state.screen === "greenScreen") {
+        app.innerHTML = screenGreenScreen();
+        mountHomeButton();
+        const greenToDisneyBtn = document.getElementById("greenToDisneyBtn");
+        if (greenToDisneyBtn != null) greenToDisneyBtn.onclick = () => go("kissRedScreen");
         return;
     }
 
     if (state.screen === "kissRedScreen") {
         app.innerHTML = screenKissRedScreen();
         mountHomeButton();
+        const kissRedScreenStage = document.getElementById("kissRedScreenStage");
+        const kissRedCounter = document.getElementById("kissRedCounter");
+        const kissRedWinSign = document.getElementById("kissRedWinSign");
         const kissRedToPurpleBtn = document.getElementById("kissRedToPurpleBtn");
+        if (kissRedTeardown != null) {
+            kissRedTeardown();
+            kissRedTeardown = null;
+        }
+        kissRedTeardown = startKissRedClickGame(kissRedScreenStage, kissRedCounter, kissRedWinSign);
         if (kissRedToPurpleBtn != null) kissRedToPurpleBtn.onclick = () => go("purpleScreen");
         return;
     }

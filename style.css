@@ -217,6 +217,22 @@ body {
     background: #000;
 }
 
+.app.blueScreenMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
+.app.greenScreenMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
 .app.kissRedScreenMode {
     padding: 0;
     height: 100vh;
@@ -313,6 +329,8 @@ body {
 .app.yellowScreenMode,
 .app.orangeScreenMode,
 .app.violetScreenMode,
+.app.blueScreenMode,
+.app.greenScreenMode,
 .app.kissRedScreenMode,
 .app.redScreenMode,
 .app.blackScreenMode,
@@ -344,6 +362,8 @@ body {
 .yellowScreenStage,
 .orangeScreenStage,
 .violetScreenStage,
+.blueScreenStage,
+.greenScreenStage,
 .kissRedScreenStage,
 .redScreenStage,
 .blackScreenStage,
@@ -447,6 +467,24 @@ body {
 }
 
 .app.violetScreenMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.blueScreenMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.greenScreenMode .header {
     position: fixed;
     top: 12px;
     left: 12px;
@@ -904,10 +942,136 @@ body {
     cursor: pointer;
 }
 
+.blueScreenStage {
+    position: relative;
+    background: url("assets/sh bkgr.png") center center / cover no-repeat;
+    overflow: hidden;
+}
+
+.bluePromptBubble {
+    position: absolute;
+    left: 50%;
+    top: 34%;
+    transform: translate(-50%, -50%);
+    width: min(64vw, 760px);
+    height: auto;
+    z-index: 4;
+    pointer-events: none;
+}
+
+.blueToGreenBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 52px;
+    transform: translateX(-50%);
+    border: none;
+    border-radius: 999px;
+    padding: 16px 34px;
+    background: rgba(210, 32, 46, 0.72);
+    color: #fff2f3;
+    font-size: 28px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.blueEndConvoBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.blueEndConvoBtn img {
+    display: block;
+    width: min(18vw, 220px);
+    height: auto;
+}
+
+.greenScreenStage {
+    position: relative;
+    background: linear-gradient(180deg, rgba(70, 196, 102, 0.96) 0%, rgba(27, 112, 53, 0.98) 100%);
+    overflow: hidden;
+}
+
+.greenPromptBubble {
+    position: absolute;
+    left: 50%;
+    top: 34%;
+    transform: translate(-50%, -50%);
+    width: min(34vw, 320px);
+    height: auto;
+    z-index: 4;
+    pointer-events: none;
+}
+
+.greenToDisneyBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 52px;
+    transform: translateX(-50%);
+    border: none;
+    border-radius: 999px;
+    padding: 16px 34px;
+    background: rgba(210, 32, 46, 0.72);
+    color: #fff2f3;
+    font-size: 28px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
 .kissRedScreenStage {
     position: relative;
-    background: linear-gradient(180deg, rgba(104, 11, 20, 0.96) 0%, rgba(48, 4, 10, 0.98) 100%);
+    background: url("assets/disney.png") center center / cover no-repeat;
     overflow: hidden;
+    cursor: crosshair;
+}
+
+.kissRedPromptBubble {
+    position: absolute;
+    left: 50%;
+    top: 18%;
+    transform: translate(-50%, -50%);
+    width: min(34vw, 320px);
+    height: auto;
+    z-index: 6;
+    pointer-events: none;
+}
+
+.kissRedCounter {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    z-index: 6;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: rgba(194, 19, 45, 0.78);
+    color: #fff4f5;
+    font-size: clamp(18px, 2.2vw, 30px);
+    font-weight: 900;
+    letter-spacing: 0.02em;
+}
+
+.kissRedWinSign {
+    position: absolute;
+    left: 50%;
+    top: 22%;
+    transform: translate(-50%, -50%);
+    z-index: 7;
+    padding: 14px 24px;
+    border-radius: 14px;
+    border: 3px solid rgba(255, 240, 210, 0.9);
+    background: rgba(201, 20, 46, 0.88);
+    color: #fff4e8;
+    font-size: clamp(30px, 4.4vw, 56px);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.38);
 }
 
 .kissRedToPurpleBtn {
