@@ -970,6 +970,7 @@ function screenGreenScreen() {
     return `
     ${headerTitle()}
     <div class="greenScreenStage" id="greenScreenStage" aria-label="Green screen">
+      <img class="greenPromptBubble" id="greenPromptBubble" src="assets/distracted.png" alt="Baby we got distracted and forgot about the love bug">
       <button class="greenToDisneyBtn" id="greenToDisneyBtn" aria-label="Next">Next</button>
     </div>
   `;
@@ -979,125 +980,47 @@ function screenKissRedScreen() {
     return `
     ${headerTitle()}
     <div class="kissRedScreenStage" id="kissRedScreenStage" aria-label="Red kiss cam screen">
-      <div class="kissRedCounter" id="kissRedCounter" aria-live="polite">Red clicks: 0</div>
-      <div class="kissRedWinSign" id="kissRedWinSign" hidden>You Win!</div>
+      <img class="kissRedHiddenBug" id="kissRedHiddenBug" src="assets/love bug.png" alt="Hidden love bug">
+      <div class="kissRedWinSign" id="kissRedWinSign" hidden>Found It</div>
       <button class="kissRedToPurpleBtn" id="kissRedToPurpleBtn" aria-label="Next">Next</button>
     </div>
   `;
 }
 
-function startKissRedClickGame(stage, counterEl, winEl = null) {
-    if (stage == null || counterEl == null) return null;
+function startKissRedClickGame(stage, bugEl, winEl = null) {
+    if (stage == null || bugEl == null) return null;
 
     let running = true;
-    let score = 0;
-    const winTarget = 5;
-    const img = new Image();
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    let loaded = false;
-    let naturalWidth = 0;
-    let naturalHeight = 0;
-    const sampleRadius = 4;
-    const minRedHits = 8;
+    let won = false;
 
-    const setScore = (value) => {
-        score = Math.max(0, Math.floor(Number(value) || 0));
-        counterEl.textContent = `Red clicks: ${score}`;
-        if (score >= winTarget) {
-            if (winEl != null) winEl.hidden = false;
-            running = false;
-        }
+    const placeBug = () => {
+        const stageWidth = stage.clientWidth || 980;
+        const stageHeight = stage.clientHeight || 740;
+        const bugSize = Math.max(22, Math.min(42, Math.round(stageWidth * 0.03)));
+        const left = Math.max(18, Math.random() * Math.max(18, stageWidth - bugSize - 18));
+        const topMin = Math.max(90, stageHeight * 0.18);
+        const topMax = Math.max(topMin + 10, stageHeight - bugSize - 170);
+        const top = topMin + (Math.random() * (topMax - topMin));
+        bugEl.style.width = `${bugSize}px`;
+        bugEl.style.left = `${left}px`;
+        bugEl.style.top = `${top}px`;
     };
 
-    const isRedPixel = (r, g, b) => {
-        const max = Math.max(r, g, b);
-        const min = Math.min(r, g, b);
-        const delta = max - min;
-        if (delta < 22) return false;
-        const saturation = max === 0 ? 0 : (delta / max);
-        if (saturation < 0.2) return false;
-
-        let hue = 0;
-        if (delta !== 0) {
-            if (max === r) hue = ((g - b) / delta) % 6;
-            else if (max === g) hue = ((b - r) / delta) + 2;
-            else hue = ((r - g) / delta) + 4;
-            hue *= 60;
-            if (hue < 0) hue += 360;
-        }
-
-        const isRedHue = hue <= 24 || hue >= 336;
-        return isRedHue && r >= 95;
+    const onBugClick = () => {
+        if (!running || won) return;
+        won = true;
+        if (winEl != null) winEl.hidden = false;
     };
 
-    const isRedZoneAt = (x, y) => {
-        if (ctx == null) return false;
-        let hits = 0;
-        for (let dy = -sampleRadius; dy <= sampleRadius; dy += 1) {
-            const py = y + dy;
-            if (py < 0 || py >= naturalHeight) continue;
-            for (let dx = -sampleRadius; dx <= sampleRadius; dx += 1) {
-                const px = x + dx;
-                if (px < 0 || px >= naturalWidth) continue;
-                const pixel = ctx.getImageData(px, py, 1, 1).data;
-                if (isRedPixel(pixel[0], pixel[1], pixel[2])) {
-                    hits += 1;
-                    if (hits >= minRedHits) return true;
-                }
-            }
-        }
-        return false;
-    };
-
-    const toImagePoint = (clientX, clientY) => {
-        if (!loaded || naturalWidth < 1 || naturalHeight < 1) return null;
-        const rect = stage.getBoundingClientRect();
-        const x = clientX - rect.left;
-        const y = clientY - rect.top;
-        if (x < 0 || y < 0 || x > rect.width || y > rect.height) return null;
-
-        const scale = Math.max(rect.width / naturalWidth, rect.height / naturalHeight);
-        const drawnWidth = naturalWidth * scale;
-        const drawnHeight = naturalHeight * scale;
-        const offsetX = (rect.width - drawnWidth) * 0.5;
-        const offsetY = (rect.height - drawnHeight) * 0.5;
-
-        const imgX = (x - offsetX) / scale;
-        const imgY = (y - offsetY) / scale;
-        if (imgX < 0 || imgY < 0 || imgX >= naturalWidth || imgY >= naturalHeight) return null;
-        return { x: Math.floor(imgX), y: Math.floor(imgY) };
-    };
-
-    const onStagePointerDown = (e) => {
-        if (!running || !loaded || ctx == null) return;
-        if (e.target instanceof Element && e.target.closest("button")) return;
-        const point = toImagePoint(e.clientX, e.clientY);
-        if (point == null) return;
-        if (isRedZoneAt(point.x, point.y)) {
-            setScore(score + 1);
-        }
-    };
-
-    setScore(0);
-    stage.addEventListener("pointerdown", onStagePointerDown);
-
-    img.onload = () => {
-        naturalWidth = Math.max(1, img.naturalWidth || img.width || 0);
-        naturalHeight = Math.max(1, img.naturalHeight || img.height || 0);
-        if (ctx != null && naturalWidth > 0 && naturalHeight > 0) {
-            canvas.width = naturalWidth;
-            canvas.height = naturalHeight;
-            ctx.drawImage(img, 0, 0, naturalWidth, naturalHeight);
-            loaded = true;
-        }
-    };
-    img.src = "assets/disney.png";
+    if (winEl != null) winEl.hidden = true;
+    bugEl.hidden = false;
+    placeBug();
+    bugEl.addEventListener("click", onBugClick);
 
     return () => {
         if (!running) return;
         running = false;
-        stage.removeEventListener("pointerdown", onStagePointerDown);
+        bugEl.removeEventListener("click", onBugClick);
     };
 }
 
@@ -2856,8 +2779,31 @@ function render() {
     if (state.screen === "greenScreen") {
         app.innerHTML = screenGreenScreen();
         mountHomeButton();
+        const greenPromptBubble = document.getElementById("greenPromptBubble");
         const greenToDisneyBtn = document.getElementById("greenToDisneyBtn");
-        if (greenToDisneyBtn != null) greenToDisneyBtn.onclick = () => go("kissRedScreen");
+        const greenConversation = [
+            { src: "assets/distracted.png", alt: "Baby we got distracted and forgot about the love bug" },
+            { src: "assets/look.png", alt: "Lets look now!" }
+        ];
+        let greenConversationStep = 0;
+        const renderGreenConversationStep = () => {
+            if (greenPromptBubble == null) return;
+            const step = greenConversation[greenConversationStep];
+            if (step == null) return;
+            greenPromptBubble.src = step.src;
+            greenPromptBubble.alt = step.alt;
+        };
+        renderGreenConversationStep();
+        if (greenToDisneyBtn != null) {
+            greenToDisneyBtn.onclick = () => {
+                if (greenConversationStep < greenConversation.length - 1) {
+                    greenConversationStep += 1;
+                    renderGreenConversationStep();
+                    return;
+                }
+                go("kissRedScreen");
+            };
+        }
         return;
     }
 
@@ -2865,14 +2811,14 @@ function render() {
         app.innerHTML = screenKissRedScreen();
         mountHomeButton();
         const kissRedScreenStage = document.getElementById("kissRedScreenStage");
-        const kissRedCounter = document.getElementById("kissRedCounter");
+        const kissRedHiddenBug = document.getElementById("kissRedHiddenBug");
         const kissRedWinSign = document.getElementById("kissRedWinSign");
         const kissRedToPurpleBtn = document.getElementById("kissRedToPurpleBtn");
         if (kissRedTeardown != null) {
             kissRedTeardown();
             kissRedTeardown = null;
         }
-        kissRedTeardown = startKissRedClickGame(kissRedScreenStage, kissRedCounter, kissRedWinSign);
+        kissRedTeardown = startKissRedClickGame(kissRedScreenStage, kissRedHiddenBug, kissRedWinSign);
         if (kissRedToPurpleBtn != null) kissRedToPurpleBtn.onclick = () => go("purpleScreen");
         return;
     }

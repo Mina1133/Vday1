@@ -994,7 +994,7 @@ body {
 
 .greenScreenStage {
     position: relative;
-    background: linear-gradient(180deg, rgba(70, 196, 102, 0.96) 0%, rgba(27, 112, 53, 0.98) 100%);
+    background: url("assets/disney 2.png") center center / cover no-repeat;
     overflow: hidden;
 }
 
@@ -1028,7 +1028,7 @@ body {
     position: relative;
     background: url("assets/disney.png") center center / cover no-repeat;
     overflow: hidden;
-    cursor: crosshair;
+    cursor: default;
 }
 
 .kissRedPromptBubble {
@@ -1042,18 +1042,13 @@ body {
     pointer-events: none;
 }
 
-.kissRedCounter {
+.kissRedHiddenBug {
     position: absolute;
-    top: 22px;
-    right: 22px;
     z-index: 6;
-    padding: 10px 16px;
-    border-radius: 999px;
-    background: rgba(194, 19, 45, 0.78);
-    color: #fff4f5;
-    font-size: clamp(18px, 2.2vw, 30px);
-    font-weight: 900;
-    letter-spacing: 0.02em;
+    height: auto;
+    cursor: pointer;
+    user-select: none;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45));
 }
 
 .kissRedWinSign {
