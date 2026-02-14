@@ -623,8 +623,8 @@ function showGameMapMenu() {
         { screen: "nycRoom", label: "NYC Walk Game", hint: "Dodge obstacles scene" },
         { screen: "nycDinner", label: "Restaurant Jump Game", hint: "Runner/jump restaurant game" },
         { screen: "mintRoom", label: "Basketball Game", hint: "Catch the falling basketballs" },
+        { screen: "greenScreen", label: "Disney Game", hint: "Disney conversation and love bug game" },
         { screen: "violetScreen", label: "Kiss Cam", hint: "Kiss cam arena screen" },
-        { screen: "nycAfterDinner", label: "NYC View", hint: "Post-dinner city screen" },
         { screen: "afterDinnerHall", label: "NYC Memories", hint: "Romantic hallway memory scene" },
         { screen: "brownScreen", label: "sea", hint: "Sea ending screen" }
     ];
@@ -987,6 +987,7 @@ function screenKissRedScreen() {
     <div class="kissRedScreenStage" id="kissRedScreenStage" aria-label="Red kiss cam screen">
       <img class="kissRedFindBugSign" id="kissRedFindBugSign" src="assets/findbug.png" alt="Find the bug sign">
       <img class="kissRedHiddenBug" id="kissRedHiddenBug" src="assets/love bug.png" alt="Hidden love bug" hidden>
+      <img class="kissRedFoundSign" id="kissRedFoundSign" src="assets/found.png" alt="Found the love bug" hidden>
       <button class="kissRedToPurpleBtn" id="kissRedToPurpleBtn" aria-label="Start">Start</button>
       <div class="kissRedChoiceRow" id="kissRedChoiceRow" hidden>
         <button class="kissRedChoiceBtn" id="kissRedPlayAgainBtn" aria-label="Play Again">Play Again</button>
@@ -2861,6 +2862,7 @@ function render() {
         const kissRedScreenStage = document.getElementById("kissRedScreenStage");
         const kissRedFindBugSign = document.getElementById("kissRedFindBugSign");
         const kissRedHiddenBug = document.getElementById("kissRedHiddenBug");
+        const kissRedFoundSign = document.getElementById("kissRedFoundSign");
         const kissRedToPurpleBtn = document.getElementById("kissRedToPurpleBtn");
         const kissRedChoiceRow = document.getElementById("kissRedChoiceRow");
         const kissRedPlayAgainBtn = document.getElementById("kissRedPlayAgainBtn");
@@ -2905,7 +2907,7 @@ function render() {
             kissRedTeardown = startKissRedClickGame(
                 kissRedScreenStage,
                 kissRedHiddenBug,
-                null,
+                kissRedFoundSign,
                 () => {
                     if (!kissRedStarted) return;
                     if (kissRedOfferTimer != null) {
