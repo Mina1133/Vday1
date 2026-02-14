@@ -592,7 +592,8 @@ body {
 }
 
 .yellowScreenStage {
-    background: linear-gradient(180deg, #fff9b5 0%, #ffd84f 48%, #ffbc22 100%);
+    background: url("assets/park.jpeg") center center no-repeat;
+    background-size: cover;
 }
 
 .nycAfterDinnerBubble {
