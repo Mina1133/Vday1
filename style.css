@@ -1223,12 +1223,12 @@ body {
 
 .magentaTextBubble {
     position: absolute;
-    left: 50%;
-    top: 30%;
+    left: 66%;
+    top: 42%;
     transform: translate(-50%, -50%);
-    min-width: min(88%, 980px);
-    max-width: min(88%, 980px);
-    padding: 18px 24px;
+    min-width: min(62%, 620px);
+    max-width: min(62%, 620px);
+    padding: 12px 14px;
     border: 6px solid #000;
     border-radius: 12px;
     background: #fff;
@@ -1248,18 +1248,18 @@ body {
     border-radius: 0;
     padding: 0;
     min-width: auto;
-    max-width: min(92%, 1100px);
-    top: 28%;
+    max-width: min(62%, 620px);
+    top: 44%;
 }
 
 .magentaBubbleImage {
     display: block;
-    width: min(92vw, 1040px);
+    width: min(58vw, 620px);
     height: auto;
 }
 
 .magentaBubbleImageSmall {
-    width: min(38vw, 420px);
+    width: min(24vw, 260px);
 }
 
 .magentaTextBubble::after {
@@ -1281,9 +1281,9 @@ body {
 
 .magentaTextBubble[data-step="2"],
 .magentaTextBubble[data-step="3"] {
-    min-width: min(56%, 520px);
-    max-width: min(56%, 520px);
-    top: 34%;
+    min-width: min(34%, 320px);
+    max-width: min(34%, 320px);
+    top: 46%;
 }
 
 .magentaNextBtn {
@@ -1305,7 +1305,7 @@ body {
 .magentaEndBtn {
     position: absolute;
     left: 50%;
-    bottom: 22px;
+    bottom: 6px;
     transform: translateX(-50%);
     border: none;
     background: transparent;
