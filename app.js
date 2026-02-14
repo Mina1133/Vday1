@@ -1155,7 +1155,7 @@ function screenKissGreyScreen() {
     ${headerTitle()}
     <div class="kissGreyScreenStage" id="kissGreyScreenStage" aria-label="Grey screen">
       <img class="kissGreyBubbleImg first" id="kissGreyBubbleImg" src="assets/couch 1.png" alt="Finally time to rest">
-      <div class="kissGreyQuestionText" id="kissGreyQuestionText" hidden>who is missing?</div>
+      <img class="kissGreyQuestionImg" id="kissGreyQuestionText" src="assets/missing.png" alt="who is missing?" hidden>
       <div class="kissGreyAnswerBox" id="kissGreyAnswerBox" hidden>
         <input
           class="kissGreyAnswerInput"
@@ -3104,6 +3104,7 @@ function render() {
                 }
                 if (kissGreyStep === 1) {
                     kissGreyStep = 2;
+                    if (kissGreyBubbleImg != null) kissGreyBubbleImg.hidden = true;
                     if (kissGreyQuestionText != null) kissGreyQuestionText.hidden = false;
                     if (kissGreyAnswerBox != null) kissGreyAnswerBox.hidden = false;
                     kissGreyNextBtn.hidden = true;
