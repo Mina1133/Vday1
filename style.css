@@ -3474,7 +3474,9 @@ body {
 }
 
 #gameMapBtn,
-#floatingMapBtn {
+#floatingMapBtn,
+.floatingMapBtn,
+[data-open-map-menu="1"] {
     display: none !important;
 }
 
