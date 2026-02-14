@@ -21,6 +21,10 @@ body {
     --scene-width: calc(var(--design-width) * 1px);
     --scene-height: calc(var(--design-height) * 1px);
     --scene-scale: min(calc(100vw / var(--design-width)), calc(100dvh / var(--design-height)));
+    --scene-render-width: calc(var(--scene-width) * var(--scene-scale));
+    --scene-render-height: calc(var(--scene-height) * var(--scene-scale));
+    --scene-offset-x: calc((100vw - var(--scene-render-width)) / 2);
+    --scene-offset-y: calc((100dvh - var(--scene-render-height)) / 2);
     --panel-width: 980px;
     --dialog-width: 520px;
 }
@@ -405,221 +409,6 @@ body {
     transform-origin: center center;
 }
 
-.app.nycDinnerMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.nycRoomMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.nycAfterDinnerMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.afterDinnerHallMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.memoriesPinkMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.memoriesBlueMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.bahamasHotelMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.yellowScreenMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.orangeScreenMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.violetScreenMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.blueScreenMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.greenScreenMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.kissRedScreenMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.kissPinkScreenMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.kissGreyScreenMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.redScreenMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.blackScreenMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.brownScreenMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.greyScreenMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.silverScreenMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.purpleScreenMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.magentaScreenMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.goldenScreenMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
-
-.app.mintRoomMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
 
 .nycRoomStage {
     background-image: url("assets/nyc view.png");
@@ -715,29 +504,22 @@ body {
 .memoriesFinishBtn {
     position: absolute;
     left: 50%;
-    bottom: 34px;
+    bottom: -18px;
     transform: translateX(-50%);
-    min-width: 220px;
-    padding: 13px 30px;
-    border-radius: 999px;
-    border: 2px solid rgba(255, 238, 247, 0.95);
-    background:
-        radial-gradient(circle at 20% 24%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 32%),
-        linear-gradient(180deg, rgba(255, 196, 219, 0.99) 0%, rgba(255, 145, 191, 0.99) 52%, rgba(255, 116, 169, 0.99) 100%);
-    color: #fff8fb;
-    font-size: 23px;
-    font-weight: 900;
-    letter-spacing: 0.03em;
+    width: min(58%, 760px);
+    aspect-ratio: 1536 / 512;
+    border: none;
+    border-radius: 0;
+    background: transparent url("assets/fn look.png") center center no-repeat;
+    background-size: contain;
     cursor: pointer;
-    text-shadow: 0 1px 3px rgba(131, 36, 82, 0.75);
-    box-shadow: 0 14px 26px rgba(67, 16, 44, 0.46), 0 0 18px rgba(255, 145, 191, 0.34);
-    transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+    box-shadow: none;
+    transition: transform 140ms ease, filter 140ms ease;
     z-index: 6;
 }
 
 .memoriesFinishBtn:hover {
     transform: translateX(-50%) translateY(-2px) scale(1.02);
-    box-shadow: 0 18px 30px rgba(67, 16, 44, 0.52), 0 0 24px rgba(255, 145, 191, 0.4);
     filter: saturate(1.08);
 }
 
@@ -779,7 +561,7 @@ body {
 
 .bahamasHotelStage {
     background-image: url("assets/Bahamas hotel.png");
-    background-size: cover;
+    background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
 }
@@ -938,7 +720,7 @@ body {
     border: none;
     border-radius: 999px;
     padding: 16px 34px;
-    background: #f08a1f;
+    background: rgba(240, 138, 31, 0.58);
     color: #fff7eb;
     font-size: 28px;
     font-weight: 800;
@@ -1248,7 +1030,7 @@ body {
 }
 
 .kissGreyScreenStage {
-    background: radial-gradient(circle at 50% 32%, #bdbdbd 0%, #8f8f8f 48%, #656565 100%);
+    background: url("assets/couch bkg.png") center center / cover no-repeat;
 }
 
 .kissGreyCaption {
@@ -1261,6 +1043,92 @@ body {
     font-weight: 800;
     letter-spacing: 0.02em;
     text-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+}
+
+.kissGreyBubbleImg {
+    position: absolute;
+    left: 50%;
+    top: 28%;
+    transform: translate(-50%, -50%);
+    width: min(40vw, 520px);
+    height: auto;
+    z-index: 4;
+}
+
+.kissGreyBubbleImg.first {
+    left: 26%;
+    top: 10%;
+    width: min(24vw, 310px);
+}
+
+.kissGreyBubbleImg.second {
+    left: 70%;
+    top: 14%;
+    width: min(24vw, 320px);
+}
+
+.kissGreyNextBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 54px;
+    transform: translateX(-50%);
+    z-index: 5;
+}
+
+.kissGreyQuestionText {
+    position: absolute;
+    left: 50%;
+    top: 56%;
+    transform: translate(-50%, -50%);
+    padding: 12px 18px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.58);
+    color: #ffffff;
+    font-size: clamp(20px, 2.8vw, 34px);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    z-index: 5;
+}
+
+.kissGreyAnswerBox {
+    position: absolute;
+    left: 50%;
+    top: 66%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    z-index: 6;
+}
+
+.kissGreyAnswerInput {
+    width: min(42vw, 360px);
+    height: 44px;
+    border: 2px solid rgba(255, 255, 255, 0.78);
+    border-radius: 12px;
+    background: rgba(12, 12, 18, 0.72);
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    padding: 0 12px;
+}
+
+.kissGreyKiwiImg {
+    width: min(16vw, 180px);
+    height: auto;
+    filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.35));
+}
+
+.kissGreyAnswerError {
+    position: absolute;
+    left: 50%;
+    top: 58px;
+    transform: translateX(-50%);
+    color: #ffd3d3;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: lowercase;
+    white-space: nowrap;
 }
 
 .yellowScreenStage.photoTaken {
@@ -1357,7 +1225,7 @@ body {
     height: 40px;
     border: none;
     border-radius: 8px;
-    background: #8f6bff;
+    background: rgba(143, 107, 255, 0.78);
     color: #fff;
     font-size: 0.95rem;
     font-weight: 800;
@@ -1366,7 +1234,7 @@ body {
 }
 
 .yellowNextBtn:hover {
-    background: #7c55f3;
+    background: rgba(124, 85, 243, 0.82);
 }
 
 .yellowPlayAgainBtn {
@@ -1378,7 +1246,7 @@ body {
     height: 40px;
     border: none;
     border-radius: 8px;
-    background: #8f6bff;
+    background: rgba(143, 107, 255, 0.78);
     color: #fff;
     font-size: 0.92rem;
     font-weight: 800;
@@ -1387,7 +1255,7 @@ body {
 }
 
 .yellowPlayAgainBtn:hover {
-    background: #7c55f3;
+    background: rgba(124, 85, 243, 0.82);
 }
 
 .yellowGameLogo {
@@ -1427,7 +1295,7 @@ body {
 
 .redScreenStage {
     background: url("assets/Bahamas hotel.png") center center no-repeat;
-    background-size: cover;
+    background-size: 100% 100%;
     display: grid;
     place-items: center;
 }
@@ -1556,8 +1424,8 @@ body {
 
 .greyScreenStage {
     background-image: url("assets/Bahamas hotel.png");
-    background-size: 92% auto;
-    background-position: 52% 42%;
+    background-size: 100% 100%;
+    background-position: center;
     background-repeat: no-repeat;
 }
 
@@ -1637,6 +1505,18 @@ body {
     z-index: 3;
 }
 
+.silverScreenMemoryImg {
+    position: absolute;
+    left: 50%;
+    bottom: -86px !important;
+    transform: translateX(-50%);
+    width: min(44%, 640px);
+    height: auto;
+    opacity: 0.7;
+    z-index: 3;
+    pointer-events: none;
+}
+
 .silverToPurpleBtn {
     position: absolute;
     left: 50%;
@@ -1644,12 +1524,13 @@ body {
     transform: translateX(-50%);
     padding: 10px 22px;
     border-radius: 999px;
-    border: 1px solid rgba(0, 0, 0, 0.35);
-    background: rgba(255, 255, 255, 0.7);
-    color: #2a2a2a;
+    border: 1px solid rgba(186, 214, 255, 0.58);
+    background: rgba(17, 55, 117, 0.92);
+    color: #eaf3ff;
     font-size: 18px;
     font-weight: 800;
     cursor: pointer;
+    z-index: 8;
 }
 
 .purpleSlideImg {
@@ -1657,10 +1538,10 @@ body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: calc(100% - 240px);
-    height: calc(100% - 240px);
-    max-width: calc(100% - 240px);
-    max-height: calc(100% - 240px);
+    width: calc(100% - 460px);
+    height: calc(100% - 460px);
+    max-width: calc(100% - 460px);
+    max-height: calc(100% - 460px);
     object-fit: contain;
     border-radius: 18px;
     box-shadow: 0 16px 34px rgba(0, 0, 0, 0.34);
@@ -1727,7 +1608,7 @@ body {
 }
 
 .magentaScreenStage {
-    background-image: url("assets/sh bkgr.png");
+    background-image: url("assets/disney.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -1851,7 +1732,7 @@ body {
     display: block;
     width: min(16vw, 240px);
     height: auto;
-    opacity: 0.58;
+    opacity: 1;
 }
 
 .goldenScreenStage {
@@ -1872,7 +1753,7 @@ body {
 .goldenLavenderBtn {
     position: absolute;
     left: 50%;
-    bottom: 28px;
+    bottom: 8px;
     transform: translateX(-50%);
     border: none;
     background: transparent;
@@ -1883,7 +1764,7 @@ body {
 
 .goldenLavenderBtn img {
     display: block;
-    width: min(22vw, 340px);
+    width: min(20vw, 320px);
     height: auto;
 }
 
@@ -2005,7 +1886,7 @@ body {
 .mintGameStartBtn {
     position: absolute;
     left: 50%;
-    bottom: 136px;
+    bottom: 186px;
     transform: translateX(-50%);
     border: none;
     border-radius: 999px;
@@ -2025,7 +1906,7 @@ body {
 .mintGameNextBtn {
     position: absolute;
     left: calc(50% + min(12vw, 130px));
-    bottom: 136px;
+    bottom: 186px;
     transform: translateX(-50%);
     border: none;
     border-radius: 999px;
@@ -3129,7 +3010,7 @@ body {
 }
 
 .backRoomBtn {
-    position: fixed;
+    position: absolute;
     top: 14px;
     left: 14px;
     z-index: 30;
@@ -3556,14 +3437,6 @@ body {
     background: black;
 }
 
-.app.mapMode .header {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    z-index: 20;
-    margin: 0;
-}
 
 .roomStage {
     position: relative;
@@ -3921,6 +3794,41 @@ body {
     box-shadow: 0 0 20px rgba(255, 172, 110, 0.7);
 }
 
+/* Keep top-right controls fixed in one spot across the whole game. */
+.app .header {
+    position: fixed;
+    display: block;
+    left: auto;
+    right: calc(var(--scene-offset-x) + 2px);
+    top: calc(var(--scene-offset-y) - 40px);
+    width: auto;
+    margin: 0;
+    z-index: 9800;
+    pointer-events: auto;
+}
+
+.app .headerActions {
+    margin-left: 0;
+    pointer-events: auto;
+}
+
+.backRoomBtn {
+    top: 14px;
+    left: 14px;
+}
+
+.floatingMapBtn {
+    right: calc(var(--scene-offset-x) + 16px);
+    bottom: calc(var(--scene-offset-y) + 16px);
+}
+
+.gameMapOverlay {
+    top: var(--scene-offset-y);
+    right: var(--scene-offset-x);
+    bottom: var(--scene-offset-y);
+    left: var(--scene-offset-x);
+}
+
 @media (hover: none), (pointer: coarse) {
     .mapTouchControls {
         display: grid;
@@ -4010,7 +3918,7 @@ body {
     }
 
     .gameMapModal {
-        width: min(94vw, 700px);
+        width: min(700px, calc(var(--scene-render-width) - 18px));
         padding: 14px;
     }
 
@@ -4023,8 +3931,8 @@ body {
     }
 
     .floatingMapBtn {
-        right: 12px;
-        bottom: 12px;
+        right: calc(var(--scene-offset-x) + 12px);
+        bottom: calc(var(--scene-offset-y) + 12px);
         min-width: 84px;
         height: 42px;
         font-size: 15px;

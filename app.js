@@ -17,12 +17,14 @@ let kissRedTeardown = null;
 let kissRedOfferTimer = null;
 let nycReturnFromWin = false;
 let nycFromDinnerNext = false;
+let globalMapMenuBindingReady = false;
+let headerLockBindingReady = false;
 const PURPLE_SLIDES = [
+    "assets/img4.jpg",
     "assets/img15.jpg",
     "assets/img1.jpg",
     "assets/img2.jpg",
     "assets/img3.jpg",
-    "assets/img4.jpg",
     "assets/img5.jpg",
     "assets/img6.jpg",
     "assets/img7.jpg",
@@ -241,7 +243,7 @@ function startNycObstacleSpawner(layer, onSpawned = null) {
     };
 
     spawnObstacle();
-    spawnTimer = setInterval(spawnObstacle, 500);
+    spawnTimer = setInterval(spawnObstacle, 900);
 
     return () => {
         running = false;
@@ -592,8 +594,8 @@ function headerTitle() {
     return `
     <div class="header">
       <div class="headerActions">
-        <button class="btn secondary" id="gameMapBtn" aria-label="Open game map">Map</button>
-        <button class="btn secondary" id="homeBtn">Back to Start</button>
+        <button type="button" class="btn secondary" id="gameMapBtn" data-open-map-menu="1" onclick="window.__openGameMapMenu && window.__openGameMapMenu()" aria-label="Open game map">Map</button>
+        <button type="button" class="btn secondary" id="homeBtn">Back to Start</button>
       </div>
     </div>
   `;
@@ -606,8 +608,45 @@ function mountHomeButton() {
     }
     const gameMapBtn = document.getElementById("gameMapBtn");
     if (gameMapBtn != null) {
+        gameMapBtn.onpointerdown = (e) => {
+            e.preventDefault();
+            showGameMapMenu();
+        };
         gameMapBtn.onclick = () => showGameMapMenu();
     }
+    applyLockedHeaderPosition();
+}
+
+function applyLockedHeaderPosition() {
+    const header = document.querySelector("#app .header");
+    if (header == null) return;
+    const sceneWidth = 1536;
+    const sceneHeight = 864;
+    const scale = Math.min(window.innerWidth / sceneWidth, window.innerHeight / sceneHeight);
+    const offsetX = Math.max(0, (window.innerWidth - (sceneWidth * scale)) / 2);
+    const offsetY = Math.max(0, (window.innerHeight - (sceneHeight * scale)) / 2);
+
+    header.style.position = "fixed";
+    header.style.left = "auto";
+    header.style.right = `${offsetX + 705}px`;
+    header.style.top = `${offsetY + 405}px`;
+    header.style.width = "auto";
+    header.style.margin = "0";
+    header.style.zIndex = "9800";
+    header.style.display = "block";
+    header.style.pointerEvents = "auto";
+
+    const headerActions = header.querySelector(".headerActions");
+    if (headerActions != null) {
+        headerActions.style.marginLeft = "0";
+        headerActions.style.pointerEvents = "auto";
+    }
+}
+
+function ensureHeaderLockBinding() {
+    if (headerLockBindingReady) return;
+    headerLockBindingReady = true;
+    window.addEventListener("resize", applyLockedHeaderPosition);
 }
 
 function showGameMapMenu() {
@@ -632,6 +671,13 @@ function showGameMapMenu() {
     const overlay = document.createElement("div");
     overlay.className = "gameMapOverlay";
     overlay.id = "gameMapOverlay";
+    overlay.style.position = "fixed";
+    overlay.style.inset = "0";
+    overlay.style.zIndex = "2147483646";
+    overlay.style.display = "grid";
+    overlay.style.placeItems = "center";
+    overlay.style.padding = "18px";
+    overlay.style.background = "rgba(0, 0, 0, 0.58)";
     overlay.innerHTML = `
     <div class="gameMapModal" role="dialog" aria-modal="true" aria-label="Game map menu">
       <div class="gameMapTitle">Choose a Game Room</div>
@@ -657,6 +703,13 @@ function showGameMapMenu() {
 
     document.body.appendChild(overlay);
 
+    const modal = overlay.querySelector(".gameMapModal");
+    if (modal != null) {
+        modal.style.width = "min(860px, 96vw)";
+        modal.style.maxHeight = "min(82dvh, 760px)";
+        modal.style.overflow = "auto";
+    }
+
     const closeBtn = overlay.querySelector("#gameMapCloseBtn");
     if (closeBtn != null) closeBtn.onclick = closeMenu;
 
@@ -681,7 +734,27 @@ function mountGlobalMapButton() {
         floatingMapBtn.textContent = "Map";
         document.body.appendChild(floatingMapBtn);
     }
+    floatingMapBtn.onpointerdown = (e) => {
+        e.preventDefault();
+        showGameMapMenu();
+    };
     floatingMapBtn.onclick = () => showGameMapMenu();
+}
+
+window.__openGameMapMenu = showGameMapMenu;
+
+function ensureGlobalMapMenuBinding() {
+    if (globalMapMenuBindingReady) return;
+    globalMapMenuBindingReady = true;
+    const onMapTrigger = (e) => {
+        const target = e.target;
+        if (!(target instanceof Element)) return;
+        const mapTrigger = target.closest('[data-open-map-menu="1"], #floatingMapBtn');
+        if (mapTrigger == null) return;
+        showGameMapMenu();
+    };
+    document.addEventListener("pointerdown", onMapTrigger, true);
+    document.addEventListener("click", onMapTrigger, true);
 }
 
 function showErrorOverlay(backScreen = state.screen) {
@@ -882,7 +955,7 @@ function screenMemoriesPink() {
       <video class="memoriesPinkVideo" autoplay muted loop playsinline>
         <source src="assets/nyc memories.mp4" type="video/mp4">
       </video>
-      <button class="memoriesFinishBtn" id="memoriesFinishBtn" aria-label="Finished Looking">Finished Looking</button>
+      <button class="memoriesFinishBtn" id="memoriesFinishBtn" aria-label="Finished Looking"></button>
     </div>
   `;
 }
@@ -985,6 +1058,7 @@ function screenKissRedScreen() {
     return `
     ${headerTitle()}
     <div class="kissRedScreenStage" id="kissRedScreenStage" aria-label="Red kiss cam screen">
+      <img class="kissRedPromptBubble" id="kissRedPromptBubble" src="assets/couch 1.png" alt="Finally time to rest" hidden>
       <img class="kissRedFindBugSign" id="kissRedFindBugSign" src="assets/findbug.png" alt="Find the bug sign">
       <img class="kissRedHiddenBug" id="kissRedHiddenBug" src="assets/love bug.png" alt="Hidden love bug" hidden>
       <img class="kissRedFoundSign" id="kissRedFoundSign" src="assets/found.png" alt="Found the love bug" hidden>
@@ -1080,7 +1154,22 @@ function screenKissGreyScreen() {
     return `
     ${headerTitle()}
     <div class="kissGreyScreenStage" id="kissGreyScreenStage" aria-label="Grey screen">
-      <div class="kissGreyCaption">Time to rest, baby.</div>
+      <img class="kissGreyBubbleImg first" id="kissGreyBubbleImg" src="assets/couch 1.png" alt="Finally time to rest">
+      <div class="kissGreyQuestionText" id="kissGreyQuestionText" hidden>who is missing?</div>
+      <div class="kissGreyAnswerBox" id="kissGreyAnswerBox" hidden>
+        <input
+          class="kissGreyAnswerInput"
+          id="kissGreyAnswerInput"
+          type="text"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="type answer"
+          aria-label="Type who is missing"
+        >
+        <img class="kissGreyKiwiImg" id="kissGreyKiwiImg" src="assets/kiwi.png" alt="Kiwi revealed" hidden>
+        <div class="kissGreyAnswerError" id="kissGreyAnswerError" hidden>try again</div>
+      </div>
+      <button class="heartNextBtn kissGreyNextBtn" id="kissGreyNextBtn" aria-label="Next">Next</button>
     </div>
   `;
 }
@@ -1152,7 +1241,7 @@ function screenSilverScreen() {
     return `
     ${headerTitle()}
     <div class="silverScreenStage" id="silverScreenStage" aria-label="Silver screen">
-      <div class="silverScreenText">We made so many memories!</div>
+      <img class="silverScreenMemoryImg" src="assets/membaha.png" alt="We made so many memories!">
       <button class="silverToPurpleBtn" id="silverToPurpleBtn" aria-label="take a look">take a look</button>
     </div>
   `;
@@ -1472,7 +1561,6 @@ function screenMap() {
 
       <button class="shelfAction" id="shelfBtn">Look closer</button>
       <button class="computerAction" id="computerBtn">Look closer</button>
-      <button class="hotelAction show" id="hotelBtn">Hotel</button>
       <div class="mapTouchControls" id="mapTouchControls" aria-label="Movement controls">
         <button class="mapCtrlBtn mapCtrlUp" id="mapCtrlUp" aria-label="Move up">UP</button>
         <button class="mapCtrlBtn mapCtrlLeft" id="mapCtrlLeft" aria-label="Move left">LEFT</button>
@@ -1537,6 +1625,7 @@ function screenComputer() {
           </div>
         </div>
       </div>
+      <button class="backRoomBtn" id="backRoomBtn">Back to Room</button>
     </div>
   `;
 }
@@ -1933,6 +2022,8 @@ function startBahamasCharacterControl(stage, char, canMove = null) {
 }
 
 function render() {
+    ensureGlobalMapMenuBinding();
+    ensureHeaderLockBinding();
     mountGlobalMapButton();
     app.classList.toggle("openingMode", state.screen === "home");
     app.classList.toggle("customizeMode", state.screen === "customize");
@@ -2265,7 +2356,10 @@ function render() {
                 nycWinPlayAgainBtn.onclick = () => startNycGameLoop();
             }
             if (nycWinBackBtn != null) {
-                nycWinBackBtn.onclick = () => go("nycDinner");
+                nycWinBackBtn.onclick = () => {
+                    nycReturnFromWin = true;
+                    go("nycRoom");
+                };
             }
         }
         return;
@@ -2860,6 +2954,7 @@ function render() {
         app.innerHTML = screenKissRedScreen();
         mountHomeButton();
         const kissRedScreenStage = document.getElementById("kissRedScreenStage");
+        const kissRedPromptBubble = document.getElementById("kissRedPromptBubble");
         const kissRedFindBugSign = document.getElementById("kissRedFindBugSign");
         const kissRedHiddenBug = document.getElementById("kissRedHiddenBug");
         const kissRedFoundSign = document.getElementById("kissRedFoundSign");
@@ -2878,18 +2973,6 @@ function render() {
             kissRedOfferTimer = null;
         }
         let kissRedStarted = false;
-        const scheduleKissRedOffer = () => {
-            if (!kissRedStarted) return;
-            if (kissRedOfferTimer != null) {
-                clearTimeout(kissRedOfferTimer);
-            }
-            kissRedOfferTimer = window.setTimeout(() => {
-                kissRedOfferTimer = null;
-                if (!kissRedStarted) return;
-                if (kissRedChoiceRow != null && !kissRedChoiceRow.hidden) return;
-                if (kissRedTimeoutRow != null) kissRedTimeoutRow.hidden = false;
-            }, 30000);
-        };
         const startKissRedRound = () => {
             kissRedStarted = true;
             if (kissRedFindBugSign != null) kissRedFindBugSign.hidden = true;
@@ -2920,7 +3003,10 @@ function render() {
             );
         };
         if (kissRedChoiceRow != null) kissRedChoiceRow.hidden = true;
-        if (kissRedToPurpleBtn != null) kissRedToPurpleBtn.onclick = startKissRedRound;
+        if (kissRedTimeoutRow != null) kissRedTimeoutRow.hidden = true;
+        if (kissRedToPurpleBtn != null) {
+            kissRedToPurpleBtn.onclick = startKissRedRound;
+        }
         if (kissRedPlayAgainBtn != null) kissRedPlayAgainBtn.onclick = startKissRedRound;
         if (kissRedNextBtn != null) kissRedNextBtn.onclick = () => go("kissPinkScreen");
         if (kissRedGiveUpBtn != null) kissRedGiveUpBtn.onclick = () => go("kissPinkScreen");
@@ -2983,6 +3069,54 @@ function render() {
     if (state.screen === "kissGreyScreen") {
         app.innerHTML = screenKissGreyScreen();
         mountHomeButton();
+        const kissGreyBubbleImg = document.getElementById("kissGreyBubbleImg");
+        const kissGreyQuestionText = document.getElementById("kissGreyQuestionText");
+        const kissGreyAnswerBox = document.getElementById("kissGreyAnswerBox");
+        const kissGreyAnswerInput = document.getElementById("kissGreyAnswerInput");
+        const kissGreyKiwiImg = document.getElementById("kissGreyKiwiImg");
+        const kissGreyAnswerError = document.getElementById("kissGreyAnswerError");
+        const kissGreyNextBtn = document.getElementById("kissGreyNextBtn");
+        let kissGreyStep = 0;
+        const checkKissGreyAnswer = () => {
+            const raw = kissGreyAnswerInput?.value ?? "";
+            const answer = raw.trim().toLowerCase();
+            if (answer === "kiwi") {
+                if (kissGreyKiwiImg != null) kissGreyKiwiImg.hidden = false;
+                if (kissGreyAnswerError != null) kissGreyAnswerError.hidden = true;
+                if (kissGreyAnswerInput != null) kissGreyAnswerInput.disabled = true;
+                return;
+            }
+            if (kissGreyAnswerError != null) {
+                kissGreyAnswerError.hidden = answer.length === 0;
+            }
+        };
+        if (kissGreyNextBtn != null) {
+            kissGreyNextBtn.onclick = () => {
+                if (kissGreyBubbleImg != null && kissGreyStep === 0) {
+                    kissGreyStep = 1;
+                    kissGreyBubbleImg.src = "assets/couch2.png";
+                    kissGreyBubbleImg.alt = "Almost, theres someone missing";
+                    kissGreyBubbleImg.classList.remove("first");
+                    kissGreyBubbleImg.classList.add("second");
+                    kissGreyNextBtn.textContent = "who?";
+                    kissGreyNextBtn.setAttribute("aria-label", "who?");
+                    return;
+                }
+                if (kissGreyStep === 1) {
+                    kissGreyStep = 2;
+                    if (kissGreyQuestionText != null) kissGreyQuestionText.hidden = false;
+                    if (kissGreyAnswerBox != null) kissGreyAnswerBox.hidden = false;
+                    kissGreyNextBtn.hidden = true;
+                    if (kissGreyAnswerInput != null) kissGreyAnswerInput.focus();
+                    return;
+                }
+            };
+        }
+        if (kissGreyAnswerInput != null) {
+            kissGreyAnswerInput.addEventListener("input", () => {
+                checkKissGreyAnswer();
+            });
+        }
         return;
     }
 
@@ -3263,6 +3397,7 @@ function render() {
 
     if (state.screen === "computer") {
         app.innerHTML = screenComputer();
+        const backRoomBtn = document.getElementById("backRoomBtn");
         const computerFrame = document.querySelector(".computerFrame");
         const computerHeartBtn = document.getElementById("computerHeartBtn");
         const loveBugCrawler = document.getElementById("loveBugCrawler");
@@ -3281,6 +3416,14 @@ function render() {
         const loveBugStep2 = document.getElementById("loveBugStep2");
         let crawlRoundId = 0;
         let huntActive = false;
+
+        if (backRoomBtn != null) {
+            backRoomBtn.onclick = () => {
+                state.mapIntroDone = true;
+                save();
+                go("map");
+            };
+        }
 
         function startFranticLoveBugCrawl(roundId) {
             if (computerFrame == null || loveBugCrawler == null) return;
