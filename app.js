@@ -881,10 +881,23 @@ function screenYellowScreen() {
 }
 
 function screenRedScreen() {
+    const redCharacterSrc = state.characterMode === "alone"
+        ? "assets/ccalone.png"
+        : "assets/ccwithme.png";
     return `
     ${headerTitle()}
     <div class="redScreenStage" id="redScreenStage" aria-label="Red screen">
-      <div class="redScreenLabel">Red Screen</div>
+      <img
+        class="redScreenCharacter"
+        id="redScreenCharacter"
+        src="${redCharacterSrc}"
+        data-fallback-src="assets/ccwithme.png"
+        alt="Characters at the hotel"
+      >
+      <div class="redThoughtBubble" id="redThoughtBubble" aria-label="Thought bubble">
+        <img class="redThoughtBubbleImg" id="redThoughtBubbleImg" src="assets/Happy day.png" alt="What a happy day!">
+      </div>
+      <button class="heartNextBtn redThoughtNextBtn" id="redThoughtNextBtn" aria-label="Next thought bubble">Next</button>
     </div>
   `;
 }
@@ -2191,6 +2204,28 @@ function render() {
     if (state.screen === "redScreen") {
         app.innerHTML = screenRedScreen();
         mountHomeButton();
+        const redScreenCharacter = document.getElementById("redScreenCharacter");
+        const redThoughtBubbleImg = document.getElementById("redThoughtBubbleImg");
+        const redThoughtNextBtn = document.getElementById("redThoughtNextBtn");
+        if (redScreenCharacter != null) {
+            redScreenCharacter.onerror = () => {
+                const fallbackSrc = redScreenCharacter.dataset.fallbackSrc;
+                if (fallbackSrc != null && redScreenCharacter.src.indexOf(fallbackSrc) === -1) {
+                    redScreenCharacter.src = fallbackSrc;
+                }
+            };
+        }
+        if (redThoughtNextBtn != null && redThoughtBubbleImg != null) {
+            let redThoughtStep = 1;
+            redThoughtNextBtn.onclick = () => {
+                if (redThoughtStep === 1) {
+                    redThoughtStep = 2;
+                    redThoughtBubbleImg.src = "assets/to sea.png";
+                    redThoughtBubbleImg.alt = "Tomorrow lets look for the bug out at sea";
+                    redThoughtNextBtn.hidden = true;
+                }
+            };
+        }
         return;
     }
 

@@ -327,6 +327,15 @@ body {
     margin: 0;
 }
 
+.app.redScreenMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
 .nycRoomStage {
     background-image: url("assets/nyc view.png");
     background-size: cover;
@@ -769,7 +778,8 @@ body {
 }
 
 .redScreenStage {
-    background: linear-gradient(180deg, #ff6464 0%, #d41d1d 100%);
+    background: url("assets/Bahamas hotel.png") center center no-repeat;
+    background-size: cover;
     display: grid;
     place-items: center;
 }
@@ -781,6 +791,43 @@ body {
     letter-spacing: 0.06em;
     text-transform: uppercase;
     text-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.redScreenCharacter {
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    transform: translateX(-50%);
+    width: min(20%, 300px);
+    max-width: 44%;
+    height: auto;
+    object-fit: contain;
+    z-index: 2;
+    filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.35));
+}
+
+.redThoughtBubble {
+    position: absolute;
+    top: 18%;
+    left: 62%;
+    transform: translateX(-50%);
+    width: min(42%, 620px);
+    z-index: 4;
+    pointer-events: none;
+}
+
+.redThoughtBubbleImg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.redThoughtNextBtn {
+    position: absolute;
+    left: 62%;
+    top: 44%;
+    transform: translateX(-50%);
+    z-index: 5;
 }
 
 .nycAfterDinnerBubble {
