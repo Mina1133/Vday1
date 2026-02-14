@@ -3084,6 +3084,8 @@ function render() {
                 if (kissGreyKiwiImg != null) kissGreyKiwiImg.hidden = false;
                 if (kissGreyAnswerError != null) kissGreyAnswerError.hidden = true;
                 if (kissGreyAnswerInput != null) kissGreyAnswerInput.disabled = true;
+                if (kissGreyQuestionText != null) kissGreyQuestionText.hidden = true;
+                if (kissGreyAnswerBox != null) kissGreyAnswerBox.hidden = true;
                 return;
             }
             if (kissGreyAnswerError != null) {

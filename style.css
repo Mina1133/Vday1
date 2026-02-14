@@ -1095,7 +1095,7 @@ body {
     left: 50%;
     top: 48%;
     transform: translate(-50%, -50%);
-    width: min(46vw, 600px);
+    width: min(58vw, 760px);
     height: auto;
     z-index: 5;
 }
@@ -1118,19 +1118,40 @@ body {
 }
 
 .kissGreyAnswerInput {
-    width: min(56vw, 520px);
-    height: 58px;
-    border: 2px solid rgba(236, 236, 236, 0.9);
+    width: min(76vw, 820px);
+    height: 92px;
+    border: none;
     border-radius: 16px;
     background: transparent;
-    color: #d7ffd7;
-    font-size: clamp(20px, 2.4vw, 30px);
-    font-weight: 700;
-    font-family: "Courier New", Courier, monospace;
-    letter-spacing: 0.04em;
+    color: #fff;
+    text-shadow: none;
+    font-size: clamp(32px, 3.8vw, 50px);
+    font-weight: 100;
+    font-family: "Bahnschrift Condensed", "Arial Narrow", "Roboto Condensed", "Segoe UI", sans-serif;
+    letter-spacing: 0.18em;
     padding: 0 12px;
-    caret-color: #d7ffd7;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 0 14px rgba(0, 0, 0, 0.35);
+    text-align: center;
+    caret-color: #fff;
+    box-shadow: none;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.kissGreyAnswerInput::placeholder {
+    color: #fff;
+    opacity: 0.85;
+    font-weight: 100;
+    letter-spacing: 0.18em;
+    text-shadow: none;
+}
+
+.kissGreyAnswerInput:focus,
+.kissGreyAnswerInput:focus-visible,
+.kissGreyAnswerInput:active {
+    border: none;
+    outline: none;
+    box-shadow: none;
 }
 
 .kissGreyKiwiImg {
@@ -1142,10 +1163,10 @@ body {
 .kissGreyAnswerError {
     position: absolute;
     left: 50%;
-    top: 58px;
+    top: 96px;
     transform: translateX(-50%);
-    color: #ffd3d3;
-    font-size: 16px;
+    color: #fff;
+    font-size: 30px;
     font-weight: 700;
     text-transform: lowercase;
     white-space: nowrap;
