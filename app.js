@@ -100,7 +100,7 @@ function startNycCoupleFollow(stage, couple) {
         const rect = stage.getBoundingClientRect();
         const localX = clientX - rect.left;
         const localY = clientY - rect.top;
-        targetX = clamp(localX, rect.width * 0.24, rect.width * 0.76);
+        targetX = clamp(localX, rect.width * 0.36, rect.width * 0.64);
         targetY = clamp(localY, rect.height * 0.6, rect.height * 0.92);
     };
 
@@ -151,13 +151,14 @@ function startNycObstacleSpawner(layer, onSpawned = null) {
         const obstacleType = obstacleTypes[Math.floor(Math.random() * obstacleTypes.length)];
         obstacle.classList.add(obstacleType);
         const unitPx = layer.clientWidth / 100;
-        const startX = randomSignedUnit(0, 7) * unitPx;
-        const fallX = randomSignedUnit(6, 36) * unitPx;
-        const midX = (startX * 0.4) + (fallX * 0.46);
+        const startX = randomSignedUnit(0, 14) * unitPx;
+        const fallX = randomSignedUnit(10, 50) * unitPx;
+        const midBlend = 0.32 + (Math.random() * 0.34);
+        const midX = (startX * (1 - midBlend)) + (fallX * midBlend);
         obstacle.style.setProperty("--startX", `${startX.toFixed(1)}px`);
         obstacle.style.setProperty("--fallX", `${fallX.toFixed(1)}px`);
         obstacle.style.setProperty("--fallXMid", `${midX.toFixed(1)}px`);
-        const durationMs = 4900;
+        const durationMs = 3800 + Math.floor(Math.random() * 2000);
         obstacle.style.animationDuration = `${durationMs / 1000}s`;
 
         const resolveObstacle = () => {
@@ -177,7 +178,7 @@ function startNycObstacleSpawner(layer, onSpawned = null) {
     };
 
     spawnObstacle();
-    spawnTimer = setInterval(spawnObstacle, 1500);
+    spawnTimer = setInterval(spawnObstacle, 500);
 
     return () => {
         running = false;
@@ -583,11 +584,17 @@ function screenNycRoom(useHungryPrompt = false) {
       <div class="nycObstacleLayer" id="nycObstacleLayer" hidden></div>
       <div class="nycWinOverlay" id="nycWinOverlay" hidden>
         <img class="nycWinSignImage" src="assets/protect congrats.png" alt="这么好的男朋友！保护大米这么好！">
-        <button class="nycWinBackBtn" id="nycWinBackBtn">Next</button>
+        <div class="nycOverlayBtnRow">
+          <button class="nycWinPlayAgainBtn" id="nycWinPlayAgainBtn">Play Again</button>
+          <button class="nycWinBackBtn" id="nycWinBackBtn">Next</button>
+        </div>
       </div>
       <div class="nycGameOverOverlay" id="nycGameOverOverlay" hidden>
         <div class="nycGameOverSign">不保护我</div>
-        <button class="nycPlayAgainBtn" id="nycPlayAgainBtn">Play Again</button>
+        <div class="nycOverlayBtnRow">
+          <button class="nycPlayAgainBtn" id="nycPlayAgainBtn">Play Again</button>
+          <button class="nycGameOverNextBtn" id="nycGameOverNextBtn">Next</button>
+        </div>
       </div>
       <img class="nycCouple" src="assets/ccwithme.png" alt="Couple">
       <div class="nycWalkBubble" id="nycWalkBubble" hidden>
@@ -624,8 +631,10 @@ function screenNycDinner() {
         <div class="nycDinnerRunnerGameOver" id="nycDinnerRunnerGameOver" hidden>
           <div class="nycDinnerRunnerGameOverText">Game Over</div>
           <div class="nycDinnerRunnerBestScore" id="nycDinnerRunnerBestScore">Top Score: 0</div>
-          <button class="nycDinnerRunnerRestartBtn" id="nycDinnerRunnerRestartBtn">Play Again</button>
-          <button class="nycDinnerRunnerNextBtn" id="nycDinnerRunnerNextBtn">Next</button>
+          <div class="nycDinnerRunnerBtnRow">
+            <button class="nycDinnerRunnerRestartBtn" id="nycDinnerRunnerRestartBtn">Play Again</button>
+            <button class="nycDinnerRunnerNextBtn" id="nycDinnerRunnerNextBtn">Next</button>
+          </div>
         </div>
       </div>
     </div>
@@ -732,6 +741,7 @@ function screenShelf() {
 function screenNote() {
     return `
     <div class="noteScene" aria-label="Close-up note scene">
+      <div class="noteMessage">I made this game for you my love! Now lets go explore!</div>
       <button class="backRoomBtn" id="backRoomBtn">Back to Room</button>
     </div>
   `;
@@ -1146,9 +1156,11 @@ function render() {
         const nycAvoidCount = document.getElementById("nycAvoidCount");
         const nycObstacleLayer = document.getElementById("nycObstacleLayer");
         const nycWinOverlay = document.getElementById("nycWinOverlay");
+        const nycWinPlayAgainBtn = document.getElementById("nycWinPlayAgainBtn");
         const nycWinBackBtn = document.getElementById("nycWinBackBtn");
         const nycGameOverOverlay = document.getElementById("nycGameOverOverlay");
         const nycPlayAgainBtn = document.getElementById("nycPlayAgainBtn");
+        const nycGameOverNextBtn = document.getElementById("nycGameOverNextBtn");
         const nycCouple = document.querySelector(".nycCouple");
         const nycStartSign = document.getElementById("nycStartSign");
         const nycStartBtn = document.getElementById("nycStartBtn");
@@ -1283,11 +1295,14 @@ function render() {
             if (nycPlayAgainBtn != null) {
                 nycPlayAgainBtn.onclick = () => startNycGameLoop();
             }
+            if (nycWinPlayAgainBtn != null) {
+                nycWinPlayAgainBtn.onclick = () => startNycGameLoop();
+            }
             if (nycWinBackBtn != null) {
-                nycWinBackBtn.onclick = () => {
-                    nycReturnFromWin = true;
-                    go("nycRoom");
-                };
+                nycWinBackBtn.onclick = () => go("nycDinner");
+            }
+            if (nycGameOverNextBtn != null) {
+                nycGameOverNextBtn.onclick = () => go("nycDinner");
             }
         }
         return;

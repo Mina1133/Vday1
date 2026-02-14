@@ -403,6 +403,14 @@ body {
     cursor: pointer;
 }
 
+.nycDinnerRunnerBtnRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
 .nycDinnerChat {
     position: absolute;
     left: 22%;
@@ -482,7 +490,7 @@ body {
 .nycDinnerOkBtn {
     position: absolute;
     left: 30%;
-    top: 72%;
+    top: 78%;
     transform: translateX(-50%);
     z-index: 10;
     width: 124px;
@@ -622,8 +630,17 @@ body {
     filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.35));
 }
 
-.nycWinBackBtn {
+.nycOverlayBtnRow {
     margin-top: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.nycWinBackBtn,
+.nycWinPlayAgainBtn {
     min-width: 200px;
     padding: 12px 22px;
     border-radius: 999px;
@@ -639,12 +656,14 @@ body {
     transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
-.nycWinBackBtn:hover {
+.nycWinBackBtn:hover,
+.nycWinPlayAgainBtn:hover {
     transform: translateY(-2px);
     box-shadow: 0 12px 28px rgba(151, 103, 0, 0.45);
 }
 
-.nycWinBackBtn:active {
+.nycWinBackBtn:active,
+.nycWinPlayAgainBtn:active {
     transform: translateY(0);
 }
 
@@ -679,7 +698,8 @@ body {
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45), 0 0 26px rgba(255, 196, 84, 0.35);
 }
 
-.nycPlayAgainBtn {
+.nycPlayAgainBtn,
+.nycGameOverNextBtn {
     min-width: 210px;
     padding: 12px 24px;
     border-radius: 999px;
@@ -695,12 +715,14 @@ body {
     transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
-.nycPlayAgainBtn:hover {
+.nycPlayAgainBtn:hover,
+.nycGameOverNextBtn:hover {
     transform: translateY(-2px);
     box-shadow: 0 12px 28px rgba(151, 103, 0, 0.45);
 }
 
-.nycPlayAgainBtn:active {
+.nycPlayAgainBtn:active,
+.nycGameOverNextBtn:active {
     transform: translateY(0);
 }
 
@@ -773,7 +795,7 @@ body {
 }
 
 .nycRoomStage.gameStarted .nycCouple {
-    width: 120px;
+    width: 140px;
 }
 
 .nycCouple.hitFlip {
@@ -891,6 +913,21 @@ body {
     background-size: contain;
 }
 
+.noteMessage {
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+    width: min(640px, 62%);
+    text-align: center;
+    color: #2f1f1f;
+    font-size: clamp(20px, 2.1vw, 34px);
+    line-height: 1.35;
+    font-weight: 800;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+    z-index: 10;
+}
+
 .computerScene {
     display: grid;
     place-items: center;
@@ -947,7 +984,7 @@ body {
 .nycGoBtn {
     position: absolute;
     left: 50%;
-    bottom: 28px;
+    bottom: 56px;
     transform: translateX(-50%);
     min-width: 180px;
     padding: 12px 22px;
@@ -1860,6 +1897,8 @@ body {
     .nycDinnerStartBtn,
     .nycDinnerRunnerRestartBtn,
     .nycPlayAgainBtn,
+    .nycGameOverNextBtn,
+    .nycWinPlayAgainBtn,
     .nycWinBackBtn {
         min-width: 160px;
         font-size: 18px;
