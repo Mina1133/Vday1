@@ -1,4 +1,4 @@
-const app = document.getElementById("app");
+﻿const app = document.getElementById("app");
 
 const STORAGE_KEY = "valentine_game_save_v11_story_map";
 const DINNER_TOP_SCORE_KEY = "valentine_game_nyc_dinner_top_score_v1";
@@ -27,7 +27,7 @@ function saveDinnerTopScore(score) {
 
 function defaultState() {
     return {
-        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner
+        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue
         characterMode: null, // null | alone | withme
         mapIntroDone: false,
         mapPostComputerIntroPending: false,
@@ -293,9 +293,9 @@ function startNycDinnerRunnerGame(config) {
     const jumpVelocity = -1240;
     const playerBaseBottom = 24;
     const playerHeightPx = 320;
-    const baseRunSpeed = 420;
-    const runSpeedGain = 26;
-    const maxRunSpeed = 1120;
+    const baseRunSpeed = 520;
+    const runSpeedGain = 54;
+    const maxRunSpeed = 1460;
 
     const obstacleTypes = [
         "dinnerObstacleDish",
@@ -338,8 +338,8 @@ function startNycDinnerRunnerGame(config) {
         if (spawnTimeout != null) {
             clearTimeout(spawnTimeout);
         }
-        const steps = Math.floor(elapsed / 1.0);
-        const nextDelay = Math.max(120, 420 - (steps * 70));
+        const steps = Math.floor(elapsed / 0.8);
+        const nextDelay = Math.max(80, 320 - (steps * 85));
         spawnTimeout = window.setTimeout(() => {
             spawnTimeout = null;
             spawnObstacle();
@@ -348,7 +348,7 @@ function startNycDinnerRunnerGame(config) {
 
     const spawnObstacle = (startX = null, sizeScale = 1) => {
         if (!running || gameOver || !obstacleLayer.isConnected) return;
-        if (obstacles.size > 0) {
+        if (obstacles.size > 1) {
             scheduleNextSpawn();
             return;
         }
@@ -533,6 +533,7 @@ function headerTitle() {
     return `
     <div class="header">
       <div class="headerActions">
+        <button class="btn secondary" id="gameMapBtn" aria-label="Open game map">Map</button>
         <button class="btn secondary" id="homeBtn">Back to Start</button>
       </div>
     </div>
@@ -544,6 +545,81 @@ function mountHomeButton() {
     if (homeBtn != null) {
         homeBtn.onclick = () => go("home");
     }
+    const gameMapBtn = document.getElementById("gameMapBtn");
+    if (gameMapBtn != null) {
+        gameMapBtn.onclick = () => showGameMapMenu();
+    }
+}
+
+function showGameMapMenu() {
+    const existing = document.getElementById("gameMapOverlay");
+    if (existing != null) {
+        existing.remove();
+    }
+
+    const destinations = [
+        { screen: "map", label: "Map Room", hint: "Main room hub" },
+        { screen: "shelf", label: "Bookshelf Game", hint: "Go to shelf close-up" },
+        { screen: "computer", label: "Computer Game", hint: "Open love bug hunt room" },
+        { screen: "nycRoom", label: "NYC Walk Game", hint: "Dodge obstacles scene" },
+        { screen: "nycDinner", label: "Restaurant Jump Game", hint: "Runner/jump restaurant game" },
+        { screen: "nycAfterDinner", label: "NYC View", hint: "Post-dinner city screen" },
+        { screen: "afterDinnerHall", label: "NYC Memories", hint: "Romantic hallway memory scene" }
+    ];
+
+    const overlay = document.createElement("div");
+    overlay.className = "gameMapOverlay";
+    overlay.id = "gameMapOverlay";
+    overlay.innerHTML = `
+    <div class="gameMapModal" role="dialog" aria-modal="true" aria-label="Game map menu">
+      <div class="gameMapTitle">Choose a Game Room</div>
+      <div class="gameMapGrid">
+        ${destinations.map((dest) => `
+          <button class="gameMapItemBtn" data-screen="${dest.screen}">
+            <span class="gameMapItemLabel">${dest.label}</span>
+            <span class="gameMapItemHint">${dest.hint}</span>
+          </button>
+        `).join("")}
+      </div>
+      <button class="gameMapCloseBtn" id="gameMapCloseBtn" aria-label="Close game map">Close</button>
+    </div>
+  `;
+
+    const closeMenu = () => {
+        if (overlay.isConnected) overlay.remove();
+    };
+
+    overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) closeMenu();
+    });
+
+    document.body.appendChild(overlay);
+
+    const closeBtn = overlay.querySelector("#gameMapCloseBtn");
+    if (closeBtn != null) closeBtn.onclick = closeMenu;
+
+    overlay.querySelectorAll(".gameMapItemBtn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            const target = btn.dataset.screen;
+            closeMenu();
+            if (typeof target === "string" && target.length > 0) {
+                go(target);
+            }
+        });
+    });
+}
+
+function mountGlobalMapButton() {
+    let floatingMapBtn = document.getElementById("floatingMapBtn");
+    if (floatingMapBtn == null) {
+        floatingMapBtn = document.createElement("button");
+        floatingMapBtn.id = "floatingMapBtn";
+        floatingMapBtn.className = "floatingMapBtn";
+        floatingMapBtn.setAttribute("aria-label", "Open game map");
+        floatingMapBtn.textContent = "Map";
+        document.body.appendChild(floatingMapBtn);
+    }
+    floatingMapBtn.onclick = () => showGameMapMenu();
 }
 
 function showErrorOverlay(backScreen = state.screen) {
@@ -690,6 +766,69 @@ function screenNycDinner() {
         </div>
       </div>
     </div>
+  `;
+}
+
+function screenNycAfterDinner() {
+    return `
+    ${headerTitle()}
+    <div class="nycAfterDinnerStage" id="nycAfterDinnerStage" aria-label="NYC post dinner view">
+      <img
+        class="nycAfterDinnerBubble"
+        id="nycAfterDinnerBubble"
+        src="assets/after-restaurant-bubble.png"
+        data-fallback-src="assets/aftr res 1.png"
+        data-bubble-step="1"
+        alt="Seems the love bug got away again"
+      >
+      <img
+        class="nycAfterDinnerCouple"
+        id="nycAfterDinnerCouple"
+        src="assets/after-restaurant-couple.png"
+        data-fallback-src="assets/ccwithme.png"
+        alt="Couple in NYC after dinner"
+      >
+      <button class="heartNextBtn nycAfterDinnerNextBtn" id="nycAfterDinnerNextBtn" aria-label="Next">Next</button>
+      <button class="nycAfterDinnerFinalBtn" id="nycAfterDinnerFinalBtn" aria-label="Continue" hidden></button>
+    </div>
+  `;
+}
+
+function screenAfterDinnerHall() {
+    return `
+    ${headerTitle()}
+    <div class="afterDinnerHallStage" id="afterDinnerHallStage" aria-label="Hallway scene">
+      <img
+        class="afterDinnerHallBg"
+        id="afterDinnerHallBg"
+        src="assets/lug trav.jpeg"
+        data-fallback-src="assets/after-dinner-hallway.png"
+        alt="Romantic hallway scene"
+      >
+      <div class="afterDinnerHallCaption">
+        The love bug is still out there but we made so many wonderful memories
+      </div>
+      <button class="afterDinnerHallMemoriesBtn" id="afterDinnerHallMemoriesBtn" aria-label="Look at memories">Look at memories</button>
+    </div>
+  `;
+}
+
+function screenMemoriesPink() {
+    return `
+    ${headerTitle()}
+    <div class="memoriesPinkStage" id="memoriesPinkStage" aria-label="Memories video screen">
+      <video class="memoriesPinkVideo" autoplay muted loop playsinline>
+        <source src="assets/nyc memories.mp4" type="video/mp4">
+      </video>
+      <button class="memoriesFinishBtn" id="memoriesFinishBtn" aria-label="Finished">Finished</button>
+    </div>
+  `;
+}
+
+function screenMemoriesBlue() {
+    return `
+    ${headerTitle()}
+    <div class="memoriesBlueStage" id="memoriesBlueStage" aria-label="Blue ending screen"></div>
   `;
 }
 
@@ -1106,6 +1245,7 @@ function startMapCharacterControl() {
 }
 
 function render() {
+    mountGlobalMapButton();
     app.classList.toggle("openingMode", state.screen === "home");
     app.classList.toggle("customizeMode", state.screen === "customize");
     app.classList.toggle("mapMode", state.screen === "map");
@@ -1115,6 +1255,10 @@ function render() {
     app.classList.toggle("planeClipMode", state.screen === "planeClip");
     app.classList.toggle("nycRoomMode", state.screen === "nycRoom");
     app.classList.toggle("nycDinnerMode", state.screen === "nycDinner");
+    app.classList.toggle("nycAfterDinnerMode", state.screen === "nycAfterDinner");
+    app.classList.toggle("afterDinnerHallMode", state.screen === "afterDinnerHall");
+    app.classList.toggle("memoriesPinkMode", state.screen === "memoriesPink");
+    app.classList.toggle("memoriesBlueMode", state.screen === "memoriesBlue");
 
     if (state.screen === "home") {
         app.innerHTML = screenHome();
@@ -1477,8 +1621,8 @@ function render() {
                 };
             }
             nycDinnerRunnerNextBtn.onclick = () => {
-                nycFromDinnerNext = true;
-                go("nycRoom");
+                nycFromDinnerNext = false;
+                go("nycAfterDinner");
             };
 
             const dinnerLines = [
@@ -1499,7 +1643,7 @@ function render() {
                 { side: "right", img: "assets/pixel-speech-bubble (6).png", scale: 1.12, top: "50%" },
                 { side: "left", img: "assets/pixel-speech-bubble (7).png", small: true, scale: 1.04, top: "44%" },
                 { side: "right", img: "assets/pixel-speech-bubble (8).png", small: true },
-                 { side: "right", img: "assets/pixel-speech-bubble (9).png" },
+                { side: "right", img: "assets/pixel-speech-bubble (9).png" },
                 { side: "left", img: "assets/pixel-speech-bubble (10).png", small: true }
             ];
             let dinnerLineIndex = 0;
@@ -1570,6 +1714,99 @@ function render() {
                 });
             };
         }
+        return;
+    }
+
+    if (state.screen === "nycAfterDinner") {
+        app.innerHTML = screenNycAfterDinner();
+        mountHomeButton();
+        const nycAfterDinnerBubble = document.getElementById("nycAfterDinnerBubble");
+        const nycAfterDinnerNextBtn = document.getElementById("nycAfterDinnerNextBtn");
+        const nycAfterDinnerFinalBtn = document.getElementById("nycAfterDinnerFinalBtn");
+        let nycAfterDinnerStep = 0;
+        if (nycAfterDinnerFinalBtn != null) {
+            nycAfterDinnerFinalBtn.onclick = () => go("afterDinnerHall");
+        }
+        const nycAfterDinnerFinalBtnImg = new Image();
+        nycAfterDinnerFinalBtnImg.onerror = () => {
+            if (nycAfterDinnerFinalBtn != null) {
+                nycAfterDinnerFinalBtn.style.backgroundImage = "url('assets/好的宝宝.png')";
+            }
+        };
+        nycAfterDinnerFinalBtnImg.src = "assets/after-restaurant-final-btn.png";
+        if (nycAfterDinnerNextBtn != null) {
+            nycAfterDinnerNextBtn.onclick = () => {
+                if (nycAfterDinnerStep === 0 && nycAfterDinnerBubble != null) {
+                    nycAfterDinnerStep = 1;
+                    nycAfterDinnerBubble.src = "assets/after-restaurant-bubble-2.png";
+                    nycAfterDinnerBubble.dataset.fallbackSrc = "assets/tickets text.png";
+                    nycAfterDinnerBubble.dataset.bubbleStep = "2";
+                    nycAfterDinnerBubble.alt = "But I saw it had tickets for the Bahamas in its hand.";
+                    return;
+                }
+                if (nycAfterDinnerStep === 1 && nycAfterDinnerBubble != null) {
+                    nycAfterDinnerStep = 2;
+                    nycAfterDinnerBubble.src = "assets/after-restaurant-bubble-3.png";
+                    nycAfterDinnerBubble.dataset.fallbackSrc = "assets/lets go bahamas text.png";
+                    nycAfterDinnerBubble.dataset.bubbleStep = "3";
+                    nycAfterDinnerBubble.alt = "Maybe we should head there too?";
+                    nycAfterDinnerNextBtn.hidden = true;
+                    if (nycAfterDinnerFinalBtn != null) nycAfterDinnerFinalBtn.hidden = false;
+                    return;
+                }
+                go("afterDinnerHall");
+            };
+        }
+        if (nycAfterDinnerBubble != null) {
+            nycAfterDinnerBubble.onerror = () => {
+                const fallbackSrc = nycAfterDinnerBubble.dataset.fallbackSrc;
+                if (fallbackSrc != null && nycAfterDinnerBubble.src.indexOf(fallbackSrc) === -1) {
+                    nycAfterDinnerBubble.src = fallbackSrc;
+                }
+            };
+        }
+        const nycAfterDinnerCouple = document.getElementById("nycAfterDinnerCouple");
+        if (nycAfterDinnerCouple != null) {
+            nycAfterDinnerCouple.onerror = () => {
+                const fallbackSrc = nycAfterDinnerCouple.dataset.fallbackSrc;
+                if (fallbackSrc != null && nycAfterDinnerCouple.src.indexOf(fallbackSrc) === -1) {
+                    nycAfterDinnerCouple.src = fallbackSrc;
+                }
+            };
+        }
+        return;
+    }
+
+    if (state.screen === "afterDinnerHall") {
+        app.innerHTML = screenAfterDinnerHall();
+        mountHomeButton();
+        const afterDinnerHallMemoriesBtn = document.getElementById("afterDinnerHallMemoriesBtn");
+        if (afterDinnerHallMemoriesBtn != null) {
+            afterDinnerHallMemoriesBtn.onclick = () => go("memoriesPink");
+        }
+        const afterDinnerHallBg = document.getElementById("afterDinnerHallBg");
+        if (afterDinnerHallBg != null) {
+            afterDinnerHallBg.onerror = () => {
+                const fallbackSrc = afterDinnerHallBg.dataset.fallbackSrc;
+                if (fallbackSrc != null && afterDinnerHallBg.src.indexOf(fallbackSrc) === -1) {
+                    afterDinnerHallBg.src = fallbackSrc;
+                }
+            };
+        }
+        return;
+    }
+
+    if (state.screen === "memoriesPink") {
+        app.innerHTML = screenMemoriesPink();
+        mountHomeButton();
+        const memoriesFinishBtn = document.getElementById("memoriesFinishBtn");
+        if (memoriesFinishBtn != null) memoriesFinishBtn.onclick = () => go("memoriesBlue");
+        return;
+    }
+
+    if (state.screen === "memoriesBlue") {
+        app.innerHTML = screenMemoriesBlue();
+        mountHomeButton();
         return;
     }
 

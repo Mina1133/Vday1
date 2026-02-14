@@ -153,6 +153,38 @@ body {
     background: #000;
 }
 
+.app.nycAfterDinnerMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
+.app.afterDinnerHallMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
+.app.memoriesPinkMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
+.app.memoriesBlueMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
 .app.planeClipMode,
 .app.openingMode,
 .app.customizeMode,
@@ -161,6 +193,10 @@ body {
 .app.computerMode,
 .app.nycRoomMode,
 .app.nycDinnerMode,
+.app.nycAfterDinnerMode,
+.app.afterDinnerHallMode,
+.app.memoriesPinkMode,
+.app.memoriesBlueMode,
 .app.mapMode {
     display: grid;
     place-items: center;
@@ -174,6 +210,10 @@ body {
 .computerScene,
 .nycRoomStage,
 .nycDinnerStage,
+.nycAfterDinnerStage,
+.afterDinnerHallStage,
+.memoriesPinkStage,
+.memoriesBlueStage,
 .app.mapMode .roomStage {
     position: relative;
     inset: auto;
@@ -203,11 +243,215 @@ body {
     margin: 0;
 }
 
+.app.nycAfterDinnerMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.afterDinnerHallMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.memoriesPinkMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.memoriesBlueMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
 .nycRoomStage {
     background-image: url("assets/nyc view.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+}
+
+.nycAfterDinnerStage {
+    background-image: url("assets/nyc view.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.afterDinnerHallStage {
+    background: #000;
+}
+
+.afterDinnerHallBg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.afterDinnerHallCaption {
+    position: absolute;
+    left: 50%;
+    bottom: 42px;
+    transform: translateX(-50%);
+    width: min(86%, 980px);
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: rgba(20, 12, 20, 0.56);
+    color: #fff4f7;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.2;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    z-index: 4;
+}
+
+.afterDinnerHallMemoriesBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 128px;
+    transform: translateX(-50%);
+    min-width: 250px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 222, 234, 0.9);
+    background: rgba(88, 33, 61, 0.72);
+    color: #ffeef5;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+    z-index: 5;
+}
+
+.memoriesPinkStage {
+    background: radial-gradient(circle at 25% 20%, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0) 40%),
+        radial-gradient(circle at 78% 70%, rgba(255, 211, 230, 0.58) 0%, rgba(255, 211, 230, 0) 44%),
+        linear-gradient(180deg, #ffd3e7 0%, #ffb6d7 46%, #ff99c7 100%);
+}
+
+.memoriesPinkVideo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    background: #120914;
+    display: block;
+}
+
+.memoriesFinishBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 34px;
+    transform: translateX(-50%);
+    min-width: 220px;
+    padding: 12px 28px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 242, 210, 0.92);
+    background: linear-gradient(180deg, rgba(255, 206, 147, 0.98) 0%, rgba(255, 153, 176, 0.98) 100%);
+    color: #4f243d;
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    box-shadow: 0 14px 26px rgba(0, 0, 0, 0.35);
+    z-index: 6;
+}
+
+.memoriesBlueStage {
+    background:
+        radial-gradient(circle at 28% 24%, rgba(220, 244, 255, 0.44) 0%, rgba(220, 244, 255, 0) 38%),
+        radial-gradient(circle at 76% 72%, rgba(118, 171, 255, 0.42) 0%, rgba(118, 171, 255, 0) 40%),
+        linear-gradient(180deg, #6bb8ff 0%, #3b8df1 45%, #1f5dcc 100%);
+}
+
+.nycAfterDinnerBubble {
+    position: absolute;
+    top: 340px;
+    left: 66%;
+    transform: translateX(-50%);
+    width: min(34%, 460px);
+    max-width: 62%;
+    height: auto;
+    object-fit: contain;
+    z-index: 5;
+    pointer-events: none;
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.24));
+}
+
+.nycAfterDinnerBubble[data-bubble-step="2"] {
+    top: 300px;
+    left: 62%;
+    width: min(28%, 380px);
+    max-width: 52%;
+}
+
+.nycAfterDinnerBubble[data-bubble-step="3"] {
+    top: 336px;
+    left: 61%;
+    width: min(30%, 360px);
+    max-width: 50%;
+}
+
+.nycAfterDinnerCouple {
+    position: absolute;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    width: min(28%, 360px);
+    max-width: 56%;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.45));
+    z-index: 4;
+    pointer-events: none;
+}
+
+.nycAfterDinnerNextBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    z-index: 6;
+}
+
+.nycAfterDinnerFinalBtn {
+    position: absolute;
+    left: 50%;
+    bottom: -62px;
+    transform: translateX(-50%);
+    width: min(20%, 300px);
+    max-width: 86%;
+    aspect-ratio: 1536 / 1024;
+    border: none;
+    background: transparent url("assets/after-restaurant-final-btn.png") center center no-repeat;
+    background-size: contain;
+    cursor: pointer;
+    z-index: 7;
 }
 
 .nycDinnerStage {
@@ -1376,6 +1620,105 @@ body {
     background: rgba(255, 255, 255, 0.65);
 }
 
+.gameMapOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+    padding: 18px;
+    background: rgba(0, 0, 0, 0.58);
+    backdrop-filter: blur(2px);
+}
+
+.gameMapModal {
+    width: min(860px, 96vw);
+    max-height: min(82dvh, 760px);
+    overflow: auto;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: linear-gradient(180deg, rgba(24, 30, 54, 0.95) 0%, rgba(14, 18, 32, 0.97) 100%);
+    box-shadow: 0 20px 44px rgba(0, 0, 0, 0.5);
+    padding: 18px;
+}
+
+.gameMapTitle {
+    color: #fff6d7;
+    font-weight: 900;
+    font-size: 28px;
+    letter-spacing: 0.02em;
+    margin-bottom: 14px;
+}
+
+.gameMapGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.gameMapItemBtn {
+    border: 1px solid rgba(255, 247, 202, 0.36);
+    border-radius: 14px;
+    background: linear-gradient(180deg, rgba(255, 200, 118, 0.22) 0%, rgba(255, 135, 124, 0.18) 100%);
+    color: #fff;
+    text-align: left;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: transform 110ms ease, box-shadow 110ms ease, border-color 110ms ease;
+}
+
+.gameMapItemBtn:hover {
+    transform: translateY(-1px);
+    border-color: rgba(255, 247, 202, 0.64);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.32);
+}
+
+.gameMapItemLabel {
+    display: block;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.gameMapItemHint {
+    display: block;
+    margin-top: 3px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.86);
+}
+
+.gameMapCloseBtn {
+    margin-top: 14px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.floatingMapBtn {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 9500;
+    min-width: 90px;
+    height: 46px;
+    border: 1px solid rgba(255, 244, 202, 0.6);
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(255, 204, 117, 0.95) 0%, rgba(255, 146, 113, 0.95) 100%);
+    color: #3b2100;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.28);
+}
+
+.floatingMapBtn:hover {
+    transform: translateY(-1px);
+}
+
 .heartNextBtn {
     width: 98px;
     height: 84px;
@@ -1991,6 +2334,27 @@ body {
     .backRoomBtn,
     .homeBtn {
         padding: 8px 12px;
+    }
+
+    .gameMapModal {
+        width: min(94vw, 700px);
+        padding: 14px;
+    }
+
+    .gameMapTitle {
+        font-size: 22px;
+    }
+
+    .gameMapGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .floatingMapBtn {
+        right: 12px;
+        bottom: 12px;
+        min-width: 84px;
+        height: 42px;
+        font-size: 15px;
     }
 
     .computerFrame {
