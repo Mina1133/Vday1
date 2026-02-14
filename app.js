@@ -873,7 +873,7 @@ function screenYellowScreen() {
       <img class="yellowGameLogo" src="assets/picture sign.png" alt="Take a Picture Game">
       <button class="yellowStartGameBtn" id="yellowStartGameBtn" aria-label="Take Picture">Take Picture</button>
       <button class="yellowStopObjectBtn" id="yellowStopObjectBtn" aria-label="Stop moving object"></button>
-      <div class="yellowGoodSign" id="yellowGoodSign" hidden>Good</div>
+      <img class="yellowGoodSign" id="yellowGoodSign" src="assets/perfect.png" alt="Perfect picture" hidden>
       <button class="yellowNextBtn" id="yellowNextBtn" aria-label="Next" hidden>Next</button>
       <button class="yellowPlayAgainBtn" id="yellowPlayAgainBtn" aria-label="Play Again" hidden>Play Again</button>
     </div>
@@ -2076,6 +2076,7 @@ function render() {
         const boxHeight = 64;
         const boxCenterXRatio = 0.56;
         const boxTopRatio = 0.52;
+        const fixedSpawnTopPercent = 52;
         const checkObjectInBox = () => {
             if (yellowScreenStage == null || yellowFastPassObject == null) return false;
             const stageRect = yellowScreenStage.getBoundingClientRect();
@@ -2107,17 +2108,16 @@ function render() {
                     const stageHeight = yellowScreenStage.clientHeight;
                     const objectHeight = yellowFastPassObject.offsetHeight || 18;
                     const boxCenterY = (stageHeight * boxTopRatio) + (boxHeight * 0.5);
-                    const jitter = Math.max(2, stageHeight * 0.015);
                     const topPx = Math.max(
                         0,
                         Math.min(
                             stageHeight - objectHeight,
-                            (boxCenterY - (objectHeight * 0.5)) + ((Math.random() * 2 - 1) * jitter)
+                            (boxCenterY - (objectHeight * 0.5)) - 16
                         )
                     );
                     yellowFastPassObject.style.top = `${topPx}px`;
                 } else {
-                    yellowFastPassObject.style.top = `${58 + (Math.random() * 12)}%`;
+                    yellowFastPassObject.style.top = `${fixedSpawnTopPercent}%`;
                 }
             };
             yellowFastPassObject.addEventListener("animationiteration", respawnFastObject);
@@ -2160,10 +2160,10 @@ function render() {
                             const objectHeight = yellowFastPassObject.offsetHeight || 18;
                             const boxCenterY = (stageHeight * boxTopRatio) + (boxHeight * 0.5);
                             yellowFastPassObject.style.left = "-14%";
-                            yellowFastPassObject.style.top = `${Math.max(0, Math.min(stageHeight - objectHeight, boxCenterY - (objectHeight * 0.5)))}px`;
+                            yellowFastPassObject.style.top = `${Math.max(0, Math.min(stageHeight - objectHeight, (boxCenterY - (objectHeight * 0.5)) - 16))}px`;
                         } else {
                             yellowFastPassObject.style.left = "-14%";
-                            yellowFastPassObject.style.top = `${58 + (Math.random() * 12)}%`;
+                            yellowFastPassObject.style.top = `${52 + (Math.random() * 12)}%`;
                         }
                         yellowFastPassObject.style.animation = "yellowFastPass 550ms linear infinite";
                         yellowFastPassObject.dataset.paused = "0";

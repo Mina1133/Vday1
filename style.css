@@ -635,13 +635,13 @@ body {
     left: 50%;
     bottom: 28%;
     transform: translateX(-50%);
-    min-width: 150px;
-    height: 44px;
+    min-width: 190px;
+    height: 56px;
     border: none;
     outline: none;
-    background: #8f6bff;
+    background: rgba(143, 107, 255, 0.58);
     color: #fff;
-    font-size: 0.98rem;
+    font-size: 1.08rem;
     font-weight: 700;
     letter-spacing: 0.03em;
     border-radius: 8px;
@@ -650,7 +650,7 @@ body {
 }
 
 .yellowStartGameBtn:hover {
-    background: #7c55f3;
+    background: rgba(124, 85, 243, 0.72);
 }
 
 .yellowStopObjectBtn {
@@ -660,10 +660,10 @@ body {
     width: 132px;
     height: 132px;
     transform: translate(-50%, -50%);
-    border: 2px solid #000;
+    border: none;
     outline: none;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(0, 0, 0, 0.42);
     color: #111;
     font-size: 0;
     font-weight: 700;
@@ -685,14 +685,10 @@ body {
 .yellowGoodSign {
     position: absolute;
     left: 50%;
-    top: 54%;
+    top: 30%;
     transform: translate(-50%, -50%);
-    padding: 8px 18px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.9);
-    color: #118a31;
-    font-size: 1.05rem;
-    font-weight: 800;
+    width: min(64%, 560px);
+    height: auto;
     z-index: 4;
     pointer-events: none;
 }
@@ -700,7 +696,7 @@ body {
 .yellowNextBtn {
     position: absolute;
     left: calc(50% + 64px);
-    bottom: 10%;
+    bottom: 22%;
     transform: translateX(-50%);
     min-width: 110px;
     height: 40px;
@@ -721,7 +717,7 @@ body {
 .yellowPlayAgainBtn {
     position: absolute;
     left: calc(50% - 64px);
-    bottom: 10%;
+    bottom: 22%;
     transform: translateX(-50%);
     min-width: 120px;
     height: 40px;
