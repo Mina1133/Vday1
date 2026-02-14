@@ -14,6 +14,7 @@ let nycCollisionTeardown = null;
 let nycDinnerRunnerTeardown = null;
 let mintGameTeardown = null;
 let kissRedTeardown = null;
+let kissRedOfferTimer = null;
 let nycReturnFromWin = false;
 let nycFromDinnerNext = false;
 const PURPLE_SLIDES = [
@@ -69,7 +70,7 @@ function saveMintTopScore(score) {
 
 function defaultState() {
     return {
-        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | orangeScreen | violetScreen | blueScreen | greenScreen | kissRedScreen | redScreen | blackScreen | brownScreen | greyScreen | silverScreen | purpleScreen | magentaScreen | goldenScreen | mintRoom
+        screen: "home", // home | customize | map | shelf | note | computer | planeClip | nycRoom | nycDinner | nycAfterDinner | afterDinnerHall | memoriesPink | memoriesBlue | bahamasHotel | yellowScreen | orangeScreen | violetScreen | blueScreen | greenScreen | kissRedScreen | kissPinkScreen | kissGreyScreen | redScreen | blackScreen | brownScreen | greyScreen | silverScreen | purpleScreen | magentaScreen | goldenScreen | mintRoom
         characterMode: null, // null | alone | withme
         mapIntroDone: false,
         mapPostComputerIntroPending: false,
@@ -127,6 +128,10 @@ function go(screen) {
     if (screen !== "kissRedScreen" && kissRedTeardown != null) {
         kissRedTeardown();
         kissRedTeardown = null;
+    }
+    if (screen !== "kissRedScreen" && kissRedOfferTimer != null) {
+        clearTimeout(kissRedOfferTimer);
+        kissRedOfferTimer = null;
     }
     state.screen = screen;
     if (screen !== "nycRoom") {
@@ -794,7 +799,7 @@ function screenNycDinner() {
       <div class="nycDinnerChat nycDinnerChatRight" id="nycDinnerChatRight" hidden>
         <img class="nycDinnerChatImg" id="nycDinnerChatRightImg" alt="Dinner speech bubble">
       </div>
-      <button class="nycDinnerOkBtn" id="nycDinnerOkBtn" aria-label="Next">Next</button>
+      <button class="heartNextBtn nycDinnerOkBtn" id="nycDinnerOkBtn" aria-label="Next">Next</button>
       <div class="nycDinnerGameIntro" id="nycDinnerGameIntro" hidden>
         <img class="nycDinnerGameSign" src="assets/restaurant_sign_transparent.png" alt="Restaurant game sign">
         <button class="nycDinnerStartBtn" id="nycDinnerStartBtn" aria-label="Start">JUMP</button>
@@ -958,7 +963,7 @@ function screenBlueScreen() {
     ${headerTitle()}
     <div class="blueScreenStage" id="blueScreenStage" aria-label="Blue screen">
       <img class="bluePromptBubble" id="bluePromptBubble" src="assets/wantgo.png" alt="Baby I know we have been doing but there is another place I want to go">
-      <button class="blueToGreenBtn" id="blueToGreenBtn" aria-label="Next">Next</button>
+      <button class="heartNextBtn blueToGreenBtn" id="blueToGreenBtn" aria-label="Next">Next</button>
       <button class="blueEndConvoBtn" id="blueEndConvoBtn" aria-label="End conversation" hidden>
         <img src="assets/好的宝宝.png" alt="End conversation">
       </button>
@@ -971,7 +976,7 @@ function screenGreenScreen() {
     ${headerTitle()}
     <div class="greenScreenStage" id="greenScreenStage" aria-label="Green screen">
       <img class="greenPromptBubble" id="greenPromptBubble" src="assets/distracted.png" alt="Baby we got distracted and forgot about the love bug">
-      <button class="greenToDisneyBtn" id="greenToDisneyBtn" aria-label="Next">Next</button>
+      <button class="heartNextBtn greenToDisneyBtn" id="greenToDisneyBtn" aria-label="Next">Next</button>
     </div>
   `;
 }
@@ -980,14 +985,21 @@ function screenKissRedScreen() {
     return `
     ${headerTitle()}
     <div class="kissRedScreenStage" id="kissRedScreenStage" aria-label="Red kiss cam screen">
-      <img class="kissRedHiddenBug" id="kissRedHiddenBug" src="assets/love bug.png" alt="Hidden love bug">
-      <div class="kissRedWinSign" id="kissRedWinSign" hidden>Found It</div>
-      <button class="kissRedToPurpleBtn" id="kissRedToPurpleBtn" aria-label="Next">Next</button>
+      <img class="kissRedFindBugSign" id="kissRedFindBugSign" src="assets/findbug.png" alt="Find the bug sign">
+      <img class="kissRedHiddenBug" id="kissRedHiddenBug" src="assets/love bug.png" alt="Hidden love bug" hidden>
+      <button class="kissRedToPurpleBtn" id="kissRedToPurpleBtn" aria-label="Start">Start</button>
+      <div class="kissRedChoiceRow" id="kissRedChoiceRow" hidden>
+        <button class="kissRedChoiceBtn" id="kissRedPlayAgainBtn" aria-label="Play Again">Play Again</button>
+        <button class="kissRedChoiceBtn" id="kissRedNextBtn" aria-label="Next">Next</button>
+      </div>
+      <div class="kissRedTimeoutRow" id="kissRedTimeoutRow" hidden>
+        <button class="kissRedChoiceBtn" id="kissRedGiveUpBtn" aria-label="Give up">Give up</button>
+      </div>
     </div>
   `;
 }
 
-function startKissRedClickGame(stage, bugEl, winEl = null) {
+function startKissRedClickGame(stage, bugEl, winEl = null, onWin = null) {
     if (stage == null || bugEl == null) return null;
 
     let running = true;
@@ -996,10 +1008,10 @@ function startKissRedClickGame(stage, bugEl, winEl = null) {
     const placeBug = () => {
         const stageWidth = stage.clientWidth || 980;
         const stageHeight = stage.clientHeight || 740;
-        const bugSize = Math.max(22, Math.min(42, Math.round(stageWidth * 0.03)));
+        const bugSize = Math.max(10, Math.min(20, Math.round(stageWidth * 0.015)));
         const left = Math.max(18, Math.random() * Math.max(18, stageWidth - bugSize - 18));
-        const topMin = Math.max(90, stageHeight * 0.18);
-        const topMax = Math.max(topMin + 10, stageHeight - bugSize - 170);
+        const topMin = Math.max(stageHeight * 0.5, 90);
+        const topMax = Math.max(topMin + 10, stageHeight - bugSize - 40);
         const top = topMin + (Math.random() * (topMax - topMin));
         bugEl.style.width = `${bugSize}px`;
         bugEl.style.left = `${left}px`;
@@ -1010,6 +1022,7 @@ function startKissRedClickGame(stage, bugEl, winEl = null) {
         if (!running || won) return;
         won = true;
         if (winEl != null) winEl.hidden = false;
+        if (typeof onWin === "function") onWin();
     };
 
     if (winEl != null) winEl.hidden = true;
@@ -1045,6 +1058,28 @@ function screenRedScreen() {
       <button class="redFinalImageBtn" id="redFinalImageBtn" aria-label="Continue" hidden>
         <img src="assets/好的宝宝.png" alt="Continue">
       </button>
+    </div>
+  `;
+}
+
+function screenKissPinkScreen() {
+    return `
+    ${headerTitle()}
+    <div class="kissPinkScreenStage" id="kissPinkScreenStage" aria-label="Pink celebration screen">
+      <img class="kissPinkBubbleImg" id="kissPinkBubbleImg" src="assets/cought.png" alt="We finally caught the love bug">
+      <button class="heartNextBtn kissPinkToPurpleBtn" id="kissPinkToPurpleBtn" aria-label="Next">Next</button>
+      <button class="kissPinkEndBtn" id="kissPinkEndBtn" aria-label="End conversation" hidden>
+        <img src="assets/好的宝宝.png" alt="End conversation">
+      </button>
+    </div>
+  `;
+}
+
+function screenKissGreyScreen() {
+    return `
+    ${headerTitle()}
+    <div class="kissGreyScreenStage" id="kissGreyScreenStage" aria-label="Grey screen">
+      <div class="kissGreyCaption">Time to rest, baby.</div>
     </div>
   `;
 }
@@ -1127,7 +1162,7 @@ function screenMagentaScreen() {
     ${headerTitle()}
     <div class="magentaScreenStage" id="magentaScreenStage" aria-label="Magenta screen">
       <div class="magentaTextBubble" id="magentaTextBubble">NOW THAT WE ARE HOME YOU KNOW WHAT SOUNDS REALLY GOOD?</div>
-      <button class="magentaNextBtn" id="magentaNextBtn" aria-label="Next">Next</button>
+      <button class="heartNextBtn magentaNextBtn" id="magentaNextBtn" aria-label="Next">Next</button>
       <button class="magentaEndBtn" id="magentaEndBtn" aria-label="End conversation" hidden>
         <img src="assets/好的宝宝.png" alt="End conversation">
       </button>
@@ -1918,6 +1953,8 @@ function render() {
     app.classList.toggle("blueScreenMode", state.screen === "blueScreen");
     app.classList.toggle("greenScreenMode", state.screen === "greenScreen");
     app.classList.toggle("kissRedScreenMode", state.screen === "kissRedScreen");
+    app.classList.toggle("kissPinkScreenMode", state.screen === "kissPinkScreen");
+    app.classList.toggle("kissGreyScreenMode", state.screen === "kissGreyScreen");
     app.classList.toggle("redScreenMode", state.screen === "redScreen");
     app.classList.toggle("blackScreenMode", state.screen === "blackScreen");
     app.classList.toggle("brownScreenMode", state.screen === "brownScreen");
@@ -2782,8 +2819,16 @@ function render() {
         const greenPromptBubble = document.getElementById("greenPromptBubble");
         const greenToDisneyBtn = document.getElementById("greenToDisneyBtn");
         const greenConversation = [
-            { src: "assets/distracted.png", alt: "Baby we got distracted and forgot about the love bug" },
-            { src: "assets/look.png", alt: "Lets look now!" }
+            {
+                src: "assets/distracted.png",
+                alt: "Baby we got distracted and forgot about the love bug",
+                style: { left: "64%", top: "36%", width: "min(34vw, 320px)" }
+            },
+            {
+                src: "assets/look.png",
+                alt: "Lets look now!",
+                style: { left: "35%", top: "31%", width: "min(28vw, 260px)" }
+            }
         ];
         let greenConversationStep = 0;
         const renderGreenConversationStep = () => {
@@ -2792,6 +2837,9 @@ function render() {
             if (step == null) return;
             greenPromptBubble.src = step.src;
             greenPromptBubble.alt = step.alt;
+            greenPromptBubble.style.left = step.style?.left ?? "50%";
+            greenPromptBubble.style.top = step.style?.top ?? "34%";
+            greenPromptBubble.style.width = step.style?.width ?? "min(34vw, 320px)";
         };
         renderGreenConversationStep();
         if (greenToDisneyBtn != null) {
@@ -2811,15 +2859,128 @@ function render() {
         app.innerHTML = screenKissRedScreen();
         mountHomeButton();
         const kissRedScreenStage = document.getElementById("kissRedScreenStage");
+        const kissRedFindBugSign = document.getElementById("kissRedFindBugSign");
         const kissRedHiddenBug = document.getElementById("kissRedHiddenBug");
-        const kissRedWinSign = document.getElementById("kissRedWinSign");
         const kissRedToPurpleBtn = document.getElementById("kissRedToPurpleBtn");
+        const kissRedChoiceRow = document.getElementById("kissRedChoiceRow");
+        const kissRedPlayAgainBtn = document.getElementById("kissRedPlayAgainBtn");
+        const kissRedNextBtn = document.getElementById("kissRedNextBtn");
+        const kissRedTimeoutRow = document.getElementById("kissRedTimeoutRow");
+        const kissRedGiveUpBtn = document.getElementById("kissRedGiveUpBtn");
         if (kissRedTeardown != null) {
             kissRedTeardown();
             kissRedTeardown = null;
         }
-        kissRedTeardown = startKissRedClickGame(kissRedScreenStage, kissRedHiddenBug, kissRedWinSign);
-        if (kissRedToPurpleBtn != null) kissRedToPurpleBtn.onclick = () => go("purpleScreen");
+        if (kissRedOfferTimer != null) {
+            clearTimeout(kissRedOfferTimer);
+            kissRedOfferTimer = null;
+        }
+        let kissRedStarted = false;
+        const scheduleKissRedOffer = () => {
+            if (!kissRedStarted) return;
+            if (kissRedOfferTimer != null) {
+                clearTimeout(kissRedOfferTimer);
+            }
+            kissRedOfferTimer = window.setTimeout(() => {
+                kissRedOfferTimer = null;
+                if (!kissRedStarted) return;
+                if (kissRedChoiceRow != null && !kissRedChoiceRow.hidden) return;
+                if (kissRedTimeoutRow != null) kissRedTimeoutRow.hidden = false;
+            }, 30000);
+        };
+        const startKissRedRound = () => {
+            kissRedStarted = true;
+            if (kissRedFindBugSign != null) kissRedFindBugSign.hidden = true;
+            if (kissRedChoiceRow != null) kissRedChoiceRow.hidden = true;
+            if (kissRedTimeoutRow != null) kissRedTimeoutRow.hidden = false;
+            if (kissRedToPurpleBtn != null) kissRedToPurpleBtn.hidden = true;
+            if (kissRedTeardown != null) {
+                kissRedTeardown();
+                kissRedTeardown = null;
+            }
+            if (kissRedOfferTimer != null) {
+                clearTimeout(kissRedOfferTimer);
+                kissRedOfferTimer = null;
+            }
+            kissRedTeardown = startKissRedClickGame(
+                kissRedScreenStage,
+                kissRedHiddenBug,
+                null,
+                () => {
+                    if (!kissRedStarted) return;
+                    if (kissRedOfferTimer != null) {
+                        clearTimeout(kissRedOfferTimer);
+                        kissRedOfferTimer = null;
+                    }
+                    if (kissRedTimeoutRow != null) kissRedTimeoutRow.hidden = true;
+                    if (kissRedChoiceRow != null) kissRedChoiceRow.hidden = false;
+                }
+            );
+        };
+        if (kissRedChoiceRow != null) kissRedChoiceRow.hidden = true;
+        if (kissRedToPurpleBtn != null) kissRedToPurpleBtn.onclick = startKissRedRound;
+        if (kissRedPlayAgainBtn != null) kissRedPlayAgainBtn.onclick = startKissRedRound;
+        if (kissRedNextBtn != null) kissRedNextBtn.onclick = () => go("kissPinkScreen");
+        if (kissRedGiveUpBtn != null) kissRedGiveUpBtn.onclick = () => go("kissPinkScreen");
+        return;
+    }
+
+    if (state.screen === "kissPinkScreen") {
+        app.innerHTML = screenKissPinkScreen();
+        mountHomeButton();
+        const kissPinkBubbleImg = document.getElementById("kissPinkBubbleImg");
+        const kissPinkToPurpleBtn = document.getElementById("kissPinkToPurpleBtn");
+        const kissPinkEndBtn = document.getElementById("kissPinkEndBtn");
+        const kissPinkConversation = [
+            { src: "assets/cought.png", alt: "We finally caught the love bug" },
+            { src: "assets/ouch.png", alt: "Ouch", size: "min(16vw, 150px)" },
+            { src: "assets/wrong.png", alt: "Whats wrong?", size: "min(24vw, 260px)" },
+            { src: "assets/bit.png", alt: "It bit me", size: "min(14vw, 140px)" },
+            { src: "assets/ok.png", alt: "Are you ok?", size: "min(20vw, 220px)" },
+            { src: "assets/ran.png", alt: "Yes, but it dropped it and it ran", left: "64%", top: "33%" },
+            { src: "assets/rest.png", alt: "Its ok lets go home and rest", left: "37%", top: "27%" }
+        ];
+        let kissPinkStep = 0;
+        const renderKissPinkStep = () => {
+            const step = kissPinkConversation[kissPinkStep];
+            if (kissPinkBubbleImg != null && step != null) {
+                kissPinkBubbleImg.src = step.src;
+                kissPinkBubbleImg.alt = step.alt;
+                kissPinkBubbleImg.style.width = step.size ?? "min(38vw, 430px)";
+                kissPinkBubbleImg.style.left = step.left ?? "";
+                kissPinkBubbleImg.style.top = step.top ?? "";
+                const isOddStepNumber = ((kissPinkStep + 1) % 2) === 1;
+                kissPinkBubbleImg.classList.toggle("left", isOddStepNumber);
+                kissPinkBubbleImg.classList.toggle("right", !isOddStepNumber);
+            }
+        };
+        const showKissPinkEndBtn = () => {
+            if (kissPinkToPurpleBtn != null) kissPinkToPurpleBtn.hidden = true;
+            if (kissPinkEndBtn != null) kissPinkEndBtn.hidden = false;
+        };
+        if (kissPinkToPurpleBtn != null) {
+            kissPinkToPurpleBtn.onclick = () => {
+                if (kissPinkStep < kissPinkConversation.length - 1) {
+                    kissPinkStep += 1;
+                    renderKissPinkStep();
+                    if (kissPinkStep >= kissPinkConversation.length - 1) {
+                        showKissPinkEndBtn();
+                    }
+                    return;
+                }
+                showKissPinkEndBtn();
+            };
+        }
+        if (kissPinkEndBtn != null) kissPinkEndBtn.onclick = () => go("kissGreyScreen");
+        if (kissPinkEndBtn != null) kissPinkEndBtn.hidden = true;
+        if (kissPinkToPurpleBtn != null) kissPinkToPurpleBtn.hidden = false;
+        renderKissPinkStep();
+        return;
+    }
+
+    if (state.screen === "kissGreyScreen") {
+        app.innerHTML = screenKissGreyScreen();
+        mountHomeButton();
         return;
     }
 

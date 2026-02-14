@@ -241,6 +241,22 @@ body {
     background: #000;
 }
 
+.app.kissPinkScreenMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
+.app.kissGreyScreenMode {
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    background: #000;
+}
+
 .app.redScreenMode {
     padding: 0;
     height: 100vh;
@@ -332,6 +348,8 @@ body {
 .app.blueScreenMode,
 .app.greenScreenMode,
 .app.kissRedScreenMode,
+.app.kissPinkScreenMode,
+.app.kissGreyScreenMode,
 .app.redScreenMode,
 .app.blackScreenMode,
 .app.brownScreenMode,
@@ -365,6 +383,8 @@ body {
 .blueScreenStage,
 .greenScreenStage,
 .kissRedScreenStage,
+.kissPinkScreenStage,
+.kissGreyScreenStage,
 .redScreenStage,
 .blackScreenStage,
 .brownScreenStage,
@@ -494,6 +514,24 @@ body {
 }
 
 .app.kissRedScreenMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.kissPinkScreenMode .header {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 20;
+    margin: 0;
+}
+
+.app.kissGreyScreenMode .header {
     position: fixed;
     top: 12px;
     left: 12px;
@@ -1042,6 +1080,18 @@ body {
     pointer-events: none;
 }
 
+.kissRedFindBugSign {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(62vw, 760px);
+    height: auto;
+    z-index: 7;
+    pointer-events: none;
+    filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.35));
+}
+
 .kissRedHiddenBug {
     position: absolute;
     z-index: 6;
@@ -1072,16 +1122,133 @@ body {
 .kissRedToPurpleBtn {
     position: absolute;
     left: 50%;
-    bottom: 52px;
+    bottom: 88px;
     transform: translateX(-50%);
-    border: none;
+    border: 2px solid #5a3a1b;
     border-radius: 999px;
     padding: 16px 34px;
-    background: rgba(210, 32, 46, 0.72);
-    color: #fff2f3;
-    font-size: 28px;
+    background: #8b5a2b;
+    color: #fff3de;
+    font-size: 18px;
     font-weight: 800;
     cursor: pointer;
+}
+
+.kissRedChoiceRow {
+    position: absolute;
+    left: 50%;
+    bottom: 52px;
+    transform: translateX(-50%);
+    z-index: 9;
+    display: flex;
+    gap: 16px;
+}
+
+.kissRedTimeoutRow {
+    position: absolute;
+    left: 50%;
+    bottom: 72px;
+    transform: translateX(-50%);
+    z-index: 9;
+    display: flex;
+    gap: 16px;
+}
+
+.kissRedChoiceBtn {
+    border: none;
+    border-radius: 999px;
+    padding: 16px 28px;
+    background: #d81b8a;
+    color: #fff2f3;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.kissRedToPurpleBtn[hidden],
+.kissRedChoiceRow[hidden],
+.kissRedTimeoutRow[hidden] {
+    display: none !important;
+}
+
+.kissPinkScreenStage {
+    background: url("assets/disney 2.png") center center / cover no-repeat;
+}
+
+.kissPinkTitle {
+    position: absolute;
+    left: 50%;
+    top: 42%;
+    transform: translate(-50%, -50%);
+    color: #fff3f8;
+    font-size: clamp(38px, 6vw, 74px);
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-shadow: 0 8px 18px rgba(102, 0, 46, 0.45);
+}
+
+.kissPinkBubbleImg {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(38vw, 430px);
+    height: auto;
+    z-index: 7;
+}
+
+.kissPinkBubbleImg.left {
+    left: 38%;
+    top: 30%;
+}
+
+.kissPinkBubbleImg.right {
+    left: 62%;
+    top: 36%;
+}
+
+.kissPinkToPurpleBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 72px;
+    transform: translateX(-50%);
+}
+
+.kissPinkEndBtn {
+    position: absolute;
+    left: 50%;
+    bottom: 38px;
+    transform: translateX(-50%);
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+}
+
+.kissPinkEndBtn img {
+    width: min(22vw, 260px);
+    height: auto;
+    display: block;
+}
+
+.kissPinkEndBtn[hidden] {
+    display: none !important;
+}
+
+.kissGreyScreenStage {
+    background: radial-gradient(circle at 50% 32%, #bdbdbd 0%, #8f8f8f 48%, #656565 100%);
+}
+
+.kissGreyCaption {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #f5f5f5;
+    font-size: clamp(18px, 2.8vw, 32px);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
 }
 
 .yellowScreenStage.photoTaken {
@@ -1647,8 +1814,8 @@ body {
     transform: translateX(-50%);
     padding: 10px 22px;
     border-radius: 999px;
-    border: 2px solid rgba(255, 222, 130, 0.95);
-    background: linear-gradient(180deg, rgba(255, 222, 130, 0.98) 0%, rgba(236, 167, 61, 0.98) 100%);
+    border: 2px solid rgba(255, 222, 130, 0.62);
+    background: linear-gradient(180deg, rgba(255, 222, 130, 0.58) 0%, rgba(236, 167, 61, 0.58) 100%);
     color: #3a2608;
     font-size: 20px;
     font-weight: 900;
@@ -1672,6 +1839,7 @@ body {
     display: block;
     width: min(16vw, 240px);
     height: auto;
+    opacity: 0.72;
 }
 
 .goldenScreenStage {
