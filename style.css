@@ -204,8 +204,6 @@ body {
 }
 
 .nycRoomStage {
-    width: 100%;
-    height: 100%;
     background-image: url("assets/nyc view.png");
     background-size: cover;
     background-position: center;
@@ -213,8 +211,6 @@ body {
 }
 
 .nycDinnerStage {
-    width: 100%;
-    height: 100%;
     background-image: url("assets/Restaurant img.png");
     background-size: 92% auto;
     background-position: 52% 42%;
@@ -856,7 +852,7 @@ body {
     aspect-ratio: 1536 / 1024;
     border: none;
     cursor: pointer;
-    background: transparent url("assets/好的宝宝.png") center center no-repeat;
+    background: transparent url("assets/%E5%A5%BD%E7%9A%84%E5%AE%9D%E5%AE%9D.png") center center no-repeat;
     background-size: contain;
 }
 
@@ -934,14 +930,14 @@ body {
 
 .noteMessage {
     position: absolute;
-    left: 50%;
-    top: 45%;
+    left: 48%;
+    top: 47%;
     transform: translate(-50%, -50%);
     width: min(640px, 62%);
     text-align: center;
     color: #2f1f1f;
     font-family: "Brush Script MT", "Segoe Script", "Lucida Handwriting", cursive;
-    font-size: clamp(20px, 2.1vw, 34px);
+    font-size: clamp(28px, 2.9vw, 46px);
     line-height: 1.35;
     font-weight: 800;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
@@ -1004,7 +1000,7 @@ body {
 .nycGoBtn {
     position: absolute;
     left: 50%;
-    bottom: 56px;
+    bottom: 84px;
     transform: translateX(-50%);
     min-width: 180px;
     padding: 12px 22px;
@@ -1088,7 +1084,7 @@ body {
 .nycGoHotspot {
     position: absolute;
     left: 36.8%;
-    top: 69.4%;
+    top: 73.4%;
     width: 40%;
     height: 20.5%;
     border: none;
@@ -1235,7 +1231,7 @@ body {
 .customizeContent {
     position: relative;
     z-index: 2;
-    min-height: 100vh;
+    min-height: 100%;
     padding: 18px 18px 0;
     display: flex;
     flex-direction: column;
@@ -1976,11 +1972,12 @@ body {
 
     .huntStartBtn,
     .nycGoBtn {
-        bottom: 14px;
+        bottom: 24px;
         min-width: 150px;
         padding: 8px 16px;
         font-size: 15px;
     }
+
 
     .loveBugPopup {
         width: 320px;
@@ -1999,3 +1996,4 @@ body {
         width: 98px;
     }
 }
+

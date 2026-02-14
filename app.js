@@ -493,7 +493,7 @@ function mountClickHearts() {
         for (let i = 0; i < count; i += 1) {
             const heart = document.createElement("span");
             heart.className = "clickHeart";
-            heart.textContent = "?";
+            heart.textContent = "\u2665";
 
             const spreadX = (Math.random() - 0.5) * 44;
             const spreadY = (Math.random() - 0.5) * 30;
@@ -727,7 +727,7 @@ function screenMap() {
           width:360px;
           max-width:92%;
           aspect-ratio: 1536 / 1024;
-          background:transparent url('assets/????.png') center center no-repeat;
+          background:transparent url('assets/%E5%A5%BD%E7%9A%84%E5%AE%9D%E5%AE%9D.png') center center no-repeat;
           background-size:contain;
           border:none;
           cursor:pointer;
@@ -759,7 +759,7 @@ function screenShelf() {
 function screenNote() {
     return `
     <div class="noteScene" aria-label="Close-up note scene">
-      <div class="noteMessage">I made this game<br>for you my love!<br>Now lets go explore!</div>
+      <div class="noteMessage">I made this game<br>for you my love!<br>Now lets go explore!<br>&hearts;</div>
       <button class="backRoomBtn" id="backRoomBtn">Back to Room</button>
     </div>
   `;
@@ -1167,10 +1167,6 @@ function render() {
         app.innerHTML = screenNycRoom(nycArrivalFromWin, nycPostDinnerPrompt);
         nycReturnFromWin = false;
         mountHomeButton();
-        if (nycPostDinnerPrompt) {
-            const header = app.querySelector(".header");
-            if (header != null) header.style.display = "none";
-        }
         const homeBtn = document.getElementById("homeBtn");
         if (nycFromDinnerNext && homeBtn != null) {
             homeBtn.textContent = "Next";
@@ -1545,8 +1541,8 @@ function render() {
             let maxY = Math.max(0, computerFrame.clientHeight - loveBugCrawler.offsetHeight);
             let x = maxX * 0.5;
             let y = maxY * 0.5;
-            let vx = (Math.random() < 0.5 ? -1 : 1) * (270 + (Math.random() * 150));
-            let vy = (Math.random() < 0.5 ? -1 : 1) * (270 + (Math.random() * 150));
+            let vx = (Math.random() < 0.5 ? -1 : 1) * (370 + (Math.random() * 210));
+            let vy = (Math.random() < 0.5 ? -1 : 1) * (370 + (Math.random() * 210));
             let lastTime = performance.now();
 
             function frame(now) {
@@ -1563,8 +1559,8 @@ function render() {
                 vy += (Math.random() - 0.5) * 900 * dt;
 
                 const speed = Math.hypot(vx, vy) || 1;
-                const minSpeed = 235;
-                const maxSpeed = 540;
+                const minSpeed = 350;
+                const maxSpeed = 760;
                 const clampedSpeed = Math.max(minSpeed, Math.min(maxSpeed, speed));
                 vx = (vx / speed) * clampedSpeed;
                 vy = (vy / speed) * clampedSpeed;
