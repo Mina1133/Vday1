@@ -1369,7 +1369,7 @@ body {
     border: none;
     outline: none;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.42);
+    background: rgba(255, 255, 255, 0.68);
     color: #111;
     font-size: 0;
     font-weight: 700;
@@ -1931,7 +1931,7 @@ body {
 }
 
 .magentaScreenStage {
-    background-image: url("assets/disney.png");
+    background-image: url("assets/sh bkgr.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
