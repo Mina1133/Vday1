@@ -595,7 +595,6 @@ function headerTitle() {
     <div class="header">
       <div class="headerActions">
         <button type="button" class="btn secondary" id="gameMapBtn" data-open-map-menu="1" onclick="window.__openGameMapMenu && window.__openGameMapMenu()" aria-label="Open game map">Map</button>
-        <button type="button" class="btn secondary" id="homeBtn">Back to Start</button>
       </div>
     </div>
   `;
